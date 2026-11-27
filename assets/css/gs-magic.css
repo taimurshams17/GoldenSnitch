@@ -1,0 +1,124 @@
+/* GOLDEN SNITCH magic layer styles */
+/* Hero castle */
+.gs-hasc>:not(.gs-castle){display:none!important}
+.gs-castle{position:absolute;inset:0;overflow:hidden;border-radius:inherit}
+.gs-castle svg{width:100%;height:100%;display:block}
+html[data-theme] .sci-art.gs-hasc{filter:none!important;background:#050912!important}
+.gs-win{fill:#F5DB9C;animation:gsWin 4s ease-in-out infinite;filter:drop-shadow(0 0 3px #ffb84a)}
+.gs-tw{animation:gsTw 4s ease-in-out infinite}
+@keyframes gsWin{0%,100%{opacity:1}45%{opacity:.35}60%{opacity:.9}}
+@keyframes gsTw{0%,100%{opacity:.9}50%{opacity:.25}}
+.gs-owl{animation:gsOwl 22s linear infinite}.gs-bat{animation:gsBat 14s linear infinite}.gs-bat.b2{animation-duration:19s;animation-delay:-7s}
+@keyframes gsOwl{0%{transform:translate(-40px,170px)}50%{transform:translate(330px,120px)}100%{transform:translate(740px,150px)}}
+@keyframes gsBat{0%{transform:translate(720px,60px)}50%{transform:translate(380px,100px)}100%{transform:translate(-30px,50px)}}
+.gs-mist{animation:gsMist 16s ease-in-out infinite alternate}@keyframes gsMist{to{transform:translateX(60px)}}
+/* Banners */
+.gs-banner{position:relative;max-width:1120px;margin:14px auto 18px;height:170px;border-radius:14px;overflow:hidden;border:2px solid #8a6d34;
+ box-shadow:0 0 0 3px #1a140e,0 0 0 4px rgba(197,161,92,.55),0 14px 40px rgba(0,0,0,.5)}
+.gs-banner svg{position:absolute;inset:0;width:100%;height:100%}
+.gs-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,8,14,.9),rgba(5,8,14,.55) 45%,transparent 75%)}
+.gs-bt{position:absolute;z-index:2;left:26px;top:50%;transform:translateY(-50%);color:#F2EBDD;max-width:62%}
+.gs-bk{display:block;font:600 11px var(--gs-body);letter-spacing:.3em;color:#C5A15C}
+.gs-bt b{display:block;font:400 clamp(28px,4.4vw,46px) var(--gs-display);color:#F5DB9C;text-shadow:0 2px 14px rgba(0,0,0,.7);letter-spacing:.04em;line-height:1.1}
+.gs-bt small{display:block;font:500 16px var(--gs-body);color:#E9DABC;margin-top:4px}
+.gs-bub{animation:gsBub 3s ease-in infinite}@keyframes gsBub{from{transform:translateY(8px);opacity:.9}to{transform:translateY(-34px);opacity:0}}
+.gs-flame{transform-box:fill-box;transform-origin:50% 100%;animation:gsFl .5s ease-in-out infinite alternate}
+@keyframes gsFl{from{transform:scale(1,1)}to{transform:scale(.88,1.14)}}
+/* Floating candles + dust */
+#gsAmb{position:fixed;inset:0;z-index:30;pointer-events:none;overflow:hidden}
+.gs-cd{position:absolute;top:66px;width:12px;margin-left:-6px;animation:gsBob 6s ease-in-out infinite}
+.gs-ch{position:absolute;left:5px;top:-70px;width:1px;height:calc(var(--l) + 70px);background:rgba(197,161,92,.35)}
+.gs-cb{position:absolute;left:2px;top:var(--l);width:8px;height:24px;border-radius:2px;background:linear-gradient(90deg,#d8c9a4,#f3e8c8,#cdbb90);box-shadow:0 0 18px rgba(255,184,74,.35)}
+.gs-cf{position:absolute;left:3px;top:calc(var(--l) - 13px);width:6px;height:14px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(#fff 10%,#ffd36a 45%,#ff8a2a 80%);box-shadow:0 0 22px 8px rgba(255,170,60,.45);animation:gsFl2 .45s ease-in-out infinite alternate}
+@keyframes gsFl2{from{transform:scale(1,1) skewX(-4deg)}to{transform:scale(.85,1.15) skewX(4deg)}}
+@keyframes gsBob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+.gs-dust{position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;background:#F5DB9C;box-shadow:0 0 6px #F5DB9C;opacity:.0;animation:gsDust linear infinite}
+@keyframes gsDust{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:.8}90%{opacity:.6}100%{transform:translateY(-105vh) translateX(40px);opacity:0}}
+/* Golden Snitch flyby */
+#gsSnitch{position:fixed;z-index:60;width:74px;height:37px;pointer-events:none;display:none;filter:drop-shadow(0 0 8px rgba(245,219,156,.8))}
+#gsSnitch svg{width:100%;height:100%;overflow:visible}
+.gs-w,.gs-w2{transform-box:fill-box;animation:gsWing .09s ease-in-out infinite alternate}.gs-w{transform-origin:100% 50%}.gs-w2{transform-origin:0 50%}
+@keyframes gsWing{from{transform:scaleY(1)}to{transform:scaleY(.35)}}
+@keyframes gsFlyR{0%{left:-90px;transform:translateY(0)}25%{transform:translateY(-40px)}50%{transform:translateY(20px)}75%{transform:translateY(-30px)}100%{left:calc(100vw + 90px);transform:translateY(10px)}}
+@keyframes gsFlyL{0%{left:calc(100vw + 90px);transform:scaleX(-1) translateY(0)}25%{transform:scaleX(-1) translateY(30px)}50%{transform:scaleX(-1) translateY(-35px)}75%{transform:scaleX(-1) translateY(25px)}100%{left:-90px;transform:scaleX(-1) translateY(0)}}
+/* Wand sparkle */
+.gs-sp{position:fixed;z-index:9999;width:10px;height:10px;margin:-5px 0 0 -5px;pointer-events:none;background:radial-gradient(circle,#fff 10%,#F5DB9C 40%,transparent 70%);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:gsSp .9s ease-out forwards}
+@keyframes gsSp{to{transform:translate(var(--dx,10px),26px) scale(.1) rotate(120deg);opacity:0}}
+/* Themed icons */
+.gs-ico{display:block;margin:0 auto;filter:drop-shadow(0 0 4px rgba(197,161,92,.35))}
+#nav a .gs-ico{display:inline-block;vertical-align:-4px;margin-right:8px}
+/* Wood header + ornate frames + leather cards (dark & purple themes) */
+html:not([data-theme=light]) header{background:linear-gradient(180deg,#2a1f17,#17110d)!important;border-bottom:2px solid #8a6d34!important;box-shadow:0 4px 20px rgba(0,0,0,.6),inset 0 -1px 0 rgba(245,219,156,.25)}
+html:not([data-theme=light]) .bottom-nav{background:linear-gradient(180deg,#2a1f17,#17110d)!important;border:2px solid #8a6d34!important}
+html:not([data-theme=light]) #app :is([class*="-card"],.card,.panel,.about-card){
+ background-color:#1c1510!important;background-image:radial-gradient(rgba(245,219,156,.05) 1px,transparent 1.5px),linear-gradient(160deg,rgba(112,43,53,.10),rgba(22,44,76,.14))!important;background-size:6px 6px,auto!important;
+ border:1px solid rgba(197,161,92,.55)!important;box-shadow:inset 0 0 0 4px #17110d,inset 0 0 0 5px rgba(197,161,92,.3),0 8px 26px rgba(0,0,0,.5)!important;border-radius:12px!important}
+html:not([data-theme=light]) #app :is([class*="-card"],.card,.panel):hover{border-color:#F5DB9C!important;box-shadow:inset 0 0 0 4px #17110d,inset 0 0 0 5px rgba(245,219,156,.5),0 0 26px rgba(197,161,92,.35)!important}
+#app h2{padding-bottom:.28em;background:linear-gradient(90deg,#C5A15C,rgba(197,161,92,0)) left bottom/min(260px,60%) 1px no-repeat}
+html:not([data-theme=light]) .sci-bg{opacity:.35!important}
+html:not([data-theme=light]) .sci{background:radial-gradient(900px 420px at 18% 0%,rgba(255,170,60,.10),transparent 70%),radial-gradient(700px 400px at 100% 30%,rgba(112,43,53,.22),transparent 70%)!important}
+@media(max-width:700px){.gs-banner{height:118px;margin:10px 12px 14px;border-radius:12px}.gs-bt{left:14px;max-width:80%}.gs-bt small{font-size:13px}.gs-bk{font-size:9px}.gs-cd{top:60px;transform:scale(.8)}#gsSnitch{width:52px;height:26px}}
+@media(prefers-reduced-motion:reduce){.gs-win,.gs-tw,.gs-owl,.gs-bat,.gs-mist,.gs-bub,.gs-flame,.gs-cd,.gs-cf,.gs-dust{animation:none!important}.gs-dust{display:none}}
+.gs-banner{z-index:31}
+.gs-castle{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%),linear-gradient(180deg,#000 85%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent 0,#000 22%),linear-gradient(180deg,#000 85%,transparent);mask-composite:intersect}
+html:not([data-theme=light]) .sci,html[data-theme=dark] .sci{--sci-h1b:#E9DABC;--sci-typed:#F5DB9C;--sci-sub:#E9DABC;--sci-lead:rgba(242,235,221,.86)}
+html:not([data-theme=light]) #app .sci-eyebrow,html:not([data-theme=light]) #app .sci-bar{background:#C5A15C!important}
+html:not([data-theme=light]) body #app a.card h3,html:not([data-theme=light]) body #app .chapter-index-card h3{color:#F5DB9C!important}
+html:not([data-theme=light]) body #app .chapter-subject-dot{background:#C5A15C!important;box-shadow:0 0 12px rgba(197,161,92,.6)!important}
+html:not([data-theme=light]) body #app .sci-subj li{border-color:rgba(197,161,92,.5)!important}
+html:not([data-theme=light]) body #app .caret{background:#F5DB9C!important}
+body:has(.gs-banner) .gs-cd{display:none}
+html:not([data-theme=light]) body #app .chapters-page [data-chapter-subject="phy"] .chapter-index-card h3{color:#B9CCFF!important}
+html:not([data-theme=light]) body #app .chapters-page [data-chapter-subject="chem"] .chapter-index-card h3{color:#8FE0B4!important}
+html:not([data-theme=light]) body #app .chapters-page [data-chapter-subject="math"] .chapter-index-card h3{color:#F5DB9C!important}
+html:not([data-theme=light]) body #app .chapters-page [data-chapter-subject="phy"] .chapter-subject-dot{background:#9db8ff!important;box-shadow:0 0 18px rgba(157,184,255,.45)!important}
+html:not([data-theme=light]) body #app .chapters-page [data-chapter-subject="chem"] .chapter-subject-dot{background:#4be39a!important;box-shadow:0 0 18px rgba(75,227,154,.4)!important}
+html:not([data-theme=light]) body #app .chapters-page [data-chapter-subject="math"] .chapter-subject-dot{background:#C5A15C!important;box-shadow:0 0 18px rgba(197,161,92,.45)!important}
+html:not([data-theme=light]) body #app .h4-hero{background:radial-gradient(520px 280px at 96% 0%,rgba(197,161,92,.22),transparent 70%),radial-gradient(600px 320px at 0% 100%,rgba(112,43,53,.45),transparent 70%),linear-gradient(160deg,#241c17,#14100d)!important;border:2px solid #8a6d34!important;box-shadow:inset 0 0 0 4px #14100d,inset 0 0 0 5px rgba(197,161,92,.35),0 14px 40px rgba(0,0,0,.55)!important}
+html:not([data-theme=light]) body #app .h4-hero h1{background:linear-gradient(180deg,#fff6d6,#C5A15C)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important}
+html:not([data-theme=light]) body #app :is(.h4-hero *)[class*="bar"],html:not([data-theme=light]) body #app .h4-hero :is(hr,.rule){background:#C5A15C!important}
+
+/* ===== No flash of the old science art: hide it at once, show a CSS castle until the animated one mounts ===== */
+html{background:#0B1019}
+.sci-bg{display:none!important}
+.sci-art>:not(.gs-castle){display:none!important}
+.sci-art{background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 700 420%22 preserveAspectRatio=%22xMidYMid slice%22%3E%3Cdefs%3E%3ClinearGradient id=%22a%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22#050912%22/%3E%3Cstop offset=%22.55%22 stop-color=%22#16294a%22/%3E%3Cstop offset=%221%22 stop-color=%22#5a3a52%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22700%22 height=%22420%22 fill=%22url(#a)%22/%3E%3Ccircle cx=%22540%22 cy=%2290%22 r=%2234%22 fill=%22#fff6d6%22/%3E%3Cg fill=%22#0a0f1c%22%3E%3Crect x=%2240%22 y=%22210%22 width=%2246%22 height=%22120%22/%3E%3Cpolygon points=%2236,210 63,160 90,210%22/%3E%3Crect x=%2296%22 y=%22160%22 width=%2234%22 height=%22170%22/%3E%3Cpolygon points=%2292,160 113,100 134,160%22/%3E%3Crect x=%22200%22 y=%22130%22 width=%2240%22 height=%22200%22/%3E%3Cpolygon points=%22196,130 220,66 244,130%22/%3E%3Crect x=%22310%22 y=%22100%22 width=%2230%22 height=%22230%22/%3E%3Cpolygon points=%22306,100 325,30 344,100%22/%3E%3Crect x=%22420%22 y=%22140%22 width=%2238%22 height=%22190%22/%3E%3Cpolygon points=%22416,140 439,80 462,140%22/%3E%3Crect x=%22570%22 y=%22155%22 width=%2244%22 height=%22175%22/%3E%3Cpolygon points=%22566,155 592,95 618,155%22/%3E%3Crect x=%220%22 y=%22300%22 width=%22700%22 height=%2240%22/%3E%3C/g%3E%3Crect y=%22330%22 width=%22700%22 height=%2290%22 fill=%22#0b1322%22/%3E%3Cg fill=%22#F5DB9C%22%3E%3Crect x=%2262%22 y=%22240%22 width=%226%22 height=%2210%22/%3E%3Crect x=%22108%22 y=%22200%22 width=%226%22 height=%2210%22/%3E%3Crect x=%22216%22 y=%22190%22 width=%226%22 height=%2210%22/%3E%3Crect x=%22322%22 y=%22150%22 width=%226%22 height=%2210%22/%3E%3Crect x=%22436%22 y=%22200%22 width=%226%22 height=%2210%22/%3E%3Crect x=%22590%22 y=%22215%22 width=%226%22 height=%2210%22/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat,#050912!important;filter:none!important}
+.sci-art .gs-castle{animation:gsFade .5s ease both}@keyframes gsFade{from{opacity:0}to{opacity:1}}
+/* ===== Header: brand centred ===== */
+header .hr{position:relative}
+header .brand{position:absolute!important;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;margin:0!important}
+header .hr .hx{margin-left:auto}
+@media(max-width:700px){
+ header .hr{display:grid!important;grid-template-columns:49px 49px minmax(0,1fr) auto minmax(0,1fr) 64px 34px;column-gap:4px;align-items:center;min-height:56px}
+ header .brand{position:static!important;transform:none;grid-column:4;grid-row:1;justify-self:center;gap:6px}
+ header .brand #bn{font-size:14px!important}header .brand .logo{width:28px!important;height:28px!important}
+ header .hr .hx{display:contents}
+ header #burger{grid-column:1;grid-row:1;justify-self:center;width:34px!important;height:34px!important;min-width:0!important;padding:0!important}
+ header #clMessageCentre{grid-column:2;grid-row:1;justify-self:center;width:34px}
+ header #clMessageCentre button{width:34px!important;height:34px!important;min-width:0!important;padding:0!important}
+ header #accountActions,header #profileLink{grid-column:6;grid-row:1;width:64px}
+ header #accountActions a,header #accountActions button{width:64px!important;padding:0!important;font-size:12px!important;min-height:34px!important;justify-content:center;white-space:nowrap}
+ header #headerSettingsLink{grid-column:7;grid-row:1;width:34px!important;height:34px!important;min-width:0!important;padding:0!important}
+ header #clSearchBtn,header #gsHouseBtn{display:none!important}
+}
+/* ===== First-paint Hogwarts hero: no old science artwork, ever ===== */
+.sci-bg,.sci-art>*:not(.gs-castle){display:none!important}
+.sci-art{background:#050912 url(../images/castle-night.svg) center bottom/cover no-repeat!important}
+@media(max-width:900px){
+ .sci-art .gs-castle{display:none!important}
+ .sci-art{background:none!important}
+ html[data-theme] body #app section.sci{background:linear-gradient(180deg,rgba(5,9,18,.62),rgba(5,9,18,.38) 45%,rgba(5,9,18,.78)),#050912 url(../images/castle-night.svg) center bottom/cover no-repeat!important}
+ /* centre the whole title block */
+ .sci-copy,.sci-copy h1,.sci-copy .lead,.sci-copy .typed,.sci-copy .sci-cta,.sci-copy .sci-subj{text-align:center!important;margin-left:auto!important;margin-right:auto!important}
+ .sci-copy h1{display:flex!important;flex-direction:column!important;align-items:center!important;width:100%}
+ .sci-h1a,.sci-h1b{display:block!important;width:100%;text-align:center!important}
+ .sci-copy .sci-bar{margin-left:auto!important;margin-right:auto!important}
+ .sci-copy .sci-cta,.sci-copy .sci-subj{justify-content:center!important}
+ .gs-cd{--l:16px!important}
+}
+/* Buttons & pills: wood + gold instead of navy */
+html body #app :is(.sci-btn--s,.sci-subj li){background:rgba(36,28,23,.88)!important;border:1px solid rgba(197,161,92,.6)!important;color:#F2EBDD!important}
+html[data-theme] .sci-art.gs-hasc{background:#050912 url(../images/castle-night.svg) center bottom/cover no-repeat!important}
+@media(max-width:900px){html[data-theme] .sci-art.gs-hasc,html[data-theme] .sci-art{background:transparent!important;pointer-events:none}}
+@media(max-width:900px){html[data-theme] body #app section.sci{background:linear-gradient(180deg,rgba(5,9,18,.55),rgba(5,9,18,.16) 50%,rgba(5,9,18,.45)),#050912 url(../images/castle-night.svg) 62% bottom/cover no-repeat!important}
+ html body #app .sci-copy :is(.lead,.typed){text-shadow:0 1px 10px #000,0 0 18px rgba(0,0,0,.8)}}

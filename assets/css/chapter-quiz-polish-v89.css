@@ -1,0 +1,59 @@
+/* v89 — stable, theme-aware HSC quiz surfaces. Hover is deliberately non-3D. */
+#app .play-detail-page #gm.is-chapter-quiz{width:100%;max-width:100%;margin-inline:auto;}
+#app .play-detail-page #gm.is-chapter-quiz .cq-card{width:100%!important;max-width:1000px!important;margin:0 auto!important;box-sizing:border-box;}
+#app .play-detail-page #gm.is-chapter-quiz .cq-card,
+#app .play-detail-page #gm.is-chapter-quiz .cq-question-text,
+#app .play-detail-page #gm.is-chapter-quiz .cq-option,
+#app .play-detail-page #gm.is-chapter-quiz .cq-answer-feedback,
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation,
+#app .play-detail-page #gm.is-chapter-quiz .cq-question-media-v88,
+#app .play-detail-page #gm.is-chapter-quiz .cq-question-media-v88 .cq-media-item{
+  filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  perspective:none!important;backface-visibility:visible!important;transform-style:flat!important;
+}
+@media(hover:hover){
+  #app .play-detail-page #gm.is-chapter-quiz .cq-card:hover,
+  #app .play-detail-page #gm.is-chapter-quiz .cq-option:not(:disabled):hover,
+  #app .play-detail-page #gm.is-chapter-quiz .cq-answer-feedback:hover,
+  #app .play-detail-page #gm.is-chapter-quiz .cq-explanation:hover,
+  #app .play-detail-page #gm.is-chapter-quiz .cq-question-media-v88 .cq-media-item:hover{
+    transform:none!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  }
+  #app .play-detail-page #gm.is-chapter-quiz .cq-option:not(:disabled):hover{
+    border-color:var(--p,#D9B873)!important;box-shadow:0 3px 12px rgba(38,32,19,.12)!important;
+  }}
+#app .play-detail-page #gm.is-chapter-quiz .cq-option:focus-visible,
+#app .play-detail-page #gm.is-chapter-quiz .cq-next-question:focus-visible,
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation summary:focus-visible,
+#app .play-detail-page #gm.is-chapter-quiz .cq-reference-list a:focus-visible{
+  outline:3px solid var(--p,#D9B873)!important;outline-offset:3px!important;
+}
+#app .play-detail-page #gm.is-chapter-quiz .cq-option{transition:background-color .16s,border-color .16s,box-shadow .16s!important;}
+#app .play-detail-page #gm.is-chapter-quiz .cq-question-text{overflow-wrap:anywhere;}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation-body{min-width:0;overflow-wrap:anywhere;}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation-body :is(img,svg,iframe,video){max-width:100%;}
+/* Indigo / Midnight Indigo theme: readable surfaces rather than translucent low-contrast cards. */
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-card{
+  color:#fcfaf5!important;background:linear-gradient(155deg,#3c331e,#2a2415)!important;
+  border-color:rgba(234,219,183,.34)!important;box-shadow:0 22px 52px -34px rgba(0,0,0,.72),inset 0 1px 0 rgba(248,243,231,.06)!important;
+}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-question-text{color:#fcfaf6!important;}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-option{
+  color:#fbf9f3!important;background:#493f27!important;border-color:rgba(238,225,196,.28)!important;
+}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-option-letter{color:#f8f3e7!important;background:rgba(225,203,152,.2)!important;}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-answer-feedback{color:#fcfaf5;background:rgba(78,66,38,.78);border-color:rgba(234,219,183,.32);}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-answer-feedback p{color:#f9f5ec!important;}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explanation{background:rgba(49,41,21,.78);border-color:rgba(234,219,183,.3);}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explanation-body{color:#faf6ee;}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section{background:rgba(138,58,69,.1);border-color:rgba(234,219,183,.2);}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section h4{color:#f2e9d3!important;}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-reference-list{color:#faf6ee;}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-reference-list a{color:#ebdcb9;}
+/* Dark theme gets the same stable interaction policy, retaining its existing palette. */
+html[data-theme="dark"] #app .play-detail-page #gm.is-chapter-quiz .cq-card{max-width:1000px!important;}
+@media(max-width:700px){
+  #app .play-detail-page #gm.is-chapter-quiz .cq-card{max-width:100%!important;margin-inline:0!important;}
+  #app .play-detail-page #gm.is-chapter-quiz .cq-option{min-width:0;overflow-wrap:anywhere;}}
+@media(prefers-reduced-motion:reduce){
+  #app .play-detail-page #gm.is-chapter-quiz *{scroll-behavior:auto!important;animation:none!important;transition:none!important;}}

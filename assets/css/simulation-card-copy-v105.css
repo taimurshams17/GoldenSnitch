@@ -1,0 +1,28 @@
+/* Golden Snitch v105 — concise description rhythm for simulation cards. */
+.lab-sim-card > p,
+.home-lab-card > p {
+  margin: 10px 0 16px;
+  color: var(--muted, #d9d4c9);
+  font-size: .96rem;
+  line-height: 1.68;
+  letter-spacing: .002em;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+.sim-detail-description {
+  max-width: 76ch;
+  line-height: 1.8;
+}
+@media (max-width: 700px) {
+  .lab-sim-card > p,
+  .home-lab-card > p {
+    margin: 8px 0 13px;
+    font-size: .9rem;
+    line-height: 1.62;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+  }}

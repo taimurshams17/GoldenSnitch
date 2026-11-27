@@ -1,0 +1,32 @@
+/* GOLDEN SNITCH — final polish layer (phase 9). Loaded last.
+   1) Palette tokens remapped from legacy sky-blue/indigo to antique gold / dark wood / parchment.
+   2) Display font enforced on banner titles (supplied "Harry P").
+   3) Fix: nested "-card" descendants no longer each get a full double gold frame.
+   4) Wood/gold bottom navigation, Student Hub banner and hero headline sizing.
+   No layout, logic or data is touched here. */
+:root,html[data-theme]{
+ --bg:#0B1019;--card:#171310;--line:#3a2f22;--tx:#F2EBDD;--mut:#B9B1A5;
+ --p:#C5A15C;--s:#F5DB9C;--a:#F5DB9C;--glow:#C5A15C;--chapter-name:#C5A15C;
+ --st-line:rgba(197,161,92,.18);--st-line-hi:rgba(245,219,156,.42)}
+/* 2) Display font on the illustrated page banners (was falling back to the body face) */
+#app .gs-bt b,.gs-bt b{font-family:var(--gs-display)!important;font-weight:400!important}
+/* 3) Nested -card/-panel descendants: quiet inner surface instead of a second ornate frame */
+html:not([data-theme=light]) #app :is([class*="-card"],.card,.panel,.about-card) :is([class*="-card"],.card,.panel,.about-card){
+ background-image:none!important;background-color:rgba(245,219,156,.035)!important;box-shadow:none!important;
+ border:1px solid rgba(197,161,92,.16)!important;border-radius:10px!important}
+html:not([data-theme=light]) #app :is([class*="-card"],.card,.panel,.about-card) :is([class*="-card"],.card,.panel,.about-card):not(:has(*)){
+ background:transparent!important;border:0!important}
+/* Hero headline: supplied display font, comfortable size for the English line */
+html:not([data-theme=light]) #app .sci-h1a{font-family:var(--gs-display);color:#F5DB9C;line-height:1.12}
+html:not([data-theme=light]) #app .sci-t{font-size:clamp(34px,5.2vw,64px)}
+/* Bengali supporting line: readable Bengali body face, not the display font */
+html:not([data-theme=light]) #app .sci .lead{font-family:var(--gs-bn);font-size:clamp(17px,1.5vw,20px);line-height:1.85}
+/* Visible keyboard focus everywhere */
+:focus-visible{outline:2px solid #F5DB9C!important;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+/* Bottom navigation pill: dark wood + antique gold (overrides later, more specific navy rules) */
+html:not([data-theme=light]) body nav.bottom-nav:not(#a):not(#b){background:linear-gradient(180deg,#2a1f17,#17110d)!important;border:1px solid rgba(197,161,92,.6)!important;box-shadow:0 10px 30px rgba(0,0,0,.55),inset 0 1px 0 rgba(245,219,156,.18)!important}
+html:not([data-theme=light]) body nav.bottom-nav a.on:not(#a),html:not([data-theme=light]) body nav.bottom-nav a[aria-current]:not(#a){background:rgba(197,161,92,.16)!important;border-color:rgba(245,219,156,.6)!important}
+/* Arcade mode tiles: Games = gold→wine, Quiz = parchment→gold (were violet / teal) */
+html body #app .arcade-page .ga-mode-deck .ga-mode-card:not(#a):not(#b){--mc:#C5A15C;--mc2:#702B35}
+html body #app .arcade-page .ga-mode-deck .ga-mode-card[data-ga-mode="quiz"]:not(#a):not(#b){--mc:#E9DABC;--mc2:#C5A15C}

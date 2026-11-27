@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="color-scheme" content="dark">
+<title>HSC Question Bank Studio · Golden Snitch</title>
+<link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+<link rel="stylesheet" href="question-bank.css?v=20261121-v98-blueprint-triage-review-gate-gs9">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Noto+Serif+Bengali:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/css/gs-admin.css?v=gs5">
+</head>
+<body>
+<header class="top"><div><a href="./" class="back">← Admin Panel</a><p class="eyebrow">GOLDEN SNITCH · CONTENT STUDIO</p><h1>HSC Question Bank Studio</h1><p class="sub">Author, edit and replace chapter quiz questions across all six HSC papers.</p></div><div class="top-actions"><button id="exportAll" class="secondary">Export JSON</button><button id="importBtn" class="secondary">Import JSON</button><input id="importFile" type="file" accept="application/json,.json" hidden><button id="saveAll" class="primary">Save draft changes</button></div></header>
+<main>
+  <section class="notice"><b>Editorial status: Draft</b><span>Saved items are not marked academically approved. A subject-expert review is still required before publishing them as verified learning content. Media HTML is intentionally blocked; supported interactive learning aids are added by the site safely.</span></section>
+  <section class="workspace">
+    <aside class="sidebar panel">
+      <label class="field"><span>Subject / Paper / Chapter</span><select id="chapterSelect"><option>Loading syllabus…</option></select></label>
+      <div class="chapter-meta" id="chapterMeta">Loading chapter metadata…</div>
+      <div class="counts"><div><b id="baseCount">—</b><small>Playable curated questions</small></div><div><b id="draftCount">0</b><small>Admin rewrite drafts</small></div><div><b id="blueprintCount">0</b><small>Hidden blueprints</small></div></div>
+      <div id="targetMeter" class="admin-target-meter" aria-live="polite"><b>অধ্যায়ের প্রশ্নসংখ্যার লক্ষ্য</b><span>সিলেবাস লোড হচ্ছে…</span></div>
+      <button id="newQuestion" class="primary full">＋ Add question</button>
+      <div class="keyline"></div><label class="field"><span>Search in this chapter</span><input id="search" type="search" placeholder="Find a question or topic"></label>
+      <p class="side-note">Tip: choose a current question and press “Edit / replace” to create a reviewed replacement linked to its existing question ID.</p>
+      <div id="frameStatus" class="frame-status">Loading current site question bank…</div>
+    </aside>
+    <section class="content">
+      <section class="panel list-panel"><div class="section-head"><div><h2>Chapter questions</h2><p>Curated learner questions, hidden editorial blueprints, and saved rewrite drafts.</p></div><span class="pill" id="listStatus">Loading</span></div><div id="questionList" class="question-list"><p class="empty">Reading the chapter bank…</p></div></section>
+      <section class="panel editor" id="editorPanel">
+        <div class="section-head"><div><h2 id="editorTitle">Question editor</h2><p>Write an unambiguous MCQ with one defensible correct option.</p></div><span class="pill draft">UNREVIEWED</span></div>
+        <form id="questionForm">
+          <input id="questionId" type="hidden"><input id="draftIndex" type="hidden" value="-1">
+          <label class="field"><span>Replacement ID (optional)</span><input id="replaceId" type="text" placeholder="Leave blank to add a new question"><small>Filled automatically when you edit a current static-bank question.</small></label>
+          <label class="field"><span>Subtopic from supplied syllabus</span><select id="topicSelect"></select></label>
+          <label class="field"><span>Question (Bangla preferred)</span><textarea id="questionText" rows="3" minlength="8" maxlength="3000" required placeholder="Write a conceptual, unambiguous question…"></textarea></label>
+          <div class="options-grid">
+            <label class="field"><span>Option A</span><input id="option0" maxlength="1000" required></label>
+            <label class="field"><span>Option B</span><input id="option1" maxlength="1000" required></label>
+            <label class="field"><span>Option C</span><input id="option2" maxlength="1000" required></label>
+            <label class="field"><span>Option D</span><input id="option3" maxlength="1000" required></label>
+          </div>
+          <div class="form-grid">
+            <label class="field"><span>Correct option</span><select id="correct"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></label>
+            <label class="field"><span>Difficulty level</span><select id="tier"><option value="1">1 · Easy</option><option value="2" selected>2 · Medium</option><option value="3">3 · Deep Conceptual</option><option value="4">4 · Hard / Advanced</option></select></label>
+            <label class="field"><span>Question category</span><select id="questionType"><option value="conceptual">Conceptual reasoning</option><option value="scenario">Situation based</option><option value="analytical">Analytical</option><option value="mathematical">Mathematical</option><option value="experiment">Experimental / observation</option><option value="assertion">Assertion & reason</option><option value="graph">Graph / data interpretation</option><option value="misconception">Misconception based</option><option value="realWorld">Real-life application</option><option value="multiStep">Multi-step solution</option></select></label>
+          </div>
+          <div class="keyline"></div><h3>Detailed learning explanation</h3>
+          <label class="field"><span>Core explanation / correct answer</span><textarea id="exCore" rows="3" maxlength="10000" placeholder="Explain the fundamental concept and why the correct answer is correct."></textarea></label>
+          <div class="form-grid">
+            <label class="field"><span>Detailed analysis</span><textarea id="exAnalysis" rows="3" maxlength="10000" placeholder="Reasoning, conditions and cause-effect. "></textarea></label>
+            <label class="field"><span>Formula / law / equation</span><textarea id="exFormula" rows="3" maxlength="10000" placeholder="Formula, symbols and units, if applicable."></textarea></label>
+            <label class="field"><span>Misconception to correct</span><textarea id="exMisconception" rows="3" maxlength="10000" placeholder="A likely incorrect idea and its correction."></textarea></label>
+            <label class="field"><span>Real-life application</span><textarea id="exRealWorld" rows="3" maxlength="10000" placeholder="A relevant example, not decorative filler."></textarea></label>
+          </div>
+          <label class="field"><span>Step-by-step solution (one step per line)</span><textarea id="exSteps" rows="4" placeholder="Step 1…&#10;Step 2…&#10;Step 3…"></textarea></label>
+          <label class="field"><span>Why each answer choice is correct or incorrect (JSON array of exactly four explanations, A–D)</span><textarea id="optionAnalysisJSON" rows="5" spellcheck="false" placeholder='["A কেন সঠিক/ভুল…","B কেন সঠিক/ভুল…","C কেন সঠিক/ভুল…","D কেন সঠিক/ভুল…"]'></textarea><small>প্রতিটি বিকল্পের জন্য আলাদা কারণ লিখুন। শুধু “ভুল” বা “সাধারণ ভুল” লিখলে review gate পাস হবে না।</small></label>
+          <div class="form-grid">
+            <label class="field"><span>Memory cue / simple explanation</span><textarea id="exSimple" rows="3" maxlength="10000"></textarea></label>
+            <div>
+              <label class="field"><span>Reference title (optional)</span><input id="refTitle" maxlength="200" placeholder="Exact book/resource title"></label>
+              <label class="field"><span>Reference URL (HTTPS only)</span><input id="refUrl" type="url" placeholder="https://…"></label>
+              <p class="help">Only add a link after checking its title, source and relevance.</p>
+            </div>
+          </div>
+          <div class="keyline"></div><h3>Question-specific multimedia</h3>
+          <p class="help">Use structured JSON only. Do not paste HTML, embed code, scripts or arbitrary SVG. Question media accepts static image or diagram only (never simulation, animation or video inside the question). Explanation resources may use image, animation, video, resource, link or diagram. Interactive simulations remain in the separate Lab section. Every external item needs an HTTPS URL. Add rightsStatus (owned / open-license / permission / public-domain / link-only / pending), attribution and license/licenseUrl where applicable; add transcriptUrl for video when available. Question-support media remains unverified until a qualified reviewer checks both relevance and rights.</p>
+          <label class="field"><span>Question media JSON (static image/diagram only)</span><textarea id="questionMediaJSON" rows="4" spellcheck="false" placeholder='[{"type":"image","title":"...","url":"https://...","alt":"...","caption":"...","rightsStatus":"open-license","license":"CC BY 4.0","attribution":"Creator / source","licenseUrl":"https://..."}]'></textarea></label>
+          <div id="questionMediaPreview" class="media-preview-grid" aria-live="polite"></div>
+          <label class="field"><span>Explanation media JSON (learning resources)</span><textarea id="explanationMediaJSON" rows="4" spellcheck="false" placeholder='[{"type":"video","title":"...","url":"https://www.youtube.com/watch?v=...","caption":"...","rightsStatus":"link-only","provider":"Channel name","transcriptUrl":"https://..."}]'></textarea></label>
+          <div id="explanationMediaPreview" class="media-preview-grid" aria-live="polite"></div>
+          <label class="field"><span>Additional references JSON (array, maximum five total)</span><textarea id="referencesJSON" rows="4" spellcheck="false" placeholder='[{"title":"Textbook section","url":"https://...","institution":"Publisher / university"}]'></textarea></label>
+          <p class="help">YouTube videos are displayed through the privacy-enhanced youtube-nocookie player. Simulation and textbook links open in a new tab. HTML-based embeds are rejected by the API.</p>
+          <section class="review-panel" aria-labelledby="reviewHeading">
+            <div><h3 id="reviewHeading">Academic review &amp; controlled publishing</h3><p>Only a suitably qualified Physics, Chemistry or Mathematics reviewer should complete this section after checking the exact item. Publishing is a separate action; saving a draft never makes it public.</p></div>
+            <label class="field"><span>Reviewer name and qualification / institution</span><input id="reviewerName" minlength="10" maxlength="120" placeholder="e.g. Reviewer name · MSc Physics · institution"></label>
+            <div class="review-checks">
+              <label><input id="reviewAnswer" type="checkbox"> Correct answer and calculations independently checked</label>
+              <label><input id="reviewReasoning" type="checkbox"> Explanation, formulas, units and assumptions checked</label>
+              <label><input id="reviewSyllabus" type="checkbox"> Exact HSC syllabus alignment checked</label>
+              <label><input id="reviewDistractors" type="checkbox"> All distractors and ambiguity checked</label>
+              <label><input id="reviewReferences" type="checkbox"> Reference title, section and relevance checked</label>
+            </div>
+            <div class="review-checks review-checks-optional">
+              <label><input id="reviewQuestionMedia" type="checkbox"> Question media directly supports this question and its source/rights were checked</label>
+              <label><input id="reviewExplanationMedia" type="checkbox"> Explanation media is relevant, accessible and source/rights checked</label>
+            </div>
+            <button type="button" id="publishCurrent" class="publish-button">Review and publish this saved draft</button>
+            <p id="reviewStatus" class="help" aria-live="polite">Select or save a question first. It must be saved as a draft before it can be published.</p>
+          </section>
+          <div class="form-actions"><button type="button" id="cancelEdit" class="secondary">Cancel</button><button type="submit" class="primary">Add to draft list</button></div>
+        </form>
+      </section>
+    </section>
+  </section>
+</main>
+<iframe id="compiledSource" src="../" title="Golden Snitch question-bank source" aria-hidden="true" tabindex="-1"></iframe>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="../assets/js/chapter-quiz-syllabus-v79.js?v=20261120-v87"></script>
+<script src="../assets/js/chapter-quiz-targets-v94.js?v=20261121-v94-target-policy"></script>
+<script src="question-bank.js?v=20261121-v98-blueprint-triage-review-gate-gs9"></script>
+</body></html>

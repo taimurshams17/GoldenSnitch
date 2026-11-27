@@ -1,0 +1,354 @@
+/* Golden Snitch v107 — question-first Mistake Review with spacious, complete explanations */
+#app .ga-review-page {
+  width: min(calc(100% - 28px), 1180px) !important;
+  max-width: 1180px !important;
+  margin-inline: auto !important;
+  padding-bottom: clamp(92px, 10vw, 132px) !important;
+  box-sizing: border-box;
+}
+#app .ga-review-list {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 13px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin-top: 16px !important;
+}
+#app .ga-review-list > .ga-review-item {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  contain: none !important;
+  content-visibility: visible !important;
+  border: 1px solid rgba(183,166,126, .24) !important;
+  border-radius: 19px !important;
+  background: linear-gradient(145deg, rgba(53,45,27, .96), rgba(30,25,14, .98)) !important;
+  box-shadow: 0 12px 32px -26px rgba(23,18,7, .8), inset 0 1px 0 rgba(255,255,255,.045) !important;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease !important;
+}
+#app .ga-review-list > .ga-review-item:hover {
+  border-color: rgba(194,166,100, .48) !important;
+  box-shadow: 0 15px 34px -25px rgba(134,106,39, .42), inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+#app .ga-review-question {
+  display: grid !important;
+  grid-template-columns: 38px minmax(0, 1fr) 24px !important;
+  align-items: center !important;
+  gap: 14px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 76px !important;
+  margin: 0 !important;
+  padding: 19px 22px !important;
+  color: #fbf8f2 !important;
+  background: linear-gradient(100deg, rgba(122,103,59, .19), rgba(14, 165, 169, .075) 55%, rgba(255,255,255,.018)) !important;
+  cursor: pointer !important;
+  list-style: none !important;
+  box-sizing: border-box !important;
+  -webkit-tap-highlight-color: transparent;
+}
+#app .ga-review-question::-webkit-details-marker { display: none !important; }
+#app .ga-review-question::marker { content: "" !important; }
+#app .ga-review-question:focus-visible {
+  outline: 3px solid rgba(197,161,92, .72) !important;
+  outline-offset: -4px !important;
+  border-radius: 16px;
+}
+#app .ga-review-index {
+  display: grid !important;
+  place-items: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  color: #f6f0e2 !important;
+  background: linear-gradient(145deg, rgba(14, 165, 185, .25), rgba(201,162,71, .22)) !important;
+  border: 1px solid rgba(103, 213, 224, .32) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08) !important;
+  font-size: .86rem !important;
+  font-weight: 850 !important;
+  font-variant-numeric: tabular-nums;
+}
+#app .ga-review-question-text {
+  display: block !important;
+  min-width: 0 !important;
+  color: inherit !important;
+  font-size: clamp(.94rem, 1.5vw, 1.05rem) !important;
+  font-weight: 760 !important;
+  line-height: 1.85 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+#app .ga-review-chevron {
+  display: grid !important;
+  place-items: center !important;
+  width: 25px !important;
+  height: 25px !important;
+  border-radius: 9px !important;
+  color: #8edbe5 !important;
+  background: rgba(197,161,92, .10) !important;
+  font-size: 1.15rem !important;
+  transition: transform .2s ease, background .2s ease !important;
+}
+#app .ga-review-item[open] .ga-review-question {
+  border-bottom: 1px solid rgba(190,173,132, .20) !important;
+  background: linear-gradient(100deg, rgba(122,103,59, .23), rgba(14, 165, 169, .10) 55%, rgba(255,255,255,.025)) !important;
+}
+#app .ga-review-item[open] .ga-review-chevron { transform: rotate(180deg); background: rgba(197,161,92,.17) !important; }
+#app .ga-review-expanded {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: clamp(17px, 2.7vw, 30px) !important;
+  box-sizing: border-box !important;
+  color: var(--txt, #f4f1e8) !important;
+  overflow: visible !important;
+}
+#app .ga-review-meta {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+  margin: 0 0 17px !important;
+  min-width: 0 !important;
+}
+#app .ga-review-meta > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  max-width: 100% !important;
+  min-height: 27px !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  color: #e5decc !important;
+  background: rgba(169,155,123, .12) !important;
+  border: 1px solid rgba(190,176,143, .20) !important;
+  font-size: .72rem !important;
+  line-height: 1.45 !important;
+  overflow-wrap: anywhere !important;
+}
+#app .ga-review-meta > .ga-review-status-tag.is-reviewed { color: #baf4da !important; background: rgba(16, 185, 129, .13) !important; border-color: rgba(52, 211, 153, .28) !important; }
+#app .ga-review-meta > .ga-review-status-tag:not(.is-reviewed) { color: #ffe2a6 !important; background: rgba(245, 158, 11, .10) !important; border-color: rgba(245, 158, 11, .24) !important; }
+#app .ga-review-answer-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 13px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 0 20px !important;
+}
+#app .ga-review-answer-card {
+  display: grid !important;
+  align-content: start !important;
+  gap: 9px !important;
+  min-width: 0 !important;
+  min-height: 90px !important;
+  padding: 17px 19px !important;
+  border: 1px solid rgba(179,171,153, .22) !important;
+  border-radius: 15px !important;
+  background: linear-gradient(145deg, rgba(133,125,106, .10), rgba(133,125,106,.045)) !important;
+  box-sizing: border-box !important;
+}
+#app .ga-review-answer-card > span { color: #d3cdbe !important; font-size: .75rem !important; font-weight: 800 !important; letter-spacing: .02em; }
+#app .ga-review-answer-card > strong { display:block; min-width:0; color:#fcfaf4 !important; font-size:.94rem !important; line-height:1.8 !important; font-weight:750 !important; white-space:normal !important; overflow-wrap:anywhere !important; }
+#app .ga-review-answer-card.is-yours { border-color: rgba(251, 146, 60, .29) !important; background: linear-gradient(145deg, rgba(194, 65, 12, .12), rgba(124, 45, 18, .055)) !important; }
+#app .ga-review-answer-card.is-yours > span { color: #ffc28f !important; }
+#app .ga-review-answer-card.is-correct { border-color: rgba(52, 211, 153, .32) !important; background: linear-gradient(145deg, rgba(5, 150, 105, .14), rgba(6, 78, 59, .07)) !important; }
+#app .ga-review-answer-card.is-correct > span { color: #8ce8bf !important; }
+#app .ga-review-explanation-panel {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: clamp(17px, 2.4vw, 25px) !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(72, 183, 204, .28) !important;
+  background: linear-gradient(145deg, rgba(12, 89, 111, .13), rgba(46,39,21, .46)) !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+#app .ga-review-explanation-heading {
+  display:flex !important;
+  align-items:center !important;
+  gap:12px !important;
+  padding:0 0 15px !important;
+  margin:0 0 13px !important;
+  border-bottom:1px solid rgba(125, 188, 204, .20) !important;
+}
+#app .ga-review-explanation-icon {
+  display:grid !important;
+  place-items:center !important;
+  flex:0 0 38px !important;
+  width:38px !important;
+  height:38px !important;
+  border-radius:12px !important;
+  color:#b8f2f3 !important;
+  background:linear-gradient(145deg,rgba(13,148,136,.28),rgba(156,123,45,.18)) !important;
+  border:1px solid rgba(94,234,212,.28) !important;
+}
+#app .ga-review-explanation-heading h3 { margin:0 !important; color:#eafcff !important; font-size:1.02rem !important; line-height:1.4 !important; font-weight:850 !important; }
+#app .ga-review-explanation-heading p { margin:3px 0 0 !important; color:#ccc3af !important; font-size:.78rem !important; line-height:1.6 !important; }
+#app .ga-review-learning {
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+}
+#app .ga-review-learning > section {
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  margin:12px 0 0 !important;
+  padding:19px 21px !important;
+  border-radius:14px !important;
+  border:1px solid rgba(181,168,139, .22) !important;
+  background:linear-gradient(135deg,rgba(83,72,46, .32),rgba(43,36,21, .25)) !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+}
+#app .ga-review-learning > section h4 { margin:0 0 9px !important; color:#9edcf0 !important; font-size:.88rem !important; font-weight:850 !important; line-height:1.5 !important; }
+#app .ga-review-learning > section p,
+#app .ga-review-learning > section li {
+  color:#f0ece3 !important;
+  font-size:.91rem !important;
+  line-height:1.95 !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+}
+#app .ga-review-learning > section p { margin:0 !important; }
+#app .ga-review-learning > section ol { margin:9px 0 0 !important; padding:0 0 0 1.55rem !important; }
+#app .ga-review-learning > section li { padding:4px 0 4px 3px !important; }
+#app .ga-review-learning > section.is-warning { border-color:rgba(251,191,36,.3) !important; background:linear-gradient(135deg,rgba(146,64,14,.18),rgba(120,53,15,.08)) !important; }
+#app .ga-review-learning > section.is-warning h4 { color:#fcd18a !important; }
+#app .ga-review-learning > section.is-realworld { border-color:rgba(52,211,153,.28) !important; background:linear-gradient(135deg,rgba(6,95,70,.18),rgba(6,78,59,.08)) !important; }
+#app .ga-review-learning > section.is-realworld h4 { color:#9ee9c2 !important; }
+#app .ga-review-learning .cq-question-media,
+#app .ga-review-learning .ga-review-explanation-media { width:100% !important; max-width:760px !important; margin:15px auto 5px !important; box-sizing:border-box !important; }
+#app .ga-review-learning .cq-question-media { padding:12px !important; border-radius:14px !important; }
+#app .ga-review-learning .cq-media-visual svg { display:block; width:100% !important; max-width:100% !important; max-height:300px !important; }
+#app .ga-review-attempt-history { width:100% !important; margin:16px 0 0 !important; border:1px solid rgba(184,169,135,.25) !important; border-radius:14px !important; overflow:hidden !important; box-sizing:border-box !important; background:rgba(133,125,106,.07) !important; }
+#app .ga-review-attempt-history > summary { padding:14px 17px !important; color:#e9e1cf !important; cursor:pointer !important; font-size:.84rem !important; font-weight:800 !important; }
+#app .ga-review-attempt-history ol { margin:0 !important; padding:0 17px 15px 38px !important; }
+#app .ga-review-attempt-history li { margin:9px 0 !important; padding:13px 15px !important; border-radius:11px !important; background:rgba(133,125,106,.10) !important; color:#ede8dd !important; font-size:.81rem !important; line-height:1.7 !important; }
+#app .ga-review-attempt-history li p { margin:5px 0 0 !important; line-height:1.7 !important; overflow-wrap:anywhere !important; }
+#app .ga-review-foot-meta { display:flex !important; flex-wrap:wrap !important; gap:8px 15px !important; margin:16px 0 0 !important; color:#bcb5a3 !important; font-size:.75rem !important; line-height:1.6 !important; }
+#app .ga-review-actions { display:flex !important; flex-wrap:wrap !important; align-items:center !important; gap:10px !important; margin:17px 0 0 !important; padding-top:15px !important; border-top:1px solid rgba(184,169,135,.18) !important; }
+#app .ga-review-actions .btn { min-height:44px !important; padding:10px 16px !important; border-radius:12px !important; font-size:.82rem !important; }
+#app .ga-review-actions .btn.pri { color:#fff !important; background:linear-gradient(110deg,#087f9b,#0e7490 55%,#937838) !important; border:1px solid rgba(245,219,156,.36) !important; box-shadow:0 8px 20px -14px rgba(154,122,53,.8) !important; }
+#app .ga-review-retry-unavailable { margin:0 !important; padding:10px 13px !important; border-radius:11px !important; color:#fbd59d !important; background:rgba(180,83,9,.12) !important; border:1px solid rgba(245,158,11,.25) !important; font-size:.8rem !important; line-height:1.65 !important; }
+#app .ga-review-filter-empty { margin-top:14px !important; }
+
+/* High-contrast light theme: clear neutral surfaces with teal/blue/green accents. */
+html[data-theme="light"] #app .ga-review-list > .ga-review-item { background:#fff !important; border-color:#e8e4db !important; box-shadow:0 9px 24px -20px rgba(38,32,19,.35) !important; }
+html[data-theme="light"] #app .ga-review-question { color:#372f1d !important; background:linear-gradient(100deg,#f9f7f1,#f0faf8 58%,#fbfaf8) !important; }
+html[data-theme="light"] #app .ga-review-item[open] .ga-review-question { background:linear-gradient(100deg,#f8f5ed,#e8f8f4 58%,#faf8f3) !important; border-bottom-color:#ece8df !important; }
+html[data-theme="light"] #app .ga-review-index { color:#6d5520 !important; background:#f8f3e6 !important; border-color:#efe3c8 !important; }
+html[data-theme="light"] #app .ga-review-question-text { color:#372f1d !important; }
+html[data-theme="light"] #app .ga-review-chevron { color:#0e7490 !important; background:#dff5f4 !important; }
+html[data-theme="light"] #app .ga-review-expanded { color:#423a29 !important; }
+html[data-theme="light"] #app .ga-review-meta > span { color:#655c48 !important; background:#f8f6f2 !important; border-color:#e9e6de !important; }
+html[data-theme="light"] #app .ga-review-meta > .ga-review-status-tag.is-reviewed { color:#166534 !important; background:#dcfce7 !important; border-color:#bbf7d0 !important; }
+html[data-theme="light"] #app .ga-review-meta > .ga-review-status-tag:not(.is-reviewed) { color:#92400e !important; background:#fef3c7 !important; border-color:#fde68a !important; }
+html[data-theme="light"] #app .ga-review-answer-card { background:#fbfbf9 !important; border-color:#e8e4db !important; }
+html[data-theme="light"] #app .ga-review-answer-card > span { color:#736b58 !important; }
+html[data-theme="light"] #app .ga-review-answer-card > strong { color:#372f1d !important; }
+html[data-theme="light"] #app .ga-review-answer-card.is-yours { background:#fff7ed !important; border-color:#fed7aa !important; }
+html[data-theme="light"] #app .ga-review-answer-card.is-yours > span { color:#9a3412 !important; }
+html[data-theme="light"] #app .ga-review-answer-card.is-correct { background:#ecfdf5 !important; border-color:#a7f3d0 !important; }
+html[data-theme="light"] #app .ga-review-answer-card.is-correct > span { color:#166534 !important; }
+html[data-theme="light"] #app .ga-review-explanation-panel { background:linear-gradient(145deg,#f0fdfa,#fbfbf9) !important; border-color:#b7e4df !important; }
+html[data-theme="light"] #app .ga-review-explanation-heading { border-bottom-color:#cfe6e6 !important; }
+html[data-theme="light"] #app .ga-review-explanation-icon { color:#0f766e !important; background:#ccfbf1 !important; border-color:#99f6e4 !important; }
+html[data-theme="light"] #app .ga-review-explanation-heading h3 { color:#42371d !important; }
+html[data-theme="light"] #app .ga-review-explanation-heading p { color:#776e59 !important; }
+html[data-theme="light"] #app .ga-review-learning > section { background:#fff !important; border-color:#e8e4da !important; }
+html[data-theme="light"] #app .ga-review-learning > section h4 { color:#0e7490 !important; }
+html[data-theme="light"] #app .ga-review-learning > section p,
+html[data-theme="light"] #app .ga-review-learning > section li { color:#463e2c !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-warning { background:#fffbeb !important; border-color:#fcd99a !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-warning h4 { color:#92400e !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-realworld { background:#ecfdf5 !important; border-color:#a7f3d0 !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-realworld h4 { color:#166534 !important; }
+html[data-theme="light"] #app .ga-review-attempt-history { background:#fbfbf9 !important; border-color:#e8e4db !important; }
+html[data-theme="light"] #app .ga-review-attempt-history > summary { color:#584f39 !important; }
+html[data-theme="light"] #app .ga-review-attempt-history li { color:#504938 !important; background:#f6f4ef !important; }
+html[data-theme="light"] #app .ga-review-foot-meta { color:#736b58 !important; }
+html[data-theme="light"] #app .ga-review-actions { border-top-color:#eae7de !important; }
+html[data-theme="light"] #app .ga-review-retry-unavailable { color:#92400e !important; background:#fffbeb !important; border-color:#fcd99a !important; }
+
+/* Purple theme retained, but the palette is balanced with cyan and green. */
+html[data-theme="purple"] #app .ga-review-list > .ga-review-item { background:linear-gradient(145deg,rgba(64,56,39,.97),rgba(42,36,21,.98)) !important; border-color:rgba(198,180,139,.25) !important; }
+html[data-theme="purple"] #app .ga-review-question { color:#fcf9f3 !important; background:linear-gradient(100deg,rgba(209,175,96,.16),rgba(20,184,166,.10)) !important; }
+html[data-theme="purple"] #app .ga-review-explanation-panel { background:linear-gradient(145deg,rgba(13,88,102,.18),rgba(61,53,35,.4)) !important; border-color:rgba(94,234,212,.24) !important; }
+
+@media (max-width:720px) {
+  #app .ga-review-page { width:calc(100% - 18px) !important; padding:12px 0 120px !important; }
+  #app .ga-review-list { gap:10px !important; }
+  #app .ga-review-list > .ga-review-item { border-radius:16px !important; }
+  #app .ga-review-question { grid-template-columns:32px minmax(0,1fr) 22px !important; gap:10px !important; min-height:68px !important; padding:15px 13px !important; }
+  #app .ga-review-index { width:30px !important; height:30px !important; border-radius:10px !important; font-size:.78rem !important; }
+  #app .ga-review-question-text { font-size:.9rem !important; line-height:1.8 !important; }
+  #app .ga-review-expanded { padding:15px 13px 17px !important; }
+  #app .ga-review-answer-grid { grid-template-columns:minmax(0,1fr) !important; gap:9px !important; margin-bottom:14px !important; }
+  #app .ga-review-answer-card { min-height:0 !important; padding:14px 15px !important; gap:6px !important; }
+  #app .ga-review-explanation-panel { padding:14px 12px !important; border-radius:15px !important; }
+  #app .ga-review-explanation-heading { gap:9px !important; padding-bottom:12px !important; margin-bottom:10px !important; }
+  #app .ga-review-explanation-icon { flex-basis:32px !important; width:32px !important; height:32px !important; border-radius:10px !important; }
+  #app .ga-review-explanation-heading h3 { font-size:.94rem !important; }
+  #app .ga-review-explanation-heading p { font-size:.72rem !important; }
+  #app .ga-review-learning > section { padding:15px 14px !important; margin-top:10px !important; }
+  #app .ga-review-learning > section p,
+  #app .ga-review-learning > section li { font-size:.87rem !important; line-height:1.9 !important; }
+  #app .ga-review-foot-meta { gap:6px 11px !important; font-size:.7rem !important; }
+  #app .ga-review-actions { display:grid !important; grid-template-columns:minmax(0,1fr) !important; gap:8px !important; }
+  #app .ga-review-actions .btn { width:100% !important; min-height:45px !important; justify-content:center !important; }}
+@media (prefers-reduced-motion:reduce) {
+  #app .ga-review-chevron { transition:none !important; }
+  #app .ga-review-list > .ga-review-item { transition:none !important; }}
+/* Filtering must still hide question rows despite the card's explicit block layout. */
+#app .ga-review-list > .ga-review-item[hidden] { display: none !important; }
+
+
+/* v108: complete explanation sections — each available source field is visible. */
+#app .ga-review-learning > section.is-concept { border-color:rgba(218,191,128,.32) !important; background:linear-gradient(135deg,rgba(201,162,71,.14),rgba(153,123,52,.055)) !important; }
+#app .ga-review-learning > section.is-concept h4 { color:#e6d4aa !important; }
+#app .ga-review-learning > section.is-analysis { border-color:rgba(45,212,191,.34) !important; background:linear-gradient(135deg,rgba(13,148,136,.16),rgba(15,118,110,.055)) !important; }
+#app .ga-review-learning > section.is-analysis h4 { color:#7eead9 !important; }
+#app .ga-review-learning > section.is-reasoning { border-color:rgba(251,191,36,.30) !important; background:linear-gradient(135deg,rgba(180,83,9,.14),rgba(146,64,14,.055)) !important; }
+#app .ga-review-learning > section.is-reasoning h4 { color:#fcd28a !important; }
+#app .ga-review-learning > section.is-simple { border-color:rgba(197,161,92,.28) !important; background:linear-gradient(135deg,rgba(156,123,45,.13),rgba(127,100,37,.055)) !important; }
+#app .ga-review-learning > section.is-simple h4 { color:#F5DB9C !important; }
+#app .ga-review-learning > section.is-formula { border-color:rgba(228,208,161,.32) !important; background:linear-gradient(135deg,rgba(190,153,67,.14),rgba(131,106,47,.055)) !important; }
+#app .ga-review-learning > section.is-formula h4 { color:#eee1c4 !important; }
+#app .ga-review-learning > section.is-steps { border-color:rgba(218,191,128,.29) !important; background:linear-gradient(135deg,rgba(153,123,52,.13),rgba(122,99,46,.055)) !important; }
+#app .ga-review-learning > section.is-steps h4 { color:#ebdcb9 !important; }
+#app .ga-review-learning > section.is-options { border-color:rgba(179,171,153,.28) !important; background:linear-gradient(135deg,rgba(100,93,76,.18),rgba(80,73,56,.075)) !important; }
+#app .ga-review-learning > section.is-options h4 { color:#ebe5d6 !important; }
+#app .ga-review-learning > section.is-options ul { margin:10px 0 0 !important; padding:0 0 0 1.35rem !important; }
+#app .ga-review-learning > section.is-options li { padding:8px 0 8px 4px !important; }
+#app .ga-review-learning > section.is-options li + li { border-top:1px solid rgba(179,171,153,.14) !important; }
+#app .ga-review-learning > section.is-options li p { margin:5px 0 0 !important; }
+#app .ga-review-actions .ga-reviewed-note { color:#9ee9c2 !important; font-weight:750 !important; font-size:.84rem !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-concept { background:#fbf9f3 !important; border-color:#f0e6cd !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-concept h4 { color:#bc9539 !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-analysis { background:#ecfdf9 !important; border-color:#99f6e4 !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-analysis h4 { color:#0f766e !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-reasoning { background:#fffbeb !important; border-color:#fcd34d !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-reasoning h4 { color:#92400e !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-simple { background:#fcf9f3 !important; border-color:#efe3c8 !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-simple h4 { color:#7f6425 !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-formula { background:#fcfaf6 !important; border-color:#f6efde !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-formula h4 { color:#be9943 !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-steps { background:#fbf9f3 !important; border-color:#f0e6cd !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-steps h4 { color:#bc9539 !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-options { background:#fbfbf9 !important; border-color:#ded9ce !important; }
+html[data-theme="light"] #app .ga-review-learning > section.is-options h4 { color:#504938 !important; }
+html[data-theme="purple"] #app .ga-review-learning > section.is-analysis { background:linear-gradient(135deg,rgba(13,148,136,.2),rgba(15,118,110,.08)) !important; }
+html[data-theme="purple"] #app .ga-review-learning > section.is-formula { background:linear-gradient(135deg,rgba(207,171,88,.18),rgba(160,128,55,.08)) !important; }

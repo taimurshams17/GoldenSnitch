@@ -1,0 +1,103 @@
+/* Golden Snitch v113 — Simulation "live lab" cards.
+   Identity: blueprint grid + scan beam + LIVE chip + control rail (distinct from Games and Quiz cards).
+   Every preview animation is plain CSS (transform/opacity) and is NEVER paused by scroll, viewport or observers. */
+
+/* ---------- grid (beats the legacy 2-col !important rules) ---------- */
+#app .lab-page .lab-card-grid.sx-grid:not(#A):not(#B):not(#C):not(#D):not(#E):not(#F){
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:auto!important;align-content:start!important;height:auto!important;min-height:0!important;gap:26px!important;align-items:stretch!important;
+  width:100%!important;margin:16px 0 0!important}
+@media (max-width:1080px){#app .lab-page .lab-card-grid.sx-grid:not(#A):not(#B):not(#C):not(#D):not(#E):not(#F){grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px!important}}
+@media (max-width:620px){#app .lab-page .lab-card-grid.sx-grid:not(#A):not(#B):not(#C):not(#D):not(#E):not(#F){grid-template-columns:minmax(0,1fr)!important;gap:20px!important}}
+
+/* ---------- card shell ---------- */
+.sx-card{--a:hsl(var(--h) 98% 76%);--b:hsl(calc(var(--h) + 62) 98% 74%);--c:#fde68a;--bg:hsl(var(--h) 45% 9%);
+  position:relative;display:flex;flex-direction:column;min-width:0;border-radius:22px;overflow:hidden;isolation:isolate;
+  text-decoration:none;color:#fbf8f2;
+  background:linear-gradient(170deg,hsl(var(--h) 40% 14%),hsl(var(--h) 38% 8%));
+  border:1px solid hsl(var(--h) 60% 55% / .34);box-shadow:0 10px 22px -16px hsl(var(--h) 90% 55% / .55);
+  contain:layout style;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;-webkit-tap-highlight-color:transparent}
+.sx-card:focus-visible{outline:3px solid #F5DB9C;outline-offset:2px}
+@media (hover:hover) and (pointer:fine){.sx-card:hover{transform:translateY(-4px);border-color:hsl(var(--h) 80% 62% / .75)}}
+.sx-card:active{transform:scale(.99)}
+.sx-card::after{content:"";position:absolute;z-index:5;left:0;right:0;top:0;height:3px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--a),var(--b),transparent);opacity:.9}
+
+/* ---------- stage ---------- */
+.sx-stage{position:relative;height:136px;overflow:hidden;
+  background-image:linear-gradient(hsl(var(--h) 90% 80% / .07) 1px,transparent 1px),linear-gradient(90deg,hsl(var(--h) 90% 80% / .07) 1px,transparent 1px),linear-gradient(160deg,hsl(var(--h) 52% 17%),hsl(calc(var(--h) + 50) 50% 9%));
+  background-size:18px 18px,18px 18px,100% 100%}
+.sx-grid,.sx-aur{display:none}
+sx-scene.sx-svg{display:block;position:absolute;inset:0;z-index:1;pointer-events:none;contain:strict}
+svg.sx-svg{position:absolute;z-index:1;left:0;top:14px;width:100%;height:calc(100% - 14px);overflow:hidden;pointer-events:none;contain:strict}
+
+
+
+
+.sx-sub,.sx-live,.sx-done{position:absolute;top:10px;z-index:4;display:inline-flex;align-items:center;gap:6px;height:25px;padding:0 10px;border-radius:99px;font-size:11.5px;font-weight:700;color:#fff;
+  background:rgba(18,15,7,.68);border:1px solid rgba(255,255,255,.16);max-width:62%;white-space:nowrap}
+.sx-sub{left:10px;padding-left:4px}
+.sx-sub b{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:900;color:#1d180d;background:linear-gradient(135deg,var(--a),var(--b))}
+.sx-live{right:10px;font-size:10px;letter-spacing:.8px;color:#fde68a}
+.sx-live i{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+.sx-done{right:10px;top:40px;width:25px;padding:0;justify-content:center;color:#34d399}
+.sx-rail{position:absolute;z-index:3;left:12px;bottom:9px;display:flex;flex-direction:column;gap:4px;width:34px;opacity:.85}
+.sx-rail i{position:relative;display:block;height:3px;border-radius:3px;background:rgba(255,255,255,.2)}
+.sx-rail i::after{content:"";position:absolute;top:-2.5px;left:0;width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 6px var(--a)}
+.sx-rail i:nth-child(1)::after{left:6px}.sx-rail i:nth-child(2)::after{left:18px;background:var(--b)}.sx-rail i:nth-child(3)::after{left:11px;background:var(--c)}
+
+/* ---------- SVG scene tokens ---------- */
+.sx-svg .fa{fill:var(--a)}.sx-svg .fb{fill:var(--b)}.sx-svg .fc{fill:var(--c)}.sx-svg .fw{fill:#fff}.sx-svg .fd{fill:var(--bg)}.sx-svg .fk{fill:#f472b6}.sx-svg .fg{fill:rgba(255,255,255,.1)}
+.sx-svg .sa,.sx-svg .sb,.sx-svg .sc,.sx-svg .sw,.sx-svg .sd,.sx-svg .sk{stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sx-svg .sa{stroke:var(--a)}.sx-svg .sb{stroke:var(--b)}.sx-svg .sc{stroke:var(--c)}.sx-svg .sw{stroke:#fff}.sx-svg .sd{stroke:var(--bg)}.sx-svg .sk{stroke:#f472b6}
+.sx-svg line.sa,.sx-svg line.sb,.sx-svg line.sc,.sx-svg line.sw,.sx-svg path.sa,.sx-svg path.sb,.sx-svg path.sc,.sx-svg path.sw,.sx-svg path.sk,.sx-svg path.sd{fill:none}
+.sx-svg .nf{fill:none}
+.sx-svg *{shape-rendering:optimizeSpeed}
+.sx-svg text,.sx-svg .tx{fill:#fff;font:700 11px/1 system-ui,-apple-system,"Segoe UI","Noto Sans Bengali",sans-serif;text-anchor:middle}
+.sx-svg .sm{font-size:9.5px;opacity:.9}.sx-svg .big{font-size:16px}
+
+/* ---------- body ---------- */
+.sx-body{display:flex;flex-direction:column;gap:7px;padding:12px 14px 14px;flex:1 1 auto}
+.sx-head{display:flex;align-items:flex-start;gap:10px}
+.sx-ico{flex:0 0 34px;height:34px;display:grid;place-items:center;border-radius:11px;font-size:18px;background:hsl(var(--h) 70% 55% / .2);border:1px solid hsl(var(--h) 80% 70% / .3)}
+.sx-card h3{margin:0;font-size:16.5px;line-height:1.35;font-weight:800;color:#fff;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;align-self:center}
+.sx-card p{margin:0;font-size:12.8px;line-height:1.55;color:#ddd7c8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.sx-go{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;min-height:42px;margin-top:auto;padding:0 14px;border-radius:14px;font-weight:800;font-size:14.5px;color:#fff;
+  background:linear-gradient(135deg,hsl(var(--h) 80% 46%),hsl(calc(var(--h) + 62) 82% 44%));border:1px solid hsl(var(--h) 90% 75% / .45);
+  box-shadow:0 10px 22px -12px hsl(var(--h) 90% 55% / .9),inset 0 1px 0 rgba(255,255,255,.22)}
+.sx-go svg{width:12px;height:12px;fill:currentColor;}
+
+/* ---------- keyframes ---------- */
+@keyframes sxDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(26%,12%,0)}}
+@keyframes sxScan{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
+@keyframes sxFloat{0%{transform:translateY(0);opacity:0}15%{opacity:.5}100%{transform:translateY(-80px);opacity:0}}
+@keyframes sxKnob{from{transform:translateX(0)}to{transform:translateX(26px)}}
+@keyframes sxBlink{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes sxSheen{0%,55%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(560%) skewX(-20deg)}}
+@keyframes sxCue{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+@keyframes sxFlow{to{stroke-dashoffset:-9}}
+@keyframes sxDraw{0%{stroke-dashoffset:1;opacity:1}60%,88%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes sxDrawLoop{0%{stroke-dashoffset:1}100%{stroke-dashoffset:0}}
+
+/* ---------- never paused: beat every legacy "pause while scrolling / off-screen" rule ---------- */
+html #app .sx-card,html #app .sx-card *,html #app .sx-card *::before,html #app .sx-card *::after{animation-play-state:running!important}
+/* v113c · phones/touch: far-away cards stay drawn but frozen (the class is only ever set on phones/touch) */
+html #app .sx-card.sx-idle,html #app .sx-card.sx-idle *,html #app .sx-card.sx-idle *::before,html #app .sx-card.sx-idle *::after{animation-play-state:paused!important}
+
+/* ---------- themes ---------- */
+html[data-theme="light"] .sx-card{background:#fff;color:#262013;border-color:hsl(var(--h) 45% 55% / .4);box-shadow:0 16px 34px -22px hsl(var(--h) 70% 40% / .5)}
+html[data-theme="light"] .sx-card h3{color:#221c0f}
+html[data-theme="light"] .sx-card p{color:#645d4c}
+html[data-theme="light"] .sx-ico{background:hsl(var(--h) 70% 50% / .14);border-color:hsl(var(--h) 60% 50% / .3)}
+html[data-theme="purple"] .sx-card{background:linear-gradient(170deg,hsl(calc(var(--h) + 20) 30% 15%),hsl(calc(var(--h) + 20) 32% 9%))}
+
+/* ---------- compact phones ---------- */
+@media (max-width:620px){.sx-stage{height:128px}.sx-card{border-radius:20px}.sx-body{padding:10px 12px 12px}.sx-card h3{font-size:16px}.sx-go{min-height:44px}}
+@media (max-width:340px){.sx-sub{max-width:56%;font-size:10.5px}}
+
+/* ---------- reduced motion: scenes stay visible, frozen (declared last so it wins) ---------- */
+@media (prefers-reduced-motion:reduce){
+  html #app .sx-card,html #app .sx-card *,html #app .sx-card *::before,html #app .sx-card *::after{animation-play-state:paused!important}
+  .sx-card{transition:none}}
+
+/* Low-end escape hatch (NOT enabled): add class "sx-save" on <html> to let the browser skip off-screen rendering.
+   Trade-off: off-screen previews restart from frame 0 when they scroll in, so it stays off to honour "never pause". */
+html.sx-save .sx-card{content-visibility:auto;contain-intrinsic-size:auto 300px}

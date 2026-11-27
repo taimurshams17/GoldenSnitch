@@ -1,0 +1,70 @@
+/* Golden Snitch v123 — Desktop hero (>=900px): a little larger illustration, cleaner larger copy, quiet single-colour background.
+   All colours come from the existing theme tokens (--sci-*). Mobile/tablet untouched. */
+.sci-bg{display:none}
+.sci{--sci-rgb:56,189,248}
+html[data-theme="light"] .sci{--sci-rgb:36,87,214}
+html[data-theme="purple"] .sci{--sci-rgb:167,139,250}
+
+@media (min-width:900px){
+  /* illustration: moderately wider + taller, same shape, content scales up with it */
+  .sci{grid-template-columns:minmax(0,1fr) min(47vw,900px)}
+  .sci-art{aspect-ratio:760/640}
+
+  /* quiet background behind the copy: one soft theme glow, fine dot grid, faint orbit lines and symbols */
+  .sci-bg{display:block;position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 55%,transparent 85%);mask-image:linear-gradient(90deg,#000 0%,#000 55%,transparent 85%)}
+  .sci-aur.a1{position:absolute;left:-8%;top:8%;width:720px;height:600px;border-radius:50%;
+    background:radial-gradient(closest-side,rgba(var(--sci-rgb),.14),transparent 100%)}
+  .sci-dots{position:absolute;inset:0;opacity:.16;
+    background:radial-gradient(rgba(var(--sci-rgb),.9) 1px,transparent 1.5px) 0 0/32px 32px;
+    -webkit-mask-image:radial-gradient(ellipse 65% 80% at 28% 50%,#000 5%,transparent 75%);mask-image:radial-gradient(ellipse 65% 80% at 28% 50%,#000 5%,transparent 75%)}
+  .sci-orbr{position:absolute;border-radius:50%;border:1px solid rgba(var(--sci-rgb),.14)}
+  .sci-bg .r1{width:620px;height:620px;left:-230px;bottom:-300px}
+  .sci-bg .r2{width:900px;height:900px;left:-340px;bottom:-460px;border-color:rgba(var(--sci-rgb),.09)}
+  .sci-sym{position:absolute;left:var(--x);top:var(--y);font:400 var(--s,48px)/1 "Cambria Math","STIX Two Math","Noto Serif",Georgia,serif;
+    color:rgba(var(--sci-rgb),.1);animation:sciSym var(--d,12s) ease-in-out var(--dl,0s) infinite alternate}
+  @keyframes sciSym{from{transform:translate3d(0,0,0)}to{transform:translate3d(6px,-12px,0)}}
+
+  /* copy: solid theme colours, larger, tidy rhythm */
+  .sci-copy{padding-right:12px}
+  .sci-bar{width:72px;height:4px;margin-bottom:24px}
+  html[data-theme] #app .sci .sci-t.sci-t .sci-h1a.sci-h1a{font-size:clamp(2.5rem,4.6vw,4.6rem)!important;line-height:1.06!important;letter-spacing:-.025em!important;font-weight:800}
+  html[data-theme] #app .sci .sci-t.sci-t .sci-h1b.sci-h1b{font-size:clamp(1.7rem,3.1vw,3rem)!important;line-height:1.35!important;font-weight:700!important;margin-top:.14em}
+  html[data-theme] #app .sci .lead{margin-top:22px;max-width:34em;font-size:clamp(1rem,1.15vw,1.15rem)!important;line-height:1.85!important}
+  .sci .typed{margin-top:22px;font-size:clamp(1.2rem,1.7vw,1.5rem);font-weight:600}
+  .sci-cta{gap:14px;margin-top:30px}
+  .sci-btn{min-height:54px;padding:0 30px;font-size:1rem}
+  .sci-subj{margin-top:28px}
+  .sci-subj li{padding:9px 16px;font-size:.75rem}
+}
+@media (min-width:900px) and (max-width:1180px){
+  html[data-theme] #app .sci .sci-t.sci-t .sci-h1b.sci-h1b{font-size:clamp(1.6rem,3.2vw,2.3rem)!important}
+  .sci-btn{min-height:50px;padding:0 22px;font-size:.95rem}
+}
+@media (prefers-reduced-motion:reduce){.sci-sym{animation:none!important}}
+html.cl-low-power .sci-sym{animation:none!important}
+
+/* ---------- extra top / bottom scene details (desktop only) ---------- */
+.sci .sci-dx{display:none}
+@media (min-width:900px){
+  .sci .sci-dx{display:inline}
+  .sci-cl{fill:none;stroke:var(--sci-ring);stroke-width:1.2;opacity:.8}
+  .sci-cd{fill:var(--sci-orb);transform-box:fill-box;transform-origin:center;animation:sciTwinkle 4s ease-in-out var(--dl,0s) infinite}
+  .sci-tail{stroke:var(--sci-orb);stroke-width:2;stroke-linecap:round}.sci-tip{fill:var(--sci-orb)}
+  .sci .sci-shoot{opacity:0;animation:sciShoot var(--du,11s) ease-out var(--dl,0s) infinite}
+  .sci-pring{fill:none;stroke:var(--sci-orb);stroke-width:2}.sci-pring2{fill:none;stroke:var(--sci-orb);stroke-width:2}
+  .sci-bub{fill:none;stroke:var(--sci-wl);stroke-width:1.4;opacity:0;animation:sciRise var(--du,10s) ease-in var(--dl,0s) infinite}
+  .sci-gl2{fill:#fff;opacity:0;transform-box:fill-box;transform-origin:center;animation:sciGlint 5s ease-in-out var(--dl,0s) infinite}
+  @keyframes sciShoot{0%{opacity:0;transform:translate(0,0)}4%{opacity:.95}22%{opacity:0;transform:translate(240px,90px)}100%{opacity:0;transform:translate(240px,90px)}}
+  @keyframes sciRise{0%{opacity:0;transform:translateY(0)}15%{opacity:.8}100%{opacity:0;transform:translateY(-120px)}}
+  @keyframes sciGlint{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:.95;transform:scale(1)}}
+}
+@media (min-width:900px){
+  .sci-flow{fill:none;stroke:var(--sci-wl);stroke-width:1.6;opacity:.75}
+  .sci-tick{font:600 10.5px/1 Manrope,Inter,sans-serif;fill:var(--sci-orb);opacity:.55;white-space:pre}
+  .sci .sci-tick-g{animation:sciTick 38s linear infinite}
+  @keyframes sciTick{to{transform:translateX(-760px)}}
+}
+@media (prefers-reduced-motion:reduce){.sci .sci-tick-g{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.sci-shoot,.sci-bub,.sci-gl2,.sci-cd{animation:none!important}}
+html.cl-low-power .sci-shoot,html.cl-low-power .sci-bub{display:none}

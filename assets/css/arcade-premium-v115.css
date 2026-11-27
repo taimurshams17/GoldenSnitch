@@ -1,0 +1,52 @@
+/* Golden Snitch v115i — Arcade Games / Quiz switch buttons: premium, colourful, animated (2 columns at every width) */
+html body #app .arcade-page{--am-bg-a:#352d1b;--am-bg-b:#221d11;--am-ink:#fbf8f2;--am-mut:#c5bca6;--am-line:rgba(201,188,159,.2);--am-shadow:rgba(0,0,0,.6);--am-inner:#1f1a0e}
+html[data-theme="purple"] body #app .arcade-page,html[data-theme="purple"] #app .arcade-page{--am-bg-a:#504428;--am-bg-b:#382f19;--am-ink:#fbf9f3;--am-mut:#d7ccb4;--am-line:rgba(235,220,185,.24);--am-inner:#2d2512}
+html[data-theme="light"] #app .arcade-page{--am-bg-a:#ffffff;--am-bg-b:#f9f6f0;--am-ink:#342c1a;--am-mut:#7d735d;--am-line:rgba(123,106,67,.18);--am-shadow:rgba(104,88,51,.32);--am-inner:#ffffff}
+@keyframes amIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes amBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-4deg)}}
+@keyframes amRing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--mc) 50%,transparent)}70%,100%{box-shadow:0 0 0 9px transparent}}
+@keyframes amDrift{0%,100%{transform:translate(0,0)}50%{transform:translate(-8px,-8px)}}
+
+html body #app .arcade-page .ga-mode-deck{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;margin:0 0 18px!important}
+html body #app .arcade-page .ga-mode-deck .ga-mode-card:not(#a):not(#b){--mc:#C5A15C;--mc2:#f472b6;
+  position:relative!important;display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;justify-items:stretch!important;text-align:left!important;gap:14px!important;
+  min-height:0!important;min-width:0!important;padding:16px 18px!important;border-radius:22px!important;overflow:hidden;isolation:isolate;cursor:pointer;color:var(--am-ink)!important;
+  border:1px solid color-mix(in srgb,var(--mc) 32%,var(--am-line))!important;
+  background:radial-gradient(260px 150px at 100% 0%,color-mix(in srgb,var(--mc) 20%,transparent),transparent 70%),radial-gradient(220px 130px at 0% 110%,color-mix(in srgb,var(--mc2) 12%,transparent),transparent 70%),linear-gradient(165deg,var(--am-bg-a),var(--am-bg-b))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 16px 30px -22px var(--am-shadow)!important;
+  transition:transform .28s cubic-bezier(.2,.7,.2,1),border-color .25s,box-shadow .25s;animation:amIn .5s ease both}
+html body #app .arcade-page .ga-mode-deck .ga-mode-card[data-ga-mode="quiz"]:not(#a):not(#b){--mc:#2dd4bf;--mc2:#C5A15C;animation-delay:.08s}
+html[data-theme="light"] body #app .arcade-page .ga-mode-card[data-ga-mode="games"],html[data-theme="light"] #app .arcade-page .ga-mode-deck .ga-mode-card[data-ga-mode="games"]:not(#a):not(#b){--mc:#be9943;--mc2:#db2777}
+html[data-theme="light"] #app .arcade-page .ga-mode-deck .ga-mode-card[data-ga-mode="quiz"]:not(#a):not(#b){--mc:#0f766e;--mc2:#7f6425}
+.arcade-page .ga-mode-card::before{content:"";position:absolute;z-index:-1;left:20px;right:20px;top:0;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,transparent,var(--mc),var(--mc2),transparent);opacity:.8}
+.arcade-page .ga-mode-card::after{content:"";position:absolute;z-index:-1;right:-40px;bottom:-44px;width:150px;height:150px;border-radius:50%;pointer-events:none;
+  background:repeating-radial-gradient(circle,transparent 0 20px,color-mix(in srgb,var(--mc) 24%,transparent) 20px 21px);animation:amDrift 8s ease-in-out infinite}
+html body #app .arcade-page .ga-mode-deck .ga-mode-card:hover:not(#a):not(#b){transform:translateY(-4px);border-color:color-mix(in srgb,var(--mc) 65%,var(--am-line))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 22px 36px -20px color-mix(in srgb,var(--mc) 60%,var(--am-shadow))!important}
+html body #app .arcade-page .ga-mode-deck .ga-mode-card:active:not(#a):not(#b){transform:scale(.985)}
+html body #app .arcade-page .ga-mode-deck .ga-mode-card.is-active:not(#a):not(#b){border-color:var(--mc)!important;
+  background:radial-gradient(280px 170px at 100% 0%,color-mix(in srgb,var(--mc) 38%,transparent),transparent 70%),radial-gradient(240px 140px at 0% 110%,color-mix(in srgb,var(--mc2) 22%,transparent),transparent 70%),linear-gradient(165deg,color-mix(in srgb,var(--mc) 14%,var(--am-bg-a)),var(--am-bg-b))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px color-mix(in srgb,var(--mc) 55%,transparent),0 20px 36px -20px color-mix(in srgb,var(--mc) 70%,transparent)!important}
+html body #app .arcade-page .ga-mode-card .ga-mode-icon:not(#a){display:grid!important;place-items:center;width:52px!important;height:52px!important;flex:none!important;border-radius:17px!important;font-size:25px!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--mc) 38%,transparent),color-mix(in srgb,var(--mc2) 16%,transparent))!important;border:1px solid color-mix(in srgb,var(--mc) 45%,transparent)!important;color:var(--mc)!important;animation:amBob 3.4s ease-in-out infinite}
+html body #app .arcade-page .ga-mode-card.is-active .ga-mode-icon:not(#a){animation:amBob 3.4s ease-in-out infinite,amRing 2.4s ease-out infinite}
+.arcade-page .ga-mode-card .ga-mode-icon svg{width:24px;height:24px}
+html body #app .arcade-page .ga-mode-card .ga-mode-copy:not(#a){display:block!important;width:auto!important;min-width:0!important;text-align:left!important}
+html body #app .arcade-page .ga-mode-card .ga-mode-copy b:not(#a){display:block!important;font:700 20px/1.2 Manrope,Inter,sans-serif!important;letter-spacing:-.01em!important;white-space:normal!important;color:var(--am-ink)!important}
+html body #app .arcade-page .ga-mode-card.is-active .ga-mode-copy b:not(#a){color:var(--mc)!important}
+html body #app .arcade-page .ga-mode-card .ga-mode-copy small:not(#a){display:block!important;margin-top:3px;font:500 13px/1.4 "Hind Siliguri","Noto Sans Bengali",sans-serif!important;color:var(--am-mut)!important}
+html body #app .arcade-page .ga-mode-card .ga-mode-copy em:not(#a){display:block!important;margin-top:2px;font:600 11.5px/1.4 "Hind Siliguri",sans-serif!important;font-style:normal;color:var(--mc)!important}
+html body #app .arcade-page .ga-mode-card>strong:not(#a){position:static!important;display:grid!important;place-items:center;min-width:38px!important;height:34px!important;padding:0 11px!important;border-radius:999px!important;
+  font:700 15px/1 Manrope,sans-serif!important;color:var(--mc)!important;background:color-mix(in srgb,var(--mc) 15%,transparent)!important;border:1px solid color-mix(in srgb,var(--mc) 38%,transparent)!important}
+html body #app .arcade-page .ga-mode-card.is-active>strong:not(#a){background:var(--mc)!important;color:#fff!important;border-color:transparent!important}
+@media(max-width:560px){
+  html body #app .arcade-page .ga-mode-deck{gap:10px!important}
+  html body #app .arcade-page .ga-mode-deck .ga-mode-card:not(#a):not(#b){grid-template-columns:auto minmax(0,1fr)!important;align-items:start!important;gap:8px 10px!important;padding:13px 12px 13px 14px!important;border-radius:18px!important}
+  html body #app .arcade-page .ga-mode-card .ga-mode-icon:not(#a){width:40px!important;height:40px!important;border-radius:13px!important;font-size:20px!important}
+  html body #app .arcade-page .ga-mode-card .ga-mode-copy:not(#a){grid-column:1/-1;grid-row:2}
+  html body #app .arcade-page .ga-mode-card .ga-mode-copy b:not(#a){font-size:16px!important}
+  html body #app .arcade-page .ga-mode-card .ga-mode-copy small:not(#a){font-size:11.5px!important}
+  html body #app .arcade-page .ga-mode-card .ga-mode-copy em:not(#a){display:none!important}
+  html body #app .arcade-page .ga-mode-card>strong:not(#a){justify-self:end;grid-column:2;grid-row:1;min-width:32px!important;height:28px!important;font-size:13px!important;padding:0 9px!important}}
+@media(prefers-reduced-motion:reduce){.arcade-page .ga-mode-card,.arcade-page .ga-mode-card::after,.arcade-page .ga-mode-icon{animation:none!important}}
+html body #app .arcade-page .ga-mode-deck:not(#a){width:100%!important;max-width:none!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}
+html body #app .arcade-page .ga-mode-deck:not(#a)::before,html body #app .arcade-page .ga-mode-deck:not(#a)::after{display:none!important}

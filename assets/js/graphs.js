@@ -1,0 +1,398 @@
+/* Golden Snitch: 191 chapter-wise interactive HSC graph labs for Physics I, Chemistry I and Higher Mathematics I. */
+(function(){'use strict';
+var chapters=[
+ {id:'measurement',title:'ভৌত জগৎ ও পরিমাপ'}, {id:'vectors',title:'ভেক্টর'}, {id:'kinematics',title:'গতিবিদ্যা'}, {id:'dynamics',title:'নিউটনীয় বলবিদ্যা'}, {id:'energy',title:'কাজ, শক্তি ও ক্ষমতা'}, {id:'gravity',title:'মহাকর্ষ'}, {id:'structure',title:'পদার্থের গাঠনিক ধর্ম'}, {id:'periodic',title:'পর্যাবৃত্ত গতি'}, {id:'waves',title:'তরঙ্গ'}, {id:'gas',title:'আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব'}
+];
+var list=[];
+function add(ch,id,title,plot,x,y,formula,par){list.push({id:id,chapter:ch,title:title,plot:plot,x:x,y:y,formula:formula,param:par||'পরামিতি'});}
+// 1. Measurement (4)
+add('measurement','meas-true-vs-measured','প্রকৃত মান বনাম পরিমাপকৃত মান','measured','প্রকৃত মান','পরিমাপকৃত মান','পরিমাপকৃত মান = প্রকৃত মান + পরিমাপের ত্রুটি','পরম ত্রুটি');
+add('measurement','meas-count-vs-mean','পরিমাপের সংখ্যা বনাম গড় মান','mean','পরিমাপের সংখ্যা n','গড় মান','বারবার পরিমাপে গড় মান প্রকৃত মানের কাছাকাছি যেতে পারে','পরিমাপের বিচ্যুতি');
+add('measurement','meas-absolute-error','পরম ত্রুটি বনাম পরিমাপের মান','absoluteError','পরিমাপের মান','পরম ত্রুটি','Δx = |xপরিমাপ − xপ্রকৃত|','প্রকৃত মান');
+add('measurement','meas-least-count','যন্ত্রের লঘিষ্ঠ গণনা বনাম পরিমাপের অনিশ্চয়তা','leastCount','লঘিষ্ঠ গণনা','অনিশ্চয়তা','সাধারণ পাঠ-অনিশ্চয়তার একটি আনুমানিক মডেল: ±LC/2','রূপান্তর গুণক');
+// 2. Vectors (4)
+add('vectors','vec-resultant-angle','লব্ধির মান বনাম মধ্যবর্তী কোণ','resultant','মধ্যবর্তী কোণ θ','লব্ধির মান R','R = √(A² + B² + 2AB cos θ)','ভেক্টর A ও B');
+add('vectors','vec-components-angle','অনুভূমিক ও উল্লম্ব উপাংশ বনাম কোণ','components','কোণ θ','উপাংশ','Aₓ = A cos θ; Aᵧ = A sin θ','ভেক্টরের মান');
+add('vectors','vec-dot-cross-angle','ডট গুণন ও ক্রস গুণন বনাম কোণ','dotCross','মধ্যবর্তী কোণ θ','গুণনের মান','A·B = AB cos θ; |A×B| = AB sin θ','AB গুণফল');
+add('vectors','vec-river-time-angle','নৌকার পারাপারের সময় বনাম দিকের কোণ','riverTime','লম্বের সঙ্গে কোণ θ','পারাপারের সময়','t = d/(u cos θ), স্রোত-ক্ষতিপূরণ/পারাপার-দিকের এই আদর্শ মডেলে','নদীর প্রস্থ ও নৌকার বেগ');
+// 3. Kinematics (10)
+add('kinematics','kin-position-time','অবস্থান-সময় গ্রাফ','position','সময় t','অবস্থান x','x = x₀ + ut + ½at²','প্রাথমিক বেগ ও ত্বরণ');
+add('kinematics','kin-velocity-time','বেগ-সময় গ্রাফ','velocity','সময় t','বেগ v','v = u + at','ত্বরণ');
+add('kinematics','kin-acceleration-time','ত্বরণ-সময় গ্রাফ','acceleration','সময় t','ত্বরণ a','সমত্বরণে a ধ্রুব; পরিবর্তনশীল ত্বরণে a = dv/dt','ত্বরণের মান');
+add('kinematics','kin-vt-displacement','বেগ-সময় গ্রাফের ক্ষেত্রফল থেকে সরণ','displacementArea','সময় t','সরণ','সরণ = ∫v(t)dt; চিহ্নযুক্ত ক্ষেত্রফল','প্রাথমিক বেগ ও ত্বরণ');
+add('kinematics','kin-vt-distance','বেগ-সময় গ্রাফের ক্ষেত্রফল থেকে মোট দূরত্ব','distanceArea','সময় t','মোট দূরত্ব','মোট দূরত্ব = ∫|v(t)|dt','প্রাথমিক বেগ ও ত্বরণ');
+add('kinematics','kin-range-angle','প্রক্ষেপণের পাল্লা বনাম নিক্ষেপ কোণ','range','নিক্ষেপ কোণ θ','পাল্লা R','R = u² sin(2θ)/g','প্রাথমিক বেগ');
+add('kinematics','kin-maxheight-angle','সর্বোচ্চ উচ্চতা বনাম নিক্ষেপ কোণ','maxHeight','নিক্ষেপ কোণ θ','সর্বোচ্চ উচ্চতা H','H = u² sin²θ/(2g)','প্রাথমিক বেগ');
+add('kinematics','kin-height-time','উচ্চতা বনাম সময়','heightTime','সময় t','উচ্চতা y','y = h + ut − ½gt²','প্রাথমিক বেগ');
+add('kinematics','kin-relative-position','আপেক্ষিক অবস্থান বনাম সময়','relativePosition','সময় t','আপেক্ষিক অবস্থান Δx','Δx = x₁ − x₂','দুটি বস্তুর বেগ');
+add('kinematics','kin-distance-time-squared','দূরত্ব বনাম সময়ের বর্গ','distanceTimeSquared','সময় t-এর বর্গ','দূরত্ব s','স্থির অবস্থা থেকে সমত্বরণে s = ½at²','ত্বরণ');
+// 4. Dynamics (8)
+add('dynamics','dyn-force-acceleration','বল বনাম ত্বরণ','forceAcceleration','বল F','ত্বরণ a','a = F/m','ভর');
+add('dynamics','dyn-mass-acceleration','ভর বনাম ত্বরণ','massAcceleration','ভর m','ত্বরণ a','নিট বল ধ্রুব হলে a = F/m','নিট বল');
+add('dynamics','dyn-friction-normal','ঘর্ষণ বল বনাম লম্ব প্রতিক্রিয়া','frictionNormal','লম্ব প্রতিক্রিয়া N','ঘর্ষণ বল f','সীমান্ত/গতীয় ঘর্ষণে f = μN','ঘর্ষণ সহগ');
+add('dynamics','dyn-incline-angle','আনত তলের কোণ বনাম ত্বরণ','inclineAngle','আনত তলের কোণ θ','ত্বরণ a','a = g(sin θ − μ cos θ), স্খলনের দিকে ধনাত্মক','ঘর্ষণ সহগ');
+add('dynamics','dyn-momentum-time','সময় বনাম ভরবেগ','momentumTime','সময় t','ভরবেগ p','p = mv; ধ্রুব বল হলে p = p₀ + Ft','বল');
+add('dynamics','dyn-force-time-impulse','বল-সময় গ্রাফ থেকে অভিঘাত','impulse','সময় t','অভিঘাত J','J = ∫Fdt; বল-সময় গ্রাফের ক্ষেত্রফল','বল প্রয়োগের সময়');
+add('dynamics','dyn-collision-energy','সংঘর্ষের আগে-পরে গতিশক্তি','collisionEnergy','সংঘর্ষ অবস্থা','গতিশক্তি K','স্থিতিস্থাপক সংঘর্ষে মোট গতিশক্তি সংরক্ষিত; অস্থিতিস্থাপক সংঘর্ষে সাধারণত কমে','প্রত্যাবর্তন সহগ');
+add('dynamics','dyn-vertical-tension','বৃত্তীয় গতিতে অবস্থান কোণ বনাম টান','verticalTension','অবস্থান কোণ θ','সুতার টান T','নিচের দিক থেকে θ মাপলে T = mv²/r + mg cos θ','নিচের বিন্দুর বেগ');
+// 5. Work, energy, power (8)
+add('energy','energy-force-displacement','বল-সরণ গ্রাফ','forceDisplacement','সরণ x','বল F','ধ্রুব বল বা পরিবর্তনশীল বলের F–x সম্পর্ক থেকে কাজ','বল/স্প্রিং ধ্রুবক');
+add('energy','energy-displacement-work','সরণ বনাম কাজ','displacementWork','সরণ x','কাজ W','ধ্রুব বলের জন্য W = Fx cos θ','বল');
+add('energy','energy-speed-kinetic','বেগ বনাম গতিশক্তি','kinetic','বেগ v','গতিশক্তি K','K = ½mv²','ভর');
+add('energy','energy-height-potential','উচ্চতা বনাম বিভবশক্তি','potentialEnergy','উচ্চতা h','বিভবশক্তি U','U = mgh (পৃষ্ঠের কাছাকাছি)','ভর');
+add('energy','energy-spring-position','অবস্থান বনাম স্প্রিংয়ের শক্তি','springEnergy','প্রসারণ x','স্থিতিস্থাপক বিভবশক্তি U','U = ½kx²','স্প্রিং ধ্রুবক');
+add('energy','energy-time-work','সময় বনাম সম্পন্ন কাজ','timeWork','সময় t','কাজ W','ধ্রুব ক্ষমতার জন্য W = Pt','ক্ষমতা');
+add('energy','energy-speed-power','বেগ বনাম ক্ষমতা','speedPower','বেগ v','ক্ষমতা P','একই দিকে বল ও বেগ হলে P = Fv','বল');
+add('energy','energy-input-output','ইনপুট বনাম আউটপুট শক্তি','inputOutput','ইনপুট শক্তি Eᵢ','আউটপুট শক্তি Eₒ','Eₒ = ηEᵢ, যেখানে η দক্ষতা (0–1)','দক্ষতা');
+// 6. Gravitation (8)
+add('gravity','grav-force-distance','মহাকর্ষ বল বনাম দূরত্ব','gravityDistance','কেন্দ্রের দূরত্ব r','মহাকর্ষ বল F','F = Gm₁m₂/r²','ভরের গুণফল');
+add('gravity','grav-force-inverse-square','মহাকর্ষ বল বনাম দূরত্বের বিপরীত বর্গ','gravityInverseSquare','1/r²','মহাকর্ষ বল F','F = Gm₁m₂(1/r²)','ভরের গুণফল');
+add('gravity','grav-height-g','উচ্চতা বনাম অভিকর্ষজ ত্বরণ','heightG','উচ্চতা h','অভিকর্ষজ ত্বরণ g','g(h) = GM/(R+h)²','পৃথিবীর ব্যাসার্ধ');
+add('gravity','grav-earth-centre-g','পৃথিবীর কেন্দ্র থেকে দূরত্ব বনাম g','earthCentreG','কেন্দ্র থেকে দূরত্ব r','অভিকর্ষজ ত্বরণ g','সমঘনত্বের পৃথিবীর ভেতরে g ∝ r; বাইরে g ∝ 1/r²','পৃথিবীর ব্যাসার্ধ');
+add('gravity','grav-distance-potential','দূরত্ব বনাম মহাকর্ষীয় বিভব','gravityPotential','কেন্দ্র থেকে দূরত্ব r','বিভব V','V = −GM/r (অসীমে বিভব শূন্য)','গ্রহের ভর');
+add('gravity','grav-orbital-radius-speed','কক্ষীয় ব্যাসার্ধ বনাম কক্ষীয় বেগ','orbitalSpeed','কক্ষীয় ব্যাসার্ধ r','কক্ষীয় বেগ v','v = √(GM/r)','কেন্দ্রীয় ভর');
+add('gravity','grav-kepler-law','কক্ষীয় ব্যাসার্ধের ঘন বনাম পর্যায়কাল বর্গ','kepler','r³','T²','T² = 4π²r³/(GM)','কেন্দ্রীয় ভর');
+add('gravity','grav-total-energy-radius','উপগ্রহের মোট শক্তি বনাম কক্ষীয় ব্যাসার্ধ','satelliteEnergy','কক্ষীয় ব্যাসার্ধ r','মোট শক্তি E','E = −GMm/(2r), বৃত্তাকার কক্ষপথে','GMm');
+// 7. Structural properties / fluids (9)
+add('structure','str-force-extension','বল বনাম প্রসারণ','forceExtension','প্রসারণ ΔL','বল F','হুকের সূত্রে F = kΔL','দৃঢ়তা');
+add('structure','str-stress-strain','পীড়ন বনাম বিকৃতি','stressStrain','বিকৃতি ε','পীড়ন σ','স্থিতিস্থাপক সীমায় σ = Eε','ইয়ং গুণাঙ্ক');
+add('structure','str-pressure-depth','চাপ বনাম তরলের গভীরতা','pressureDepth','গভীরতা h','চাপ P','P = P₀ + ρgh','তরলের ঘনত্ব');
+add('structure','str-density-immersion','বস্তুর ঘনত্ব বনাম নিমজ্জিত অংশ','immersion','বস্তুর ঘনত্ব ρₒ','নিমজ্জিত ভগ্নাংশ','ভাসমান অবস্থায় Vনিমজ্জিত/V = ρবস্তু/ρতরল','তরলের ঘনত্ব');
+add('structure','str-area-flow-speed','নলের ক্ষেত্রফল বনাম প্রবাহ বেগ','flowArea','ক্ষেত্রফল A','প্রবাহ বেগ v','আয়তন প্রবাহ হার ধ্রুব হলে Av = ধ্রুব','আয়তন প্রবাহ হার');
+add('structure','str-speed-pressure','প্রবাহ বেগ বনাম চাপ','flowPressure','প্রবাহ বেগ v','চাপ P','একই উচ্চতায় বার্নৌলির সূত্রে P + ½ρv² = ধ্রুব','তরলের ঘনত্ব');
+add('structure','str-terminal-velocity-time','সময় বনাম পতনশীল গোলকের বেগ','terminalTime','সময় t','বেগ v','সান্দ্র প্রবাহে বেগ প্রান্তিক বেগের দিকে এগোয় (স্কিম্যাটিক)','প্রান্তিক বেগ ও সময় ধ্রুবক');
+add('structure','str-capillary-inverse-radius','কৈশিক উচ্চতা বনাম ব্যাসার্ধের বিপরীত','capillaryInverseRadius','ব্যাসার্ধের বিপরীত 1/r','কৈশিক উচ্চতা h','h = 2γ cos θ/(ρgr)','পৃষ্ঠটান');
+add('structure','str-sphere-radius-pressure','গোলকের ব্যাসার্ধ বনাম অতিরিক্ত চাপ','spherePressure','গোলকের ব্যাসার্ধ r','অতিরিক্ত চাপ ΔP','তরল ফোঁটার জন্য ΔP = 2γ/r; সাবানের বুদবুদে 4γ/r','পৃষ্ঠটান');
+// 8. Periodic motion (6)
+add('periodic','oscillation-x-v-a','সরণ-সময়, বেগ-সময় ও ত্বরণ-সময়','shmTriplet','সময় t','সরণ / বেগ / ত্বরণ','x=A sin ωt; v=Aω cos ωt; a=−ω²x','কৌণিক কম্পাঙ্ক');
+add('periodic','oscillation-amplitude-max-speed','বিস্তার বনাম সর্বোচ্চ বেগ','amplitudeVmax','বিস্তার A','সর্বোচ্চ বেগ vₘₐₓ','vₘₐₓ = ωA','কৌণিক কম্পাঙ্ক');
+add('periodic','oscillation-pendulum-length','দোলকের দৈর্ঘ্য বনাম পর্যায়কাল বর্গ','pendulumT2','দৈর্ঘ্য L','পর্যায়কাল বর্গ T²','T² = (4π²/g)L (ক্ষুদ্র দোলনের জন্য)','অভিকর্ষজ ত্বরণ');
+add('periodic','oscillation-spring-mass','ভর বনাম স্প্রিংয়ের পর্যায়কাল বর্গ','springT2','ভর m','পর্যায়কাল বর্গ T²','T² = (4π²/k)m','স্প্রিং ধ্রুবক');
+add('periodic','oscillation-energy-displacement','সরণ বনাম গতিশক্তি ও বিভবশক্তি','shmEnergy','সরণ x','শক্তি K ও U','U = ½kx²; K = ½k(A² − x²)','বিস্তার');
+add('periodic','oscillation-phase-amplitude','দশা পার্থক্য বনাম লব্ধি বিস্তার','phaseAmplitude','দশা পার্থক্য δ','লব্ধি বিস্তার Aᵣ','Aᵣ = √(A₁²+A₂²+2A₁A₂cosδ)','দুটি বিস্তার');
+// 9. Waves (10)
+add('waves','wave-displacement-position','সরণ বনাম অবস্থান','wavePosition','অবস্থান x','সরণ y','y = A sin(kx − ωt)','তরঙ্গদৈর্ঘ্য');
+add('waves','wave-displacement-time','সরণ বনাম সময়','waveTime','সময় t','সরণ y','y = A sin(ωt − kx)','কম্পাঙ্ক');
+add('waves','wave-frequency-wavelength','কম্পাঙ্ক বনাম তরঙ্গদৈর্ঘ্য','frequencyWavelength','কম্পাঙ্ক f','তরঙ্গদৈর্ঘ্য λ','মাধ্যমে তরঙ্গের বেগ ধ্রুব হলে λ = v/f','তরঙ্গের বেগ');
+add('waves','wave-phase-amplitude','দশা পার্থক্য বনাম লব্ধি বিস্তার','phaseAmplitude','দশা পার্থক্য δ','লব্ধি বিস্তার Aᵣ','Aᵣ = √(A₁²+A₂²+2A₁A₂cosδ)','দুটি বিস্তার');
+add('waves','wave-nodes-antinodes','নোড-অ্যান্টিনোডের অবস্থান','nodes','তার বরাবর অবস্থান x','সরণ বিস্তার','স্থির তরঙ্গে নোডে বিস্তার শূন্য, অ্যান্টিনোডে সর্বাধিক','তরঙ্গদৈর্ঘ্য');
+add('waves','wave-harmonic-frequency','হারমোনিক সংখ্যা বনাম কম্পাঙ্ক','harmonic','হারমোনিক সংখ্যা n','কম্পাঙ্ক fₙ','দুই প্রান্ত স্থির তারে fₙ = nf₁','মৌলিক কম্পাঙ্ক');
+add('waves','wave-beats-frequency','বিট কম্পাঙ্ক বনাম কম্পাঙ্কের পার্থক্য','beatsFrequency','কম্পাঙ্কের পার্থক্য Δf','বিট কম্পাঙ্ক fᵦ','fᵦ = |f₁ − f₂|','কম্পাঙ্কের পার্থক্য');
+add('waves','wave-doppler-relative-speed','পর্যবেক্ষিত কম্পাঙ্ক বনাম আপেক্ষিক বেগ','dopplerSpeed','আপেক্ষিক বেগ','পর্যবেক্ষিত কম্পাঙ্ক','চলমান উৎস/পর্যবেক্ষকের জন্য ডপলার সূত্র প্রযোজ্য; দিকের চিহ্ন গুরুত্বপূর্ণ','উৎসের কম্পাঙ্ক');
+add('waves','wave-intensity-distance','দূরত্ব বনাম শব্দের তীব্রতা','soundIntensity','দূরত্ব r','তীব্রতা I','বিন্দু উৎসে I ∝ 1/r² (মাধ্যমের শোষণ উপেক্ষা করে)','উৎসের ক্ষমতা');
+add('waves','wave-decibel-distance','দূরত্ব বনাম ডেসিবেল','decibelDistance','দূরত্ব r','শব্দের মাত্রা β','β = 10 log₁₀(I/I₀); মুক্ত ক্ষেত্রে দূরত্ব বাড়লে তীব্রতা কমে','উৎসের ক্ষমতা');
+// 10. Ideal gas (9)
+add('gas','gas-pressure-volume','চাপ বনাম আয়তন','gasPV','আয়তন V','চাপ P','সমতাপীয় প্রক্রিয়ায় PV = ধ্রুবক (বয়েলের সূত্র)','তাপমাত্রা');
+add('gas','gas-volume-temperature','আয়তন বনাম পরম তাপমাত্রা','gasVT','পরম তাপমাত্রা T','আয়তন V','সমচাপে V/T = ধ্রুবক (চার্লসের সূত্র)','চাপ');
+add('gas','gas-pressure-temperature','চাপ বনাম পরম তাপমাত্রা','gasPT','পরম তাপমাত্রা T','চাপ P','সমআয়তনে P/T = ধ্রুবক','আয়তন');
+add('gas','gas-rms-sqrt-temperature','RMS বেগ বনাম তাপমাত্রার বর্গমূল','rmsSqrt','√T','RMS বেগ cᵣₘₛ','cᵣₘₛ = √(3RT/M)','মোলার ভর');
+add('gas','gas-speed-distribution','বেগ-বণ্টন বক্ররেখা','maxwell','অণুর বেগ v','বণ্টন ঘনত্ব','ম্যাক্সওয়েল-বল্টজমান বেগ-বণ্টন (আদর্শ গ্যাসের জন্য)','তাপমাত্রা ও মোলার ভর');
+add('gas','gas-pressure-rms-square','চাপ বনাম RMS বেগের বর্গ','kineticPressure','RMS বেগের বর্গ c²','চাপ P','P = ⅓ρcᵣₘₛ²','গ্যাসের ঘনত্ব');
+add('gas','gas-pv-process-cycle','P-V প্রক্রিয়া ও চক্র','pvCycle','আয়তন V','চাপ P','P-V বক্ররেখার নিচের ক্ষেত্রফল = কাজ; চক্রের আবদ্ধ ক্ষেত্রফল = নিট কাজ','প্রাথমিক অবস্থা');
+add('gas','gas-temperature-internal-energy','তাপমাত্রা বনাম অভ্যন্তরীণ শক্তি','internalEnergy','পরম তাপমাত্রা T','অভ্যন্তরীণ শক্তি U','আদর্শ গ্যাসে U = (f/2)nRT','মোল ও স্বাধীনতার মাত্রা');
+add('gas','gas-heat-work-internal-energy','তাপ বনাম কাজ ও অভ্যন্তরীণ শক্তির পরিবর্তন','heatWorkEnergy','সরবরাহকৃত তাপ Q','কাজ W ও ΔU','প্রথম সূত্র: ΔU = Q − W (গ্যাসের দ্বারা কাজের sign convention)','কাজের অংশ');
+/* Extended HSC Chemistry I and Higher Mathematics I graph catalogue. */
+var physicsChapters=chapters.map(function(c){return {id:c.id,title:c.title,subject:'phy',subjectTitle:'পদার্থবিজ্ঞান ১ম পত্র'};});
+var chemistryChapters=[
+ {id:'chem-lab',title:'ল্যাবরেটরির নিরাপদ ব্যবহার',subject:'chem',subjectTitle:'রসায়ন ১ম পত্র'},
+ {id:'chem-qualitative',title:'গুণগত রসায়ন',subject:'chem',subjectTitle:'রসায়ন ১ম পত্র'},
+ {id:'chem-periodic',title:'মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন',subject:'chem',subjectTitle:'রসায়ন ১ম পত্র'},
+ {id:'chem-changes',title:'রাসায়নিক পরিবর্তন',subject:'chem',subjectTitle:'রসায়ন ১ম পত্র'},
+ {id:'chem-vocational',title:'কর্মমুখী রসায়ন',subject:'chem',subjectTitle:'রসায়ন ১ম পত্র'}
+];
+var mathChapters=[
+ {id:'math-matrix',title:'ম্যাট্রিক্স ও নির্ণায়ক',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-vectors',title:'ভেক্টর',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-line',title:'সরলরেখা',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-circle',title:'বৃত্ত',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-permutation',title:'বিন্যাস ও সমাবেশ',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-trig-ratios',title:'ত্রিকোণমিতিক অনুপাত',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-associated-trig',title:'সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-functions',title:'ফাংশন ও ফাংশনের লেখচিত্র',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-differentiation',title:'অন্তরীকরণ',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'},
+ {id:'math-integration',title:'যোগজীকরণ',subject:'math',subjectTitle:'উচ্চতর গণিত ১ম পত্র'}
+];
+chapters=physicsChapters.concat(chemistryChapters,mathChapters);
+function addMany(ch,rows){rows.forEach(function(r){add(ch,r[0],r[1],r[2],r[3],r[4],r[5],r[6]);});}
+addMany('chem-lab',[
+ ['chem-lab-calibration','মানদণ্ড দ্রবণের ঘনমাত্রা বনাম শোষণ','calibration','ঘনমাত্রা C','শোষণ A','Beer–Lambert মডেল: A = εℓC','পথদৈর্ঘ্য/ε'],
+ ['chem-lab-uncertainty','পুনরাবৃত্ত পরিমাপ বনাম গড়ের অনিশ্চয়তা','uncertaintyTrials','পরিমাপের সংখ্যা n','অনিশ্চয়তা','স্বাধীন পুনরাবৃত্ত পরিমাপে আদর্শ অনিশ্চয়তা প্রায় 1/√n হারে কমে','প্রাথমিক অনিশ্চয়তা'],
+ ['chem-lab-dilution','চূড়ান্ত আয়তন বনাম দ্রবণের ঘনমাত্রা','dilution','চূড়ান্ত আয়তন V₂','ঘনমাত্রা C₂','C₁V₁ = C₂V₂; স্টক দ্রবণের পরিমাণ স্থির','C₁V₁'],
+ ['chem-lab-heating-curve','তাপ সরবরাহ বনাম তাপমাত্রা','heatingCurve','সরবরাহকৃত তাপ Q','তাপমাত্রা T','আদর্শীকৃত heating curve; দশা পরিবর্তনে তাপমাত্রা প্রায় স্থির থাকতে পারে','তাপ সরবরাহের হার'],
+ ['chem-lab-repeatability','পরিমাপের বিচ্যুতি বনাম পরিমাপ সংখ্যা','repeatability','পরিমাপ সংখ্যা n','পরম বিচ্যুতি','নমুনা মডেল: পরিমাপ বাড়লে গড় বিচ্যুতির প্রবণতা কমে','প্রাথমিক বিচ্যুতি'],
+ ['chem-lab-standard-addition','যোগ করা মানদণ্ডের ঘনমাত্রা বনাম সংকেত','calibration','যোগ করা ঘনমাত্রা','যন্ত্রের সংকেত','আদর্শ রৈখিক calibration curve','সংকেত-সংবেদনশীলতা'],
+ ['chem-lab-reagent-volume','টাইট্র্যান্টের আয়তন বনাম মোট দ্রবণ আয়তন','reagentVolume','টাইট্র্যান্টের আয়তন V','মোট আয়তন','দ্রবণ যোগে মোট আয়তন প্রায় রৈখিকভাবে বাড়ে','প্রাথমিক আয়তন'],
+ ['chem-lab-error-lc','যন্ত্রের লঘিষ্ঠ গণনা বনাম পাঠ-অনিশ্চয়তা','labLeastCount','লঘিষ্ঠ গণনা LC','পাঠ-অনিশ্চয়তা','সাধারণ অ্যানালগ পাঠে আনুমানিক অনিশ্চয়তা LC/2 ধরা যায়','অনিশ্চয়তার গুণক']
+]);
+addMany('chem-qualitative',[
+ ['chem-qual-solubility','তাপমাত্রা বনাম লবণের দ্রাব্যতা','chemSolubility','তাপমাত্রা T','দ্রাব্যতা S','নির্বাচিত লবণের জন্য উদাহরণমূলক দ্রাব্যতা বক্ররেখা','দ্রাব্যতা বৃদ্ধির হার'],
+ ['chem-qual-precipitate','যোগ করা বিকারকের পরিমাণ বনাম অধঃক্ষেপের পরিমাণ','precipitate','বিকারকের পরিমাণ','অধঃক্ষেপের পরিমাণ','স্টইকিওমেট্রিক বিন্দু পর্যন্ত অধঃক্ষেপ বাড়ে, পরে প্রায় স্থির হয়','সীমাবদ্ধ বিকারকের পরিমাণ'],
+ ['chem-qual-conductivity','আয়নের ঘনমাত্রা বনাম পরিবাহিতা','conductivityConc','আয়নের ঘনমাত্রা C','পরিবাহিতা κ','পাতলা দ্রবণে ঘনমাত্রা বাড়লে পরিবাহিতা সাধারণত বাড়ে','আয়নিক গতিশীলতা'],
+ ['chem-qual-chromatography','দ্রাবকের অনুপাত বনাম Rf মান','chromatography','চলমান দশায় দ্রাবকের অনুপাত','Rf মান','ক্রোমাটোগ্রাফিতে Rf = দ্রবের অতিক্রান্ত দূরত্ব/দ্রাবক-ফ্রন্টের দূরত্ব','দ্রাবকের প্রভাব'],
+ ['chem-qual-spectrum','তরঙ্গদৈর্ঘ্য বনাম শোষণ বর্ণালি','absorptionSpectrum','তরঙ্গদৈর্ঘ্য λ','আপেক্ষিক শোষণ','নির্বাচিত শোষণ ব্যান্ডের একটি মডেল বর্ণালি','বর্ণালি ব্যান্ডের প্রস্থ'],
+ ['chem-qual-line-spectrum','তরঙ্গদৈর্ঘ্য বনাম রেখা-বর্ণালির তীব্রতা','lineSpectrum','তরঙ্গদৈর্ঘ্য λ','আপেক্ষিক তীব্রতা','পরমাণুর বিচ্ছিন্ন নির্গমন রেখার ধারণামূলক বর্ণালি','রেখার তীব্রতা'],
+ ['chem-qual-reagent-limit','বিকারকের পরিমাণ বনাম পরীক্ষার সংকেত','reagentLimit','বিকারকের পরিমাণ','আপেক্ষিক সংকেত','নির্দিষ্ট আয়নের পরীক্ষায় সংকেতের একটি আদর্শ threshold model','সংকেতের সংবেদনশীলতা'],
+ ['chem-qual-precip-solubility','আয়ন-গুণফল বনাম Ksp','solubilityProduct','আয়ন-গুণফল Q','সম্পৃক্ততার সূচক Q/Ksp','Q < Ksp হলে অসম্পৃক্ত, Q = Ksp হলে সম্পৃক্ত হওয়ার সীমা','Ksp'],
+ ['chem-qual-ion-dilution','পাতলাকরণ বনাম আয়নিক পরিবাহিতার প্রবণতা','conductivityDilution','পাতলাকরণ অনুপাত','মোলার পরিবাহিতা','দুর্বল ইলেক্ট্রোলাইটে পাতলাকরণে মোলার পরিবাহিতা বাড়তে পারে','প্রাথমিক মান'],
+ ['chem-qual-flame-spectrum','তরঙ্গদৈর্ঘ্য বনাম শিখা-পরীক্ষার নির্গমন','flameSpectrum','তরঙ্গদৈর্ঘ্য λ','আপেক্ষিক নির্গমন','নির্বাচিত মৌলের characteristic spectral lines-এর ধারণামূলক চিত্র','রেখা-তীব্রতা']
+]);
+addMany('chem-periodic',[
+ ['chem-periodic-radius','পারমাণবিক সংখ্যা বনাম পারমাণবিক ব্যাসার্ধ','atomicRadius','পারমাণবিক সংখ্যা Z','আপেক্ষিক ব্যাসার্ধ','একটি পর্যায়ে সাধারণ প্রবণতা বোঝাতে আদর্শীকৃত মডেল; বাস্তব মান মৌলভেদে বদলায়','প্রবণতার তীব্রতা'],
+ ['chem-periodic-ionization','পারমাণবিক সংখ্যা বনাম প্রথম আয়নীকরণ শক্তি','ionizationTrend','পারমাণবিক সংখ্যা Z','আয়নীকরণ শক্তি','পর্যায়বৃত্ত প্রবণতার ধারণামূলক মডেল; কিছু ব্যতিক্রম থাকে','প্রবণতার তীব্রতা'],
+ ['chem-periodic-electronegativity','পারমাণবিক সংখ্যা বনাম তড়িৎঋণাত্মকতা','electronegativityTrend','পারমাণবিক সংখ্যা Z','তড়িৎঋণাত্মকতা','একই পর্যায়ের প্রবণতা বোঝানো হয়েছে; noble gas-সহ সব মৌলের জন্য মান সংজ্ঞায়িত নয়','প্রবণতা'],
+ ['chem-periodic-electron-affinity','পারমাণবিক সংখ্যা বনাম ইলেকট্রন আসক্তি','electronAffinityTrend','পারমাণবিক সংখ্যা Z','আপেক্ষিক ইলেকট্রন আসক্তি','পর্যায়বৃত্ত পরিবর্তনের পরিকল্পিত চিত্র; প্রকৃত মানে ব্যতিক্রম আছে','প্রবণতা'],
+ ['chem-periodic-metallic','পারমাণবিক সংখ্যা বনাম ধাতব ধর্মের সূচক','metallicTrend','পারমাণবিক সংখ্যা Z','ধাতব ধর্মের সূচক','এক পর্যায়ে ধাতব ধর্ম কমার সাধারণ প্রবণতার আদর্শ মডেল','প্রবণতা'],
+ ['chem-periodic-bond-length','বন্ধন-ক্রম বনাম বন্ধন দৈর্ঘ্য','bondLengthOrder','বন্ধন-ক্রম','আপেক্ষিক বন্ধন দৈর্ঘ্য','বন্ধন-ক্রম বাড়লে একই ধরনের বন্ধনে সাধারণত দৈর্ঘ্য কমে','দৈর্ঘ্যের স্কেল'],
+ ['chem-periodic-bond-energy','বন্ধন-ক্রম বনাম বন্ধন শক্তি','bondEnergyOrder','বন্ধন-ক্রম','আপেক্ষিক বন্ধন শক্তি','একই ধরনের বন্ধনে বন্ধন-ক্রম বাড়লে সাধারণত বন্ধন শক্তি বাড়ে','শক্তির স্কেল'],
+ ['chem-periodic-potential','আন্তঃনিউক্লীয় দূরত্ব বনাম সম্ভাব্য শক্তি','bondPotential','আন্তঃনিউক্লীয় দূরত্ব r','সম্ভাব্য শক্তি U','আণবিক বন্ধনে আকর্ষণ ও বিকর্ষণের কারণে সম্ভাব্য শক্তির কূপের মডেল','কূপের গভীরতা'],
+ ['chem-periodic-lattice','আয়নিক আধানের গুণফল বনাম ল্যাটিস শক্তির মান','latticeEnergy','আধানের গুণফল |z⁺z⁻|','আপেক্ষিক ল্যাটিস শক্তি','অন্যান্য বিষয় স্থির ধরে কুলম্বীয় মডেলে আধানের গুণফল বাড়লে ল্যাটিস শক্তির মান বাড়ে','স্কেল'],
+ ['chem-periodic-polarity','তড়িৎঋণাত্মকতার পার্থক্য বনাম বন্ধনের মেরুতা','bondPolarity','তড়িৎঋণাত্মকতার পার্থক্য Δχ','মেরুতা সূচক','বন্ধনের মেরুতা বৃদ্ধির ধারণামূলক মডেল; আয়নিক সীমায় এটি সরলরৈখিক নয়','মেরুতা স্কেল'],
+ ['chem-periodic-energy-distance','বন্ধন দৈর্ঘ্য বনাম পারস্পরিক শক্তির আকর্ষণ','bondEnergyDistance','আন্তঃপরমাণু দূরত্ব r','সম্ভাব্য শক্তি U','আকর্ষণ-বিকর্ষণ ভারসাম্যে স্থিতিশীল বন্ধনের দূরত্ব দেখা যায়','বন্ধন শক্তি'],
+ ['chem-periodic-atomic-volume','পারমাণবিক সংখ্যা বনাম পারমাণবিক আয়তনের প্রবণতা','atomicVolume','পারমাণবিক সংখ্যা Z','আপেক্ষিক পারমাণবিক আয়তন','পর্যায়বৃত্ত প্রবণতার স্কেচ; বাস্তব উপাদানে শেল-প্রভাব গুরুত্বপূর্ণ','প্রবণতা']
+]);
+addMany('chem-changes',[
+ ['chem-change-exo-profile','বিক্রিয়া-সমন্বয় বনাম শক্তি: তাপউৎপাদী','reactionProfileExo','বিক্রিয়া-সমন্বয়','সম্ভাব্য শক্তি','তাপউৎপাদী বিক্রিয়ার ধারণামূলক শক্তি-প্রোফাইল','সক্রিয়ণ শক্তি/ΔH'],
+ ['chem-change-endo-profile','বিক্রিয়া-সমন্বয় বনাম শক্তি: তাপশোষী','reactionProfileEndo','বিক্রিয়া-সমন্বয়','সম্ভাব্য শক্তি','তাপশোষী বিক্রিয়ার ধারণামূলক শক্তি-প্রোফাইল','সক্রিয়ণ শক্তি/ΔH'],
+ ['chem-change-rate-conc','বিক্রিয়কের ঘনমাত্রা বনাম বিক্রিয়ার হার','rateConcPower','বিক্রিয়কের ঘনমাত্রা [A]','বিক্রিয়ার হার r','r = k[A]ⁿ; এখানে p দিয়ে আদর্শীকৃত ঘাত পরিবর্তিত হয়','হার ধ্রুবক/ঘাত'],
+ ['chem-change-zero-order','সময় বনাম শূন্য-ক্রম বিক্রিয়কের ঘনমাত্রা','rateTimeZero','সময় t','ঘনমাত্রা [A]','শূন্য-ক্রমে [A] = [A]₀ − kt','হার ধ্রুবক'],
+ ['chem-change-first-order','সময় বনাম প্রথম-ক্রম বিক্রিয়কের ঘনমাত্রা','rateTimeFirst','সময় t','ঘনমাত্রা [A]','প্রথম-ক্রমে [A] = [A]₀e⁻ᵏᵗ','হার ধ্রুবক'],
+ ['chem-change-second-order','সময় বনাম দ্বিতীয়-ক্রম বিক্রিয়কের ঘনমাত্রা','rateTimeSecond','সময় t','ঘনমাত্রা [A]','দ্বিতীয়-ক্রমে [A] = [A]₀/(1+k[A]₀t)','হার ধ্রুবক'],
+ ['chem-change-arrhenius','পরম তাপমাত্রার বিপরীতক বনাম ln k','arrhenius','1/T (K⁻¹)','ln k','Arrhenius: ln k = ln A − Eₐ/(RT); তাই ln k বনাম 1/T-এর ঢাল ঋণাত্মক','সক্রিয়ণ শক্তির স্কেল'],
+ ['chem-change-equilibrium','সময় বনাম সাম্যাবস্থায় ঘনমাত্রা','equilibriumShift','সময় t','ঘনমাত্রা','সাম্যে অগ্রগামী ও পশ্চাৎগামী বিক্রিয়ার হার সমান; ঘনমাত্রা স্থির হয়','সাম্যে পৌঁছানোর সময়'],
+ ['chem-change-yield-pressure','চাপ বনাম অ্যামোনিয়ার সাম্য-উৎপাদন','equilibriumYieldPressure','চাপ P','আপেক্ষিক NH₃ উৎপাদন','Haber প্রক্রিয়ার আদর্শ প্রবণতা: চাপ বাড়ালে গ্যাসীয় মোল কমার দিকে সাম্য সরে','সাম্য-সংবেদনশীলতা'],
+ ['chem-change-yield-exo-temp','তাপমাত্রা বনাম তাপউৎপাদী বিক্রিয়ার সাম্য-উৎপাদন','equilibriumYieldTempExo','তাপমাত্রা T','আপেক্ষিক উৎপাদন','তাপউৎপাদী সাম্য বিক্রিয়ায় তাপমাত্রা বাড়লে উৎপাদন কমার সাধারণ প্রবণতা','তাপমাত্রা-সংবেদনশীলতা'],
+ ['chem-change-yield-endo-temp','তাপমাত্রা বনাম তাপশোষী বিক্রিয়ার সাম্য-উৎপাদন','equilibriumYieldTempEndo','তাপমাত্রা T','আপেক্ষিক উৎপাদন','তাপশোষী সাম্য বিক্রিয়ায় তাপমাত্রা বাড়লে উৎপাদন বাড়ার সাধারণ প্রবণতা','তাপমাত্রা-সংবেদনশীলতা'],
+ ['chem-change-kc-temp','তাপমাত্রা বনাম সাম্য ধ্রুবক K','kcTemperature','তাপমাত্রা T','সাম্য ধ্রুবক K','সাম্য ধ্রুবক তাপমাত্রার সঙ্গে বদলায়; প্রবণতা বিক্রিয়ার ΔH-এর ওপর নির্ভর করে','তাপমাত্রা-প্রভাব'],
+ ['chem-change-titration-strong','শক্তিশালী অ্যাসিড-ক্ষার টাইট্রেশন বক্ররেখা','titrationStrong','ক্ষারের যোগ করা আয়তন','pH','শক্তিশালী অ্যাসিড-শক্তিশালী ক্ষারের আদর্শ টাইট্রেশন বক্ররেখা','সমতুল্য বিন্দু'],
+ ['chem-change-titration-weak','দুর্বল অ্যাসিড-শক্তিশালী ক্ষার টাইট্রেশন বক্ররেখা','titrationWeak','ক্ষারের যোগ করা আয়তন','pH','দুর্বল অ্যাসিড টাইট্রেশনে buffer region ও সমতুল্য বিন্দুর pH 7-এর বেশি হতে পারে','সমতুল্য বিন্দু'],
+ ['chem-change-nernst','ln আয়নিক অনুপাত বনাম কোষ বিভব','nernst','ln আয়নিক অনুপাত','কোষ বিভব E','Nernst সমীকরণে E = E° − (RT/nF)ln Q','স্ট্যান্ডার্ড কোষ বিভব'],
+ ['chem-change-faraday','তড়িৎ প্রবাহের সময়-সমাকলন বনাম জমা পদার্থের ভর','faraday','মোট চার্জ Q','জমা পদার্থের ভর m','Faraday-এর সূত্র: m ∝ Q = It','তড়িৎরাসায়নিক সমতুল্য'],
+ ['chem-change-iv','বিভব পার্থক্য বনাম তড়িৎ প্রবাহ','electrolysisIV','বিভব পার্থক্য V','তড়িৎ প্রবাহ I','একটি আদর্শ ওহমিক কোষ/উপাদানের সরল I–V মডেল','পরিবাহিতা'],
+ ['chem-change-half-life','সময় বনাম অবশিষ্ট বিক্রিয়কের পরিমাণ','halfLifeOrder','সময় t','অবশিষ্ট পরিমাণ','প্রথম-ক্রম ক্ষয়/প্রতিক্রিয়ায় সমান অর্ধায়ু ব্যবধানে পরিমাণ অর্ধেক হয়','অর্ধায়ু']
+]);
+addMany('chem-vocational',[
+ ['chem-voc-haber-temp','তাপমাত্রা বনাম শিল্প-প্রক্রিয়ার উৎপাদন','haberYieldTemp','তাপমাত্রা T','আপেক্ষিক উৎপাদন','Haber প্রক্রিয়ায় উৎপাদন ও বিক্রিয়ার গতির মধ্যে সমঝোতার ধারণামূলক মডেল','চাপ/অনুঘটক'],
+ ['chem-voc-pressure-conversion','চাপ বনাম শিল্প-প্রক্রিয়ার রূপান্তর','industrialYieldPressure','চাপ P','রূপান্তর হার','নির্বাচিত গ্যাসীয় সাম্য প্রক্রিয়ায় চাপের প্রভাবের আদর্শ মডেল','চাপ-সংবেদনশীলতা'],
+ ['chem-voc-catalyst-yield','অনুঘটকের পরিমাণ বনাম প্রক্রিয়ার হার','catalystYield','অনুঘটকের পরিমাণ','আপেক্ষিক বিক্রিয়ার হার','অনুঘটক বাড়লে হার বৃদ্ধি পেতে পারে; পরে অন্য সীমাবদ্ধতা প্রভাব ফেলতে পারে','সক্রিয় পৃষ্ঠ'],
+ ['chem-voc-corrosion-ph','pH বনাম ক্ষয়ের প্রবণতা','corrosionPH','pH','আপেক্ষিক ক্ষয়ের হার','নির্দিষ্ট ধাতু ও পরিবেশে ক্ষয় pH-নির্ভর; চিত্রটি সাধারণ ধারণামূলক','ধাতু/মাধ্যম'],
+ ['chem-voc-fertilizer-ph','মাটির pH বনাম পুষ্টি-উপলভ্যতার সূচক','fertilizerPH','মাটির pH','পুষ্টি-উপলভ্যতা','বেশ কিছু পুষ্টির জন্য মাঝারি pH-এ উপলভ্যতা বেশি হতে পারে; নির্দিষ্ট মাটি অনুসারে বদলায়','সর্বোত্তম pH'],
+ ['chem-voc-water-treatment','সময় বনাম দূষকের অবশিষ্ট ঘনমাত্রা','pollutionTreatment','পরিশোধন সময় t','অবশিষ্ট ঘনমাত্রা','একটি প্রথম-ক্রমের অপসারণ/পরিশোধন মডেল','অপসারণ ধ্রুবক'],
+ ['chem-voc-hardness','কার্বনেট যোগ করা বনাম অবশিষ্ট পানির কঠোরতা','waterHardness','প্রক্রিয়ায় যোগ করা পরিমাণ','অবশিষ্ট কঠোরতা','পানি নরমকরণের ধারণামূলক মডেল; বাস্তব ফল জলরসায়ননির্ভর','প্রাথমিক কঠোরতা']
+]);
+addMany('math-matrix',[
+ ['math-matrix-det-param','পরামিতি x বনাম নির্ণায়ক','matrixDeterminant','পরামিতি x','নির্ণায়ক |A|','উদাহরণ: A = [[x,1],[p,x]] হলে |A| = x² − p','ম্যাট্রিক্সের উপাদান'],
+ ['math-matrix-linear-map','ইনপুট x বনাম রূপান্তরিত মান y','linearTransform','ইনপুট x','রূপান্তরিত মান y','এক-মাত্রিক সরল রূপান্তর y = px','রূপান্তর গুণক'],
+ ['math-matrix-determinant-scale','স্কেল গুণক x বনাম ক্ষেত্রফল অনুপাত','determinantScale','স্কেল গুণক x','ক্ষেত্রফল অনুপাত','দ্বিমাত্রিক সমরূপ স্কেলিংয়ে ক্ষেত্রফল অনুপাত স্কেল গুণকের বর্গ','স্কেল গুণক'],
+ ['math-matrix-eigenvalue','পরামিতি x বনাম বৈশিষ্ট্য সমীকরণের ফাংশন','matrixEigen','পরামিতি x','f(x)','সরল ২×২ উদাহরণে বৈশিষ্ট্য সমীকরণের বহুপদী আচরণ','ম্যাট্রিক্সের মান'],
+ ['math-matrix-inverse','ইনপুট x বনাম বিপরীতানুপাতিক ফাংশন','functionReciprocal','ইনপুট x','ফাংশন মান','বিপরীতানুপাতিক ফাংশনের গ্রাফ; x = 0-এ সংজ্ঞায়িত নয়','স্কেল'],
+ ['math-matrix-linear-combo','প্যারামিটার x বনাম রৈখিক সমন্বয়','matrixLinearCombo','পরামিতি x','রৈখিক সমন্বয়','দুটি উপাদানের রৈখিক সমন্বয়ের উদাহরণ y = x + p','ধ্রুবক পদ']
+]);
+addMany('math-vectors',[
+ ['math-vector-components','কোণ বনাম ভেক্টরের অনুভূমিক-উল্লম্ব উপাংশ','vectorComponent','কোণ θ (ডিগ্রি)','উপাংশ','Aₓ = A cos θ; Aᵧ = A sin θ','ভেক্টরের মান A'],
+ ['math-vector-magnitude','কোণ বনাম দুটি একক ভেক্টরের লব্ধি','vectorMagnitude','মধ্যবর্তী কোণ θ (ডিগ্রি)','লব্ধির মান R','R = √(A² + B² + 2AB cos θ)','ভেক্টরগুলোর মান'],
+ ['math-vector-dot','কোণ বনাম ডট গুণফল','vectorDot','মধ্যবর্তী কোণ θ (ডিগ্রি)','A·B','A·B = AB cos θ','AB'],
+ ['math-vector-cross','কোণ বনাম ক্রস গুণফলের মান','vectorCross','মধ্যবর্তী কোণ θ (ডিগ্রি)','|A×B|','|A×B| = AB sin θ','AB'],
+ ['math-vector-projection','কোণ বনাম প্রক্ষেপ','vectorProjection','কোণ θ (ডিগ্রি)','প্রক্ষেপ','প্রক্ষেপ = A cos θ','ভেক্টরের মান A'],
+ ['math-vector-parametric','পরামিতি t বনাম ভেক্টরের স্থানাঙ্ক','vectorParametric','পরামিতি t','y-স্থানাঙ্ক','r(t) = (t, t + c); y-স্থানাঙ্ক t + c-এর সরল পরিবর্তন','ধ্রুবক c']
+]);
+addMany('math-line',[
+ ['math-line-slope','x বনাম সরলরেখার y-স্থানাঙ্ক','lineFamily','x','y','y = mx + c; এখানে ঢাল m পরামিতির মাধ্যমে বদলায়','ঢাল m'],
+ ['math-line-intercept','x বনাম y-অক্ষ-ছেদ পরিবর্তনের সরলরেখা','lineIntercept','x','y','y = x + c; c বদলালে রেখা সমান্তরালে সরে','y-অক্ষ-ছেদ c'],
+ ['math-line-slope-angle','ঢাল কোণ θ বনাম ঢাল m','slopeAngle','ঢাল কোণ θ (ডিগ্রি)','ঢাল m','m = tan θ; θ = ±90°-এ উল্লম্ব রেখার ঢাল অনির্দিষ্ট','স্কেল'],
+ ['math-line-parallel','x বনাম সমান্তরাল সরলরেখার পরিবার','lineParallel','x','y','y = x + c; একই ঢাল রেখে c বদলালে রেখাগুলো সমান্তরালভাবে সরে','ছেদক c'],
+ ['math-line-distance','x বনাম y = mx + c রেখা থেকে উল্লম্ব ব্যবধান','lineDistance','x','ব্যবধান','একটি প্রদর্শনী মডেলে রেখার লম্ব দূরত্বের নির্ভরতা','ঢাল/ছেদক'],
+ ['math-line-intersection','পরামিতি x বনাম দুটি রেখার উচ্চতার পার্থক্য','lineIntersection','x','উচ্চতার পার্থক্য','দুটি সরলরেখার ছেদ নির্ণয়ে তাদের উচ্চতার পার্থক্য শূন্য হয়','দ্বিতীয় রেখার ঢাল']
+]);
+addMany('math-circle',[
+ ['math-circle-upper','x বনাম বৃত্তের উপরের অর্ধাংশ','circleUpper','x','y','x² + y² = r²; y = √(r² − x²)','ব্যাসার্ধ r'],
+ ['math-circle-lower','x বনাম বৃত্তের নিচের অর্ধাংশ','circleLower','x','y','x² + y² = r²; নিচের অর্ধাংশে y = −√(r² − x²)','ব্যাসার্ধ r'],
+ ['math-circle-equation','x বনাম বৃত্তের সমীকরণের অবশিষ্টাংশ','circleResidual','x','সমীকরণ ফাংশন','x² + y² − r² = 0 বৃত্তের শর্ত; এখানে y=0 বসিয়ে অবশিষ্টাংশ দেখানো হয়েছে','ব্যাসার্ধ r'],
+ ['math-circle-area-radius','ব্যাসার্ধ r বনাম বৃত্তের ক্ষেত্রফল','circleArea','ব্যাসার্ধ r','ক্ষেত্রফল A','A = πr²','স্কেল'],
+ ['math-circle-circumference','ব্যাসার্ধ r বনাম পরিধি','circleCircumference','ব্যাসার্ধ r','পরিধি C','C = 2πr','স্কেল'],
+ ['math-circle-tangent','x বনাম একটি বৃত্তের স্পর্শক-ধর্মী রৈখিক মডেল','circleTangent','x','y','বৃত্তের স্পর্শকের ঢাল কেন্দ্র ও স্পর্শবিন্দুর ব্যাসার্ধের লম্ব','ঢাল/স্পর্শ বিন্দু']
+]);
+addMany('math-permutation',[
+ ['math-perm-npr','n বনাম বিন্যাস nPr','permutationNPR','বস্তুর সংখ্যা n','বিন্যাস nPr','nPr = n!/(n−r)!; র-কে নিকটতম পূর্ণসংখ্যা ধরে দেখানো হয়','r'],
+ ['math-perm-ncr','n বনাম সমাবেশ nCr','combinationNCR','বস্তুর সংখ্যা n','সমাবেশ nCr','nCr = n!/[r!(n−r)!]; র-কে নিকটতম পূর্ণসংখ্যা ধরে দেখানো হয়','r'],
+ ['math-perm-factorial','n বনাম n!','factorialGrowth','স্বাভাবিক সংখ্যা n','n!','ফ্যাক্টোরিয়াল দ্রুত বৃদ্ধি পায়; পূর্ণসংখ্যা n-এর জন্য প্রাসঙ্গিক','স্কেল'],
+ ['math-perm-pascal','n বনাম নির্দিষ্ট স্তরের দ্বিপদী সহগ','pascalCoefficient','স্তর n','দ্বিপদী সহগ','Pascal triangle-এর নির্দিষ্ট r অবস্থানের সহগ n-এর সঙ্গে বদলায়','r অবস্থান'],
+ ['math-perm-growth','n বনাম nPr/nCr-এর তুলনামূলক বৃদ্ধি','permCombCompare','বস্তুর সংখ্যা n','গণনার সংখ্যা','একই n-এ বিন্যাস ও সমাবেশের পার্থক্য দেখানো হয়েছে','r'],
+ ['math-perm-binomial','x বনাম দ্বিপদী বিস্তারের একটি পদ','binomialTerm','x','পদের মান','(1+x)ⁿ-এর একটি নির্বাচিত পদের মানের ধারণামূলক গ্রাফ','n']
+]);
+addMany('math-trig-ratios',[
+ ['math-trig-sine','কোণ θ বনাম sin θ','trigSin','কোণ θ (ডিগ্রি)','sin θ','sin θ-এর পর্যাবৃত্ত গ্রাফ; কোণ ডিগ্রিতে','বিস্তার'],
+ ['math-trig-cosine','কোণ θ বনাম cos θ','trigCos','কোণ θ (ডিগ্রি)','cos θ','cos θ-এর পর্যাবৃত্ত গ্রাফ; কোণ ডিগ্রিতে','বিস্তার'],
+ ['math-trig-tangent','কোণ θ বনাম tan θ','trigTan','কোণ θ (ডিগ্রি)','tan θ','tan θ-এর গ্রাফ; ±90°-এর কাছে অসীমাসন্ন, প্রদর্শিত সীমা সীমাবদ্ধ','বিস্তার'],
+ ['math-trig-cosec','কোণ θ বনাম cosec θ','trigCosec','কোণ θ (ডিগ্রি)','cosec θ','cosec θ = 1/sin θ; sin θ = 0-এ সংজ্ঞায়িত নয়','বিস্তার'],
+ ['math-trig-sec','কোণ θ বনাম sec θ','trigSec','কোণ θ (ডিগ্রি)','sec θ','sec θ = 1/cos θ; cos θ = 0-এ সংজ্ঞায়িত নয়','বিস্তার'],
+ ['math-trig-cot','কোণ θ বনাম cot θ','trigCot','কোণ θ (ডিগ্রি)','cot θ','cot θ = cos θ/sin θ; sin θ = 0-এ সংজ্ঞায়িত নয়','বিস্তার']
+]);
+addMany('math-associated-trig',[
+ ['math-assoc-sum-sin','কোণ θ বনাম sin(θ + α)','associatedSin','কোণ θ (ডিগ্রি)','sin(θ + α)','সংযুক্ত কোণের সূত্র অনুযায়ী sin(θ+α)','সংযুক্ত কোণ α'],
+ ['math-assoc-diff-sin','কোণ θ বনাম sin(θ − α)','associatedSinDiff','কোণ θ (ডিগ্রি)','sin(θ − α)','সংযুক্ত কোণের সূত্র অনুযায়ী sin(θ−α)','সংযুক্ত কোণ α'],
+ ['math-assoc-sum-cos','কোণ θ বনাম cos(θ + α)','associatedCos','কোণ θ (ডিগ্রি)','cos(θ + α)','cos(θ+α) = cosθ cosα − sinθ sinα','সংযুক্ত কোণ α'],
+ ['math-assoc-double-sin','কোণ θ বনাম sin 2θ','doubleSin','কোণ θ (ডিগ্রি)','sin 2θ','sin 2θ = 2 sin θ cos θ','বিস্তার'],
+ ['math-assoc-double-cos','কোণ θ বনাম cos 2θ','doubleCos','কোণ θ (ডিগ্রি)','cos 2θ','cos 2θ = cos²θ − sin²θ','বিস্তার'],
+ ['math-assoc-sum-product','কোণ θ বনাম sin(θ+α)+sin(θ−α)','associatedSumProduct','কোণ θ (ডিগ্রি)','যোগফল','sin(θ+α)+sin(θ−α) = 2 sinθ cosα; α ডিগ্রিতে','সংযুক্ত কোণ α (ডিগ্রি)']
+]);
+addMany('math-functions',[
+ ['math-func-linear','রৈখিক ফাংশন y = mx + c','functionLinear','x','y','y = mx + c','ঢাল m'],
+ ['math-func-quadratic','দ্বিঘাত ফাংশন y = ax²','functionQuadratic','x','y','y = ax²; a বদলালে প্যারাবোলার খাড়া ভাব বদলায়','a'],
+ ['math-func-cubic','ঘন ফাংশন y = ax³','functionCubic','x','y','y = ax³-এর S-আকৃতির লেখচিত্র; a = 1 হলে y = x³','সহগ a'],
+ ['math-func-absolute','মডুলাস ফাংশন y = a|x|','functionAbsolute','x','y','y = a|x|; a = 1 হলে y = |x|','সহগ a'],
+ ['math-func-reciprocal','বিপরীতানুপাতিক ফাংশন y = a/x','functionReciprocal','x','y','y = a/x; x = 0-এ সংজ্ঞায়িত নয়; a = 1 হলে y = 1/x','সহগ a'],
+ ['math-func-exponential','সূচকীয় ফাংশন y = eᵃˣ','functionExponential','x','y','y = eᵃˣ; a = 1 হলে y = eˣ','সূচক গুণক a']
+]);
+addMany('math-differentiation',[
+ ['math-diff-square','x²-এর অন্তরজ y = 2x','derivativeSquare','x','dy/dx','d(x²)/dx = 2x','স্কেল'],
+ ['math-diff-cube','x³-এর অন্তরজ y = 3x²','derivativeCube','x','dy/dx','d(x³)/dx = 3x²','স্কেল'],
+ ['math-diff-sine','sin x-এর অন্তরজ cos x','derivativeSine','x (রেডিয়ান)','dy/dx','d(sin x)/dx = cos x; ক্যালকুলাসে x রেডিয়ানে','বিস্তার'],
+ ['math-diff-cosine','cos x-এর অন্তরজ −sin x','derivativeCosine','x (রেডিয়ান)','dy/dx','d(cos x)/dx = −sin x; ক্যালকুলাসে x রেডিয়ানে','বিস্তার'],
+ ['math-diff-exp','eˣ-এর অন্তরজ','derivativeExp','x','dy/dx','d(eˣ)/dx = eˣ','সূচক গুণক'],
+ ['math-diff-tangent-slope','প্যারাবোলার স্পর্শকের ঢাল বনাম x','tangentSlope','স্পর্শবিন্দু x','ঢাল dy/dx','y = x² হলে স্পর্শকের ঢাল dy/dx = 2x','স্কেল']
+]);
+addMany('math-integration',[
+ ['math-int-square','x²-এর অনির্দিষ্ট যোগজ y = x³/3','integralSquare','x','যোগজের মান','∫x² dx = x³/3 + C','স্কেল'],
+ ['math-int-sine','sin x-এর যোগজ −cos x','integralSine','x (রেডিয়ান)','যোগজের মান','∫sin x dx = −cos x + C; ক্যালকুলাসে x রেডিয়ানে','বিস্তার'],
+ ['math-int-cosine','cos x-এর যোগজ sin x','integralCosine','x (রেডিয়ান)','যোগজের মান','∫cos x dx = sin x + C; ক্যালকুলাসে x রেডিয়ানে','বিস্তার'],
+ ['math-int-exp','eˣ-এর যোগজ','integralExp','x','যোগজের মান','∫eˣ dx = eˣ + C','সূচক গুণক'],
+ ['math-int-accumulation','উপরের সীমা x বনাম সঞ্চিত ক্ষেত্রফল','integralAccumulation','উপরের সীমা x','সঞ্চিত ক্ষেত্রফল','y = t²-এর 0 থেকে x পর্যন্ত সঞ্চিত ক্ষেত্রফল x³/3','স্কেল'],
+ ['math-int-definite','উপরের সীমা x বনাম নির্দিষ্ট যোগজ','integralDefinite','উপরের সীমা x','নির্দিষ্ট যোগজ','∫₀ˣ t dt = x²/2; x ঋণাত্মক হলে চিহ্নযুক্ত ক্ষেত্রফল ঋণাত্মক','স্কেল']
+]);
+
+function family(key,x,p){p=p||1;var g=9.8,a=2,b=1.5,deg=x*Math.PI/180;
+ switch(key){
+ case'measured':return x+(p-1)*.25;
+ case'mean':return 10+(p/Math.sqrt(Math.max(1,x)))*Math.sin(x*1.7);
+ case'absoluteError':return Math.abs(x-(p*5));
+ case'leastCount':return x*p/2;
+ case'resultant':return Math.sqrt(Math.max(0,100*p*p+64+160*p*Math.cos(deg)));
+ case'components':return Math.sin(deg)*p;
+ case'dotCross':return p*Math.cos(deg);case'riverTime':return (2*p)/Math.max(.15,Math.cos(Math.min(75,x)*Math.PI/180));
+ case'position':return 1+p*x+.2*x*x;case'velocity':return 1+p*x;case'acceleration':return p;case'displacementArea':return 2*x+.5*p*x*x;case'distanceArea':return Math.abs(2*x-.5*p*x*x);case'range':return p*p*Math.sin(2*deg)/9.8;case'maxHeight':return p*p*Math.pow(Math.sin(deg),2)/19.6;case'heightTime':return 10+p*x-4.9*x*x;case'relativePosition':return 10+(p-1.3)*x;case'distanceTimeSquared':return .5*p*x;
+ case'forceAcceleration':return x/p;case'massAcceleration':return p/Math.max(.1,x);case'frictionNormal':return p*x;case'inclineAngle':return 9.8*(Math.sin(deg)-.2*Math.cos(deg));case'momentumTime':return 2+p*x;case'impulse':return p*x;case'collisionEnergy':return x<5?Math.max(0,p*20):Math.max(0,p*15);case'verticalTension':return Math.max(0,p*(20+15*Math.cos(deg)));
+ case'forceDisplacement':return p*(1+x*.2);case'displacementWork':return p*x;case'kinetic':return .5*p*x*x;case'potentialEnergy':return p*g*x;case'springEnergy':return .5*p*x*x;case'timeWork':return p*x;case'speedPower':return p*x;case'inputOutput':return p*x;
+ case'gravityDistance':return p/Math.max(.1,x*x);case'gravityInverseSquare':return p*x;case'heightG':return 9.8*Math.pow(6371/(6371+x*p),2);case'earthCentreG':return x<1?9.8*x:9.8/(x*x);case'gravityPotential':return -p/Math.max(.1,x);case'orbitalSpeed':return Math.sqrt(p/Math.max(.1,x));case'kepler':return p*x;case'satelliteEnergy':return -p/Math.max(.1,x);
+ case'forceExtension':return p*x;case'stressStrain':return p*x;case'pressureDepth':return 100+p*9.8*x/1000;case'immersion':return Math.min(1,Math.max(0,x/p));case'flowArea':return p/Math.max(.1,x);case'flowPressure':return Math.max(0,1000-.5*p*x*x);case'terminalTime':return p*(1-Math.exp(-x/3));case'capillaryInverseRadius':return p*x;case'spherePressure':return p/Math.max(.1,x);
+ case'shmTriplet':return Math.sin(x*p);case'amplitudeVmax':return p*x;case'pendulumT2':return 4*Math.PI*Math.PI*x/p;case'springT2':return 4*Math.PI*Math.PI*x/p;case'shmEnergy':return Math.max(0,p*(1-Math.pow(x/10,2))); case'phaseAmplitude':return Math.sqrt(Math.max(0,4*p*p+2.25+6*p*Math.cos(deg)));
+ case'wavePosition':return Math.sin(x*p);case'waveTime':return Math.sin(x*p);case'frequencyWavelength':return p/Math.max(.1,x);case'nodes':return Math.abs(Math.sin(Math.PI*x*p));case'harmonic':return p*x;case'beatsFrequency':return p*x;case'dopplerSpeed':return 500*(343/(343-x*p));case'soundIntensity':return p/Math.max(.1,x*x);case'decibelDistance':return 120-20*Math.log10(Math.max(.1,x*p));
+ case'gasPV':return p/Math.max(.1,x);case'gasVT':return p*x;case'gasPT':return p*x;case'rmsSqrt':return p*x;case'maxwell':return x*x*Math.exp(-x*x/Math.max(.1,p*p));case'kineticPressure':return p*x/3;case'pvCycle':return 5+Math.sin(x)*p;case'internalEnergy':return p*x;case'heatWorkEnergy':return x*(p/3);
+ case'calibration':return p*x;case'uncertaintyTrials':return p/Math.sqrt(Math.max(1,x));case'dilution':return p/Math.max(.1,x);case'heatingCurve':return x<5?20+p*4*x:40+p*.55*(x-5);case'repeatability':return p/Math.sqrt(Math.max(1,x))*(1+.08*Math.sin(2*x));case'reagentVolume':return 20+p*x;case'labLeastCount':return p*x/2;
+ case'chemSolubility':return Math.max(0,5+p*.7*x+p*.035*x*x);case'precipitate':return p*Math.min(x,5);case'conductivityConc':return p*x/(1+.2*x);case'chromatography':return x/Math.max(.01,x+p);case'absorptionSpectrum':return p*Math.exp(-Math.pow((x-5)/1.25,2)/2);case'lineSpectrum':return p*(Math.exp(-Math.pow((x-2.2)/.09,2)/2)+.8*Math.exp(-Math.pow((x-5.7)/.11,2)/2)+.65*Math.exp(-Math.pow((x-8.1)/.08,2)/2));case'reagentLimit':return p/(1+Math.exp(-2*(x-4)));case'solubilityProduct':return x/Math.max(.01,p);case'conductivityDilution':return p*(1-Math.exp(-.25*x));case'flameSpectrum':return p*(Math.exp(-Math.pow((x-3.1)/.12,2)/2)+.9*Math.exp(-Math.pow((x-6.5)/.1,2)/2));
+ case'atomicRadius':return Math.max(.25,1.8-.07*x+.25*Math.cos((x-1)*Math.PI/9))*p;case'ionizationTrend':return (5+.35*x+.65*Math.cos(x*Math.PI/4))*p;case'electronegativityTrend':return Math.max(.1,.7+.14*x+.22*Math.sin(x*Math.PI/8))*p;case'electronAffinityTrend':return (1.2+.18*x+.5*Math.sin(x*Math.PI/3))*p;case'metallicTrend':return Math.max(.05,2-.1*x+.15*Math.cos(x*Math.PI/9))*p;case'bondLengthOrder':return p/Math.max(.3,x);case'bondEnergyOrder':return p*x*x;case'bondPotential':var rr=Math.max(.35,x),q=Math.exp(-1.1*(rr-2));return p*(Math.pow(1-q,2)-1);case'latticeEnergy':return p*x;case'bondPolarity':return p*(1-Math.exp(-x*x/1.8));case'bondEnergyDistance':var rd=Math.max(.3,x),dq=Math.exp(-1.05*(rd-2));return p*(Math.pow(1-dq,2)-1);case'atomicVolume':return p*(1.2+.25*Math.sin(x*Math.PI/2)+.06*x);
+ case'reactionProfileExo':return 12+p*3*Math.exp(-Math.pow((x-4.5)/1.15,2))-.55*p*x;case'reactionProfileEndo':return 8+p*3*Math.exp(-Math.pow((x-4.5)/1.15,2))+.45*p*x;case'rateConcPower':return p*Math.pow(Math.max(0,x),1.5);case'rateTimeZero':return Math.max(0,10-p*x);case'rateTimeFirst':return 10*Math.exp(-p*x/5);case'rateTimeSecond':return 10/(1+p*x);case'arrhenius':return Math.log(Math.max(.00001,100*p))-1000*p*x;case'equilibriumShift':return 10/(1+Math.exp(-p*(x-4)));case'equilibriumYieldPressure':return 100*x/(x+5*p);case'equilibriumYieldTempExo':return 100*Math.exp(-p*x/30);case'equilibriumYieldTempEndo':return 100*(1-Math.exp(-p*x/30));case'kcTemperature':return Math.exp(Math.max(-20,Math.min(20,p*(x-5)/10)));case'titrationStrong':return 1+12/(1+Math.exp(-p*(x-5)));case'titrationWeak':return 3+10/(1+Math.exp(-p*(x-5.5)));case'nernst':return 1-p*x;case'faraday':return p*x;case'electrolysisIV':return p*x;case'halfLifeOrder':return 10*Math.pow(.5,x/Math.max(.1,p));
+ case'haberYieldTemp':return p*75*Math.exp(-Math.pow((x-4.5)/2.4,2));case'industrialYieldPressure':return 100*x/(x+2*p);case'catalystYield':return 100*(1-Math.exp(-p*x/4));case'corrosionPH':return p*(.5+Math.pow((x-6)/5,2));case'fertilizerPH':return 100*Math.exp(-Math.pow((x-6.7)/Math.max(.5,p),2)/2);case'pollutionTreatment':return 100*Math.exp(-p*x/5);case'waterHardness':return Math.max(0,100-p*x);
+ case'matrixDeterminant':return x*x-p;case'linearTransform':return p*x;case'determinantScale':return p*x*x;case'matrixEigen':return x*x-p;case'matrixLinearCombo':return x+p;case'vectorComponent':return p*Math.cos(deg);case'vectorMagnitude':return Math.sqrt(Math.max(0,2*p*p+2*p*p*Math.cos(deg)));case'vectorDot':return p*Math.cos(deg);case'vectorCross':return Math.abs(p*Math.sin(deg));case'vectorProjection':return p*Math.cos(deg);case'vectorParametric':return x+p;
+ case'lineFamily':return p*x+2;case'lineIntercept':return x+p;case'slopeAngle':return Math.tan(deg);case'lineParallel':return x+p;case'lineDistance':return Math.abs(p*x+2)/Math.sqrt(p*p+1);case'lineIntersection':return (p-1)*x+2;
+ case'circleUpper':return Math.sqrt(Math.max(0,p*p-x*x));case'circleLower':return -Math.sqrt(Math.max(0,p*p-x*x));case'circleResidual':return x*x-p*p;case'circleArea':return p*Math.PI*x*x;case'circleCircumference':return p*2*Math.PI*x;case'circleTangent':return p*x+1;
+ case'permutationNPR':var nn=Math.max(0,Math.min(10,Math.round(x))),rr=Math.max(0,Math.min(nn,Math.round(p)));var pf=1;for(var pi=0;pi<rr;pi++)pf*=Math.max(1,nn-pi);return nn<rr?0:pf;case'combinationNCR':var nc=Math.max(0,Math.min(10,Math.round(x))),rc=Math.max(0,Math.min(nc,Math.round(p))),cf=1;for(var ci=1;ci<=rc;ci++)cf=cf*(nc-ci+1)/ci;return nc<rc?0:cf;case'factorialGrowth':var nf=Math.max(0,Math.min(10,Math.round(x))),ff=1;for(var fi=2;fi<=nf;fi++)ff*=fi;return ff;case'pascalCoefficient':var pn=Math.max(0,Math.min(10,Math.round(x))),pr=Math.max(0,Math.min(pn,Math.round(p))),pc=1;for(var pj=1;pj<=pr;pj++)pc=pc*(pn-pj+1)/pj;return pn<pr?0:pc;case'permCombCompare':var n2=Math.max(0,Math.min(10,Math.round(x))),r2=Math.max(0,Math.min(n2,Math.round(p))),c2=1;for(var ci2=1;ci2<=r2;ci2++)c2=c2*(n2-ci2+1)/ci2;return n2<r2?0:c2*r2;case'binomialTerm':return Math.pow(Math.max(.01,1+x),Math.max(1,Math.min(10,Math.round(p))));
+ case'trigSin':return p*Math.sin(deg);case'trigCos':return p*Math.cos(deg);case'trigTan':return Math.tan(deg)*p;case'trigCosec':return Math.abs(Math.sin(deg))<.015?NaN:p/Math.sin(deg);case'trigSec':return Math.abs(Math.cos(deg))<.015?NaN:p/Math.cos(deg);case'trigCot':return Math.abs(Math.sin(deg))<.015?NaN:Math.cos(deg)/Math.sin(deg)*p;
+ case'associatedSin':return Math.sin((x+p)*Math.PI/180);case'associatedSinDiff':return Math.sin((x-p)*Math.PI/180);case'associatedCos':return Math.cos((x+p)*Math.PI/180);case'doubleSin':return Math.sin(2*deg);case'doubleCos':return Math.cos(2*deg);case'associatedSumProduct':return 2*Math.sin(deg)*Math.cos(p*Math.PI/180);
+ case'functionLinear':return p*x+2;case'functionQuadratic':return p*x*x;case'functionCubic':return p*x*x*x;case'functionAbsolute':return p*Math.abs(x);case'functionReciprocal':return p/(Math.abs(x)<.02?NaN:x);case'functionExponential':return Math.exp(Math.max(-20,Math.min(10,p*x)));
+ case'derivativeSquare':return 2*p*x;case'derivativeCube':return 3*p*x*x;case'derivativeSine':return Math.cos(x)*p;case'derivativeCosine':return -Math.sin(x)*p;case'derivativeExp':return p*Math.exp(Math.max(-20,Math.min(10,x)));case'tangentSlope':return 2*p*x;
+ case'integralSquare':return p*x*x*x/3;case'integralSine':return -Math.cos(x)*p;case'integralCosine':return Math.sin(x)*p;case'integralExp':return p*Math.exp(Math.max(-20,Math.min(10,x)));case'integralAccumulation':return p*x*x*x/3;case'integralDefinite':return p*x*x/2;
+ default:return Math.sin(x)*p;
+ }
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function domain(d){var map={resultant:[0,180],components:[0,360],dotCross:[0,180],riverTime:[0,75],range:[0,90],maxHeight:[0,90],phaseAmplitude:[0,360],phase:[0,360],dopplerSpeed:[0,80],heightG:[0,30000],earthCentreG:[0,2],gravityDistance:[0.2,10],gravityPotential:[0.2,10],orbitalSpeed:[0.2,10],satelliteEnergy:[0.2,10],frequencyWavelength:[0.1,10],decibelDistance:[0.5,10],flowArea:[0.1,10],spherePressure:[0.1,10],gasPV:[0.1,10],atomicRadius:[1,18],ionizationTrend:[1,18],electronegativityTrend:[1,18],electronAffinityTrend:[1,18],metallicTrend:[1,18],atomicVolume:[1,18],bondLengthOrder:[1,3],bondEnergyOrder:[1,3],bondPotential:[0.5,5],latticeEnergy:[1,4],bondPolarity:[0,4],bondEnergyDistance:[0.5,5],chemSolubility:[0,10],chromatography:[0,1],absorptionSpectrum:[0,10],lineSpectrum:[0,10],flameSpectrum:[0,10],reactionProfileExo:[0,10],reactionProfileEndo:[0,10],rateConcPower:[0,10],rateTimeZero:[0,10],rateTimeFirst:[0,10],rateTimeSecond:[0,10],arrhenius:[0.00125,0.005],equilibriumShift:[0,10],equilibriumYieldPressure:[0,10],equilibriumYieldTempExo:[0,10],equilibriumYieldTempEndo:[0,10],kcTemperature:[0,10],titrationStrong:[0,10],titrationWeak:[0,10],nernst:[-5,5],faraday:[0,10],electrolysisIV:[0,10],halfLifeOrder:[0,10],haberYieldTemp:[1,8],industrialYieldPressure:[0,10],catalystYield:[0,10],corrosionPH:[0,14],fertilizerPH:[0,14],pollutionTreatment:[0,10],waterHardness:[0,10],matrixDeterminant:[-5,5],matrixEigen:[-5,5],vectorComponent:[0,360],vectorMagnitude:[0,180],vectorDot:[0,360],vectorCross:[0,360],vectorProjection:[0,360],vectorParametric:[-5,5],slopeAngle:[-80,80],lineDistance:[-5,5],lineIntersection:[-5,5],circleUpper:[-3,3],circleLower:[-3,3],circleResidual:[-3,3],circleArea:[0,10],circleCircumference:[0,10],permutationNPR:[0,10],combinationNCR:[0,10],factorialGrowth:[0,10],pascalCoefficient:[0,10],permCombCompare:[0,10],binomialTerm:[0,3],trigSin:[-360,360],trigCos:[-360,360],trigTan:[-80,80],trigCosec:[-360,360],trigSec:[-360,360],trigCot:[-360,360],associatedSin:[-360,360],associatedSinDiff:[-360,360],associatedCos:[-360,360],doubleSin:[-360,360],doubleCos:[-360,360],associatedSumProduct:[-360,360],functionLinear:[-5,5],functionQuadratic:[-5,5],functionCubic:[-3,3],functionAbsolute:[-5,5],functionReciprocal:[-5,5],functionExponential:[-5,5],derivativeSquare:[-5,5],derivativeCube:[-3,3],derivativeSine:[-6.28,6.28],derivativeCosine:[-6.28,6.28],derivativeExp:[-5,5],tangentSlope:[-5,5],integralSquare:[-5,5],integralSine:[-6.28,6.28],integralCosine:[-6.28,6.28],integralExp:[-5,5],integralAccumulation:[-5,5],integralDefinite:[-5,5]};return map[d.plot]||[0,10];}
+function seriesValues(key,x,p){var y=family(key,x,p),r=[y],deg=x*Math.PI/180;switch(key){case'vectorComponent':r.push(p*Math.sin(deg));break;case'components':r.push(p*Math.cos(deg));break;case'dotCross':r.push(p*Math.sin(deg));break;case'shmTriplet':r.push(Math.cos(x*p),-Math.sin(x*p));break;case'shmEnergy':r.push(p*Math.pow(x/10,2));break;case'heatWorkEnergy':r.push(x*(1-p/3));break;case'pvCycle':r[0]=10-p*x;r.push(2+p*x*.5);break;}return r;}
+function samples(d,p,n,xmin,xmax){var arr=[],i;for(i=0;i<=n;i++){var xx=xmin+(xmax-xmin)*i/n,ys=seriesValues(d.plot,xx,p);arr.push({x:xx,y:ys[0],ys:ys});}return arr;}
+function pathFor(d,p,w,h,xmin,xmax){var a=samples(d,p,60,xmin,xmax),ys=[];a.forEach(function(v){v.ys.forEach(function(y){if(Number.isFinite(y))ys.push(y);});});var lo=Math.min.apply(null,ys),hi=Math.max.apply(null,ys);if(!isFinite(lo)||!isFinite(hi)){lo=-1;hi=1;}if(hi===lo){lo-=1;hi+=1;}var pad=(hi-lo)*.08;lo-=pad;hi+=pad;var started=false,parts=[];a.forEach(function(v){if(!Number.isFinite(v.y)){started=false;return;}var xx=5+(v.x-xmin)/(xmax-xmin)*(w-10),yy=h-5-(v.y-lo)/(hi-lo)*(h-10);parts.push((started?'L':'M')+xx.toFixed(1)+' '+yy.toFixed(1));started=true;});return parts.join(' ');}
+var SUBJ_META={phy:'পদার্থ',chem:'রসায়ন',math:'গণিত'},chSubj=null;
+function subjectOf(d){if(!chSubj){chSubj={};[[physicsChapters,'phy'],[chemistryChapters,'chem'],[mathChapters,'math']].forEach(function(g){g[0].forEach(function(c){chSubj[c.id]=g[1];});});}return chSubj[d.chapter]||'phy';}
+/* v115: premium preview — real function samples, drawn with CSS stroke animation (cards only; the interactive graph is untouched) */
+function thumb(d){var dm=domain(d),W=160,H=88,L=15,R=W-9,T=8,B=H-13,px0=L+5,px1=R-4,py0=T+5,py1=B-5,a=samples(d,1,90,dm[0],dm[1]),lo=Infinity,hi=-Infinity,ns=1,i,k;a.forEach(function(v){if(v.ys.length>ns)ns=v.ys.length;v.ys.forEach(function(y){if(Number.isFinite(y)){if(y<lo)lo=y;if(y>hi)hi=y;}});});if(!isFinite(lo)||!isFinite(hi)){lo=-1;hi=1;}if(hi===lo){lo-=1;hi+=1;}var pad=(hi-lo)*.08;lo-=pad;hi+=pad;var span=dm[1]-dm[0]||1,paths=[],last=null;
+for(k=0;k<ns&&k<3;k++){var started=false,parts=[];a.forEach(function(v){var y=v.ys[k];if(!Number.isFinite(y)){started=false;return;}var xx=px0+(v.x-dm[0])/span*(px1-px0),yy=py1-(y-lo)/(hi-lo)*(py1-py0);if(yy<T-1||yy>B+1){started=false;return;}parts.push((started?'L':'M')+xx.toFixed(1)+' '+yy.toFixed(1));started=true;if(k===0)last=[xx,yy];});paths.push(parts.join(' '));}
+var grid='',zero='';for(i=1;i<=4;i++){var gx=(L+(R-L)*i/5).toFixed(1);grid+='M'+gx+' '+T+'V'+B;}for(i=1;i<=3;i++){var gy=(T+(B-T)*i/4).toFixed(1);grid+='M'+L+' '+gy+'H'+R;}
+if(lo<0&&hi>0){var zy=(py1-(0-lo)/(hi-lo)*(py1-py0)).toFixed(1);zero='<path class="gp-zero" d="M'+L+' '+zy+'H'+R+'"/>';}
+var svg='<svg class="graph-thumb" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc(d.title)+' graph preview"><path class="gp-grid" d="'+grid+'"/>'+zero+'<path class="gp-axis" pathLength="1" d="M'+L+' '+(T-2)+'V'+B+'H'+(R+2)+'"/><path class="gp-arrow" d="M'+(L-3)+' '+(T+1)+'L'+L+' '+(T-3)+'L'+(L+3)+' '+(T+1)+'M'+(R-2)+' '+(B-3)+'L'+(R+3)+' '+B+'L'+(R-2)+' '+(B+3)+'"/>';
+paths.forEach(function(p,n){if(p)svg+='<path class="gp-curve gp-s'+n+'" pathLength="1" d="'+p+'"/>';});
+if(last)svg+='<circle class="gp-dot" cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="2.6"/>';
+return svg+'</svg>';}
+function renderList(){currentFilter='all';var subjects=[{id:'all',label:'সব গ্রাফ',icon:'▦'},{id:'phy',label:'পদার্থবিজ্ঞান ১ম পত্র',icon:'⚛️'},{id:'chem',label:'রসায়ন ১ম পত্র',icon:'🧪'},{id:'math',label:'উচ্চতর গণিত ১ম পত্র',icon:'📐'}];var counts={phy:list.filter(function(d){return physicsChapters.some(function(c){return c.id===d.chapter;});}).length,chem:list.filter(function(d){return chemistryChapters.some(function(c){return c.id===d.chapter;});}).length,math:list.filter(function(d){return mathChapters.some(function(c){return c.id===d.chapter;});}).length};var html='<div class="w pgw graph-page"><span class="pill rv"><i></i>📊 Graph Lab · '+list.length+'টি ইন্টারঅ্যাকটিভ গ্রাফ</span><h1 class="rv">অধ্যায়ভিত্তিক গ্রাফ ল্যাব</h1><p class="lead rv">চারটি বিষয়-ফিল্টার থেকে গ্রাফ বেছে নিন। প্রতিটি গ্রাফে নিজস্ব পরামিতি, অক্ষের সীমা ও হাতে লেখা ডেটা দিয়ে পরিবর্তন করে পরীক্ষা করা যায়।</p><div class="graph-subject-buttons" role="tablist" aria-label="গ্রাফের বিষয়">'+subjects.map(function(q){var n=q.id==='all'?list.length:counts[q.id];return'<button type="button" class="graph-subject-btn '+(q.id==='all'?'on':'')+'" data-graph-filter="'+q.id+'" role="tab" aria-selected="'+(q.id==='all'?'true':'false')+'"><span aria-hidden="true">'+q.icon+'</span><b>'+esc(q.label)+'</b><small>'+n+'টি গ্রাফ</small></button>';}).join('')+'</div><div class="graph-search-row"><input id="graphSearch" type="search" placeholder="গ্রাফের নাম বা অধ্যায় খুঁজুন…" aria-label="গ্রাফ খুঁজুন"><span class="mutt">'+chapters.length+'টি অধ্যায় · মোট '+list.length+'টি গ্রাফ</span></div><div id="graphGroups">';var lastSubject=null;chapters.forEach(function(c){if(c.subject!==lastSubject){html+='<div class="graph-subject-section-heading" data-graph-subject-heading="'+c.subject+'"><h2>'+esc(c.subjectTitle)+'</h2></div>';lastSubject=c.subject;}var arr=list.filter(function(d){return d.chapter===c.id;});html+='<section class="graph-chapter-group" data-graph-chapter="'+c.id+'" data-graph-subject="'+c.subject+'"><h2 class="subh"><span>'+esc(c.title)+'</span> <small>'+arr.length+'টি গ্রাফ</small></h2><div class="gA g3 graph-card-grid">'+arr.map(function(d){var sj=subjectOf(d);return'<a class="card graph-card" data-subject="'+sj+'" href="#/graphs/'+d.id+'"><div class="graph-card-top"><span class="graph-card-icon">∿</span><span class="graph-card-chapter">'+esc(c.title)+'</span><span class="graph-card-subject">'+SUBJ_META[sj]+'</span></div><div class="graph-thumb-wrap">'+thumb(d)+'</div><h3>'+esc(d.title)+'</h3><p>'+esc(d.formula)+'</p><span class="go">ইন্টারঅ্যাকটিভ গ্রাফ খুলুন →</span></a>';}).join('')+'</div></section>';});html+='</div></div>';return html;}
+function detail(id){var d=list.filter(function(x){return x.id===id;})[0];if(!d)return renderList();var c=chapters.filter(function(x){return x.id===d.chapter;})[0],dm=domain(d);return '<div class="w pgw graph-detail-page"><a class="bk" href="#/graphs">← সব গ্রাফ</a><h1>'+esc(d.title)+'</h1><p class="lead">'+esc(d.formula)+'</p><section class="card graph-interactive-card"><div class="graph-control-grid"><label class="graph-control graph-control-wide"><span>'+esc(d.param)+'</span><input id="graphParameter" type="range" min="0.2" max="3" step="0.1" value="1"><output id="graphParameterOut">1.0</output></label><label class="graph-control graph-control-param-number"><span>পরামিতির নির্দিষ্ট মান (নিজে লিখুন)</span><input id="graphParameterValue" type="number" step="any" value="1" aria-label="পরামিতির নির্দিষ্ট মান"></label><label class="graph-control"><span>X-axis minimum</span><input id="graphXMin" type="number" step="any" value="'+dm[0]+'"></label><label class="graph-control"><span>X-axis maximum</span><input id="graphXMax" type="number" step="any" value="'+dm[1]+'"></label><label class="graph-control"><span>Y-axis minimum</span><input id="graphYMin" type="number" step="any" placeholder="Auto scale"></label><label class="graph-control"><span>Y-axis maximum</span><input id="graphYMax" type="number" step="any" placeholder="Auto scale"></label><label class="graph-control"><span>Curve samples</span><input id="graphSamples" type="range" min="40" max="400" step="20" value="160"><output id="graphSamplesOut">160</output></label><label class="graph-control"><span>Drawing speed</span><input id="graphSpeed" type="range" min="0.2" max="3" step="0.2" value="1"><output id="graphSpeedOut">1×</output></label></div><div class="graph-toolbar" role="group" aria-label="Graph controls"><button type="button" class="btn pri" id="graphAnimate" aria-controls="graphCanvas">▶ Draw graph</button><button type="button" class="btn" id="graphReset">↺ Reset</button><button type="button" class="btn" id="graphExportCsv">↓ Export CSV</button><button type="button" class="btn" id="graphExportPng">▧ Save PNG</button></div><div class="graph-canvas-wrap"><canvas id="graphCanvas" width="900" height="420" aria-label="'+esc(d.title)+' interactive graph"></canvas></div><div class="graph-live-readout" id="graphReadout" aria-live="polite"></div><div class="graph-pointer-readout" id="graphPointerReadout">গ্রাফের ওপর টাচ বা মাউস রাখলে ওই বিন্দুর মান দেখাবে।</div><details class="graph-data-editor"><summary>নিজের ডেটা যোগ বা পরিবর্তন করুন</summary><p class="mutt">প্রতি লাইনে x,y লিখুন—যেমন <code>0,0</code>। এগুলো মডেল-কার্ভের সঙ্গে বিন্দু ও সংযোগরেখা হিসেবে দেখানো হবে।</p><textarea id="graphCustomData" rows="5" spellcheck="false" placeholder="0, 0&#10;1, 2&#10;2, 3.5&#10;3, 2.2" aria-label="নিজের গ্রাফের ডেটা"></textarea><div class="graph-toolbar"><button type="button" class="btn pri" id="graphApplyData">ডেটা প্রয়োগ</button><button type="button" class="btn" id="graphClearData">ডেটা মুছুন</button><label class="graph-check"><input type="checkbox" id="graphConnectData" checked> বিন্দু সংযুক্ত করুন</label><label class="graph-check"><input type="checkbox" id="graphShowCurve" checked> মূল মডেল দেখান</label></div><p id="graphDataStatus" class="graph-data-status" role="status" aria-live="polite">এখনও নিজস্ব ডেটা যোগ করা হয়নি।</p></details><p class="lens-note">এটি শিক্ষামূলক মডেল। পরামিতি, অক্ষের সীমা, নমুনা সংখ্যা ও নিজের ডেটা বদলে বক্ররেখা বিশ্লেষণ করুন। প্রয়োজন হলে Reset চাপলে এই গ্রাফের ডিফল্ট সেটিংসে ফিরবে।</p></section><div class="graph-formula card"><span>সম্পর্ক / সূত্র</span><p>'+esc(d.formula)+'</p><span class="mutt">X-axis: '+esc(d.x)+' · Y-axis: '+esc(d.y)+'</span></div><nav class="graph-prev-next" aria-label="গ্রাফ নেভিগেশন"><a class="btn graph-prev-btn" href="#/graphs/'+previousGraph(id)+'">← আগের গ্রাফ</a><a class="btn pri graph-next-btn" href="#/graphs/'+nextGraph(id)+'">পরের গ্রাফ →</a></nav></div>';}
+function nextGraph(id){var i=list.findIndex(function(d){return d.id===id;});return list[(i+1)%list.length].id;}
+function previousGraph(id){var i=list.findIndex(function(d){return d.id===id;});return list[(i-1+list.length)%list.length].id;}
+function mount(id,root){
+ var d=list.filter(function(x){return x.id===id;})[0];if(!d||!root)return;
+ var cn=root.querySelector('#graphCanvas'),ctl=root.querySelector('#graphParameter');if(!cn||!ctl)return;
+ var ctx=cn.getContext('2d');if(!ctx)return;
+ var pOut=root.querySelector('#graphParameterOut'),pValueEl=root.querySelector('#graphParameterValue'),xMinEl=root.querySelector('#graphXMin'),xMaxEl=root.querySelector('#graphXMax'),yMinEl=root.querySelector('#graphYMin'),yMaxEl=root.querySelector('#graphYMax'),sampleEl=root.querySelector('#graphSamples'),sampleOut=root.querySelector('#graphSamplesOut'),speedEl=root.querySelector('#graphSpeed'),speedOut=root.querySelector('#graphSpeedOut'),rd=root.querySelector('#graphReadout'),pointerOut=root.querySelector('#graphPointerReadout'),customEl=root.querySelector('#graphCustomData'),statusEl=root.querySelector('#graphDataStatus'),connectEl=root.querySelector('#graphConnectData'),showCurveEl=root.querySelector('#graphShowCurve'),animateBtn=root.querySelector('#graphAnimate');
+ var baseDomain=domain(d),customPoints=[],raf=0,animating=false,lastFrame=0,drawStart=0,drawStartProgress=0,drawProgress=1,hoverX=null,customRevision=0,sceneCache=null,sceneKey='',resizeObserver=null,dprNow=1;
+ var nav=window.navigator||{},connection=nav.connection||nav.mozConnection||nav.webkitConnection||{};
+ var lowPower=!!((nav.hardwareConcurrency&&nav.hardwareConcurrency<=4)||(nav.deviceMemory&&nav.deviceMemory<=4)||connection.saveData);
+ var reduceMotion=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+ var defaults={p:1,xmin:baseDomain[0],xmax:baseDomain[1],ymin:'',ymax:'',samples:160,speed:1};
+ function setStatus(t,error){if(statusEl){statusEl.textContent=t;statusEl.classList.toggle('error',!!error);}}
+ function settings(){var xmin=Number(xMinEl.value),xmax=Number(xMaxEl.value),ymin=yMinEl.value.trim()===''?null:Number(yMinEl.value),ymax=yMaxEl.value.trim()===''?null:Number(yMaxEl.value),n=Number(sampleEl.value);if(!Number.isFinite(xmin)||!Number.isFinite(xmax)||xmax<=xmin)return null;if((ymin!==null&&!Number.isFinite(ymin))||(ymax!==null&&!Number.isFinite(ymax))||(ymin!==null&&ymax!==null&&ymax<=ymin))return null;var pval=pValueEl&&pValueEl.value.trim()!==''?Number(pValueEl.value):Number(ctl.value);if(!Number.isFinite(pval))return null;return{p:pval,xmin:xmin,xmax:xmax,ymin:ymin,ymax:ymax,n:Math.max(40,Math.min(400,Math.round(n/20)*20)),speed:Number(speedEl.value)||1,showCurve:!showCurveEl||showCurveEl.checked,connect:!connectEl||connectEl.checked};}
+ function fitCanvas(){var w=cn.clientWidth||900;if(w<180)return;var dpr=Math.min(3,Math.max(1,window.devicePixelRatio||1)),want=Math.round(w*dpr),height=Math.round(want*420/900);dprNow=dpr;if(cn.width!==want||cn.height!==height){cn.width=want;cn.height=height;sceneCache=null;sceneKey='';}}
+ function buildScene(st){
+  var W=cn.width/dprNow,H=cn.height/dprNow,sm=W<520,L=Math.max(sm?54:58,W*.085),R=sm?14:20,T=sm?32:38,B=Math.max(sm?46:52,H*.14),a=samples(d,st.p,st.n,st.xmin,st.xmax),ys=[];
+  if(st.showCurve)a.forEach(function(v){v.ys.forEach(function(y){if(Number.isFinite(y))ys.push(y);});});
+  var visibleCustom=customPoints.filter(function(v){if(v.x<st.xmin||v.x>st.xmax)return false;ys.push(v.y);return true;}).sort(function(a,b){return a.x-b.x;});
+  var lo=st.ymin===null?(ys.length?Math.min.apply(null,ys):-1):st.ymin,hi=st.ymax===null?(ys.length?Math.max.apply(null,ys):1):st.ymax;
+  if(!Number.isFinite(lo)||!Number.isFinite(hi)){lo=-1;hi=1;}if(lo===hi){lo-=1;hi+=1;}
+  if(st.ymin===null||st.ymax===null){var pad=(hi-lo)*.12||1;if(st.ymin===null)lo-=pad;if(st.ymax===null)hi+=pad;}
+  return{W:W,H:H,L:L,R:R,T:T,B:B,a:a,custom:visibleCustom,lo:lo,hi:hi,X:function(x){return L+(x-st.xmin)/(st.xmax-st.xmin)*(W-L-R);},Y:function(y){return H-B-(y-lo)/(hi-lo)*(H-T-B);}};
+ }
+ function draw(progress){
+  if(!cn.isConnected)return;progress=progress==null?1:Math.max(0,Math.min(1,progress));var st=settings();
+  if(!st){setStatus('অক্ষের সীমা সঠিক দিন: X/Y maximum অবশ্যই minimum-এর চেয়ে বড় হতে হবে।',true);return;}
+  var W=cn.width/dprNow,H=cn.height/dprNow,key=[cn.width,W,H,st.p,st.xmin,st.xmax,st.ymin,st.ymax,st.n,st.showCurve?1:0,st.connect?1:0,customRevision].join('|');
+  if(!sceneCache||key!==sceneKey){sceneCache=buildScene(st);sceneKey=key;}
+  var sc=sceneCache,sm=W<520,L=sc.L,R=sc.R,T=sc.T,B=sc.B,a=sc.a,X=sc.X,Y=sc.Y,lo=sc.lo,hi=sc.hi;
+  ctx.setTransform(dprNow,0,0,dprNow,0,0);ctx.clearRect(0,0,W,H);ctx.fillStyle='#071827';ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(125,190,230,.16)';ctx.lineWidth=Math.max(1,W/900);ctx.fillStyle='#d8e6f3';ctx.font=Math.max(11,13*W/900)+'px system-ui, "Noto Sans Bengali", sans-serif';ctx.textAlign='left';ctx.fillText(d.title,Math.max(12,L*.22),Math.max(17,24*H/420));
+  for(var i=0;i<=5;i++){var yy=T+(H-T-B)*i/5;ctx.beginPath();ctx.moveTo(L,yy);ctx.lineTo(W-R,yy);ctx.stroke();ctx.textAlign='right';ctx.fillText(Number((hi-(hi-lo)*i/5).toPrecision(4)).toString(),L-7,yy+4);var xx=L+(W-L-R)*i/5;ctx.beginPath();ctx.moveTo(xx,T);ctx.lineTo(xx,H-B);ctx.stroke();ctx.textAlign='center';ctx.fillText(Number((st.xmin+(st.xmax-st.xmin)*i/5).toPrecision(4)).toString(),xx,H-B+20);}
+  ctx.strokeStyle='rgba(185,215,237,.75)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(L,H-B);ctx.lineTo(W-R,H-B);ctx.moveTo(L,T);ctx.lineTo(L,H-B);ctx.stroke();
+  if(lo<=0&&hi>=0){ctx.strokeStyle='rgba(220,235,250,.48)';ctx.beginPath();ctx.moveTo(L,Y(0));ctx.lineTo(W-R,Y(0));ctx.stroke();}
+  if(st.xmin<=0&&st.xmax>=0){ctx.strokeStyle='rgba(220,235,250,.48)';ctx.beginPath();ctx.moveTo(X(0),T);ctx.lineTo(X(0),H-B);ctx.stroke();}
+  ctx.textAlign='center';ctx.font=Math.max(11.5,14*W/900)+'px system-ui, "Noto Sans Bengali", sans-serif';ctx.fillText(d.x,(L+W-R)/2,H-10);ctx.save();ctx.translate(sm?13:18,(H+T-B)/2);ctx.rotate(-Math.PI/2);ctx.fillText(d.y,0,0);ctx.restore();
+  var colors=['#38bdf8','#fbbf24','#34d399'];
+  if(st.showCurve){
+   var limit=progress*(a.length-1),whole=Math.floor(limit),fraction=limit-whole;
+   for(var si=0;si<(a[0].ys||[a[0].y]).length;si++){
+    ctx.strokeStyle=colors[si%colors.length];ctx.lineWidth=Math.max(2,3*W/900);ctx.lineJoin='round';ctx.lineCap='round';ctx.beginPath();var started=false;
+    for(var ai=0;ai<=whole;ai++){
+     var val=a[ai].ys[si];if(!Number.isFinite(val)||val<lo-(hi-lo)*10||val>hi+(hi-lo)*10){started=false;continue;}
+     if(!started){ctx.moveTo(X(a[ai].x),Y(val));started=true;}else ctx.lineTo(X(a[ai].x),Y(val));
+    }
+    if(fraction>0&&whole<a.length-1&&started){var v0=a[whole],v1=a[whole+1],y0=v0.ys[si],y1=v1.ys[si];if(Number.isFinite(y0)&&Number.isFinite(y1)&&y0>=lo-(hi-lo)*10&&y0<=hi+(hi-lo)*10&&y1>=lo-(hi-lo)*10&&y1<=hi+(hi-lo)*10){var ix=v0.x+(v1.x-v0.x)*fraction,iy=y0+(y1-y0)*fraction;ctx.lineTo(X(ix),Y(iy));}}
+    ctx.stroke();
+   }
+  }
+  if(sc.custom.length&&progress>0){
+   var visibleCount=Math.max(1,Math.ceil(sc.custom.length*progress)),visible=sc.custom.slice(0,visibleCount);
+   if(st.connect&&visible.length>1){ctx.strokeStyle='#fb7185';ctx.lineWidth=Math.max(1.8,2.5*W/900);ctx.lineJoin='round';ctx.beginPath();visible.forEach(function(v,i){if(i)ctx.lineTo(X(v.x),Y(v.y));else ctx.moveTo(X(v.x),Y(v.y));});ctx.stroke();}
+   visible.forEach(function(v){ctx.beginPath();ctx.fillStyle='#fb7185';ctx.arc(X(v.x),Y(v.y),Math.max(3.5,5*W/900),0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();});
+  }
+  if(pOut)pOut.textContent=st.p.toFixed(1);if(sampleOut)sampleOut.textContent=String(st.n);if(speedOut)speedOut.textContent=st.speed.toFixed(1)+'×';
+  if(progress>=1&&rd){var midX=(st.xmin+st.xmax)/2,vs=seriesValues(d.plot,midX,st.p),start=seriesValues(d.plot,st.xmin,st.p),end=seriesValues(d.plot,st.xmax,st.p);rd.innerHTML='<div><small>X min · '+fmtGraph(st.xmin)+'</small><b>'+fmtGraph(start[0])+'</b></div><div><small>X mid · '+fmtGraph(midX)+'</small><b>'+fmtGraph(vs[0])+'</b></div><div><small>X max · '+fmtGraph(st.xmax)+'</small><b>'+fmtGraph(end[0])+'</b></div><div><small>নিজস্ব ডেটা</small><b>'+customPoints.length+'টি পয়েন্ট</b></div>';}
+  if(progress>=1&&hoverX!==null&&pointerOut){var hval=seriesValues(d.plot,hoverX,st.p)[0];pointerOut.textContent='নির্বাচিত বিন্দু: x = '+fmtGraph(hoverX)+' · মডেল y = '+fmtGraph(hval);}
+ }
+ function fmtGraph(n){return Number.isFinite(n)?Number(n.toPrecision(6)).toString():'—';}
+ function stopDraw(){animating=false;lastFrame=0;if(raf)cancelAnimationFrame(raf);raf=0;if(animateBtn)animateBtn.textContent=drawProgress>=1?'↻ Replay graph':'▶ Resume drawing';}
+ function drawFrame(ts){if(!animating||!cn.isConnected){stopDraw();return;}if(!drawStart)drawStart=ts;if(!lastFrame||ts-lastFrame>=(lowPower?1000/24:1000/45)){lastFrame=ts;var speed=Number(speedEl.value)||1,duration=(lowPower?1550:1250)/speed,elapsed=Math.max(0,ts-drawStart),portion=Math.min(1,elapsed/duration),progress=drawStartProgress+(1-drawStartProgress)*portion;drawProgress=progress;var eased=1-Math.pow(1-progress,2);draw(eased);}
+  if(drawProgress<1){raf=requestAnimationFrame(drawFrame);}else{drawProgress=1;animating=false;raf=0;lastFrame=0;draw(1);if(animateBtn)animateBtn.textContent='↻ Replay graph';}}
+ function startDraw(restart){if(reduceMotion){drawProgress=1;draw(1);if(animateBtn)animateBtn.textContent='↻ Replay graph';return;}if(animating){stopDraw();return;}if(restart||drawProgress>=1){drawProgress=0;draw(0);}animating=true;drawStart=0;lastFrame=0;drawStartProgress=drawProgress;if(animateBtn)animateBtn.textContent='Ⅱ Pause';raf=requestAnimationFrame(drawFrame);}
+ function refresh(){stopDraw();drawProgress=1;sceneCache=null;sceneKey='';draw(1);if(animateBtn)animateBtn.textContent='↻ Replay graph';}
+ function applyCustom(){var raw=customEl?customEl.value.trim():'';if(!raw){customPoints=[];customRevision++;setStatus('নিজস্ব ডেটা মুছে ফেলা হয়েছে।');refresh();return;}var next=[],lines=raw.split(/\r?\n/);for(var i=0;i<lines.length;i++){var line=lines[i].trim();if(!line)continue;var bits=line.split(/[;,\t ]+/).filter(Boolean);if(bits.length!==2){setStatus('লাইন '+(i+1)+': প্রতিটি লাইনে x,y—দুটি সংখ্যাই দিন।',true);return;}var x=Number(bits[0]),y=Number(bits[1]);if(!Number.isFinite(x)||!Number.isFinite(y)){setStatus('লাইন '+(i+1)+': বৈধ সংখ্যা দিন।',true);return;}next.push({x:x,y:y});if(next.length>500){setStatus('একবারে সর্বোচ্চ ৫০০টি পয়েন্ট যোগ করা যাবে।',true);return;}}if(!next.length){setStatus('কমপক্ষে একটি বৈধ ডেটা পয়েন্ট দিন।',true);return;}customPoints=next;customRevision++;setStatus(customPoints.length+'টি ডেটা পয়েন্ট গ্রাফে যোগ হয়েছে।');refresh();}
+ function download(name,blob){var url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000);}
+ function exportCsv(){var st=settings();if(!st)return;var rows=[['x','model_y','series_2','series_3']];samples(d,st.p,st.n,st.xmin,st.xmax).forEach(function(v){rows.push([v.x,v.ys[0],v.ys[1]===undefined?'':v.ys[1],v.ys[2]===undefined?'':v.ys[2]]);});rows.push([],['custom_x','custom_y']);customPoints.forEach(function(v){rows.push([v.x,v.y]);});download('golden-snitch-'+d.id+'.csv',new Blob(['\uFEFF'+rows.map(function(r){return r.map(function(v){var s=String(v==null?'':v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(',');}).join('\r\n')],{type:'text/csv;charset=utf-8'}));}
+ function reset(){ctl.value=defaults.p;if(pValueEl)pValueEl.value=defaults.p;xMinEl.value=defaults.xmin;xMaxEl.value=defaults.xmax;yMinEl.value='';yMaxEl.value='';sampleEl.value=defaults.samples;speedEl.value=defaults.speed;if(customEl)customEl.value='';customPoints=[];customRevision++;if(connectEl)connectEl.checked=true;if(showCurveEl)showCurveEl.checked=true;hoverX=null;setStatus('ডিফল্ট সেটিংসে ফিরে গেছে।');refresh();}
+ ctl.addEventListener('input',function(){if(pValueEl)pValueEl.value=ctl.value;refresh();});if(pValueEl)pValueEl.addEventListener('input',refresh);
+ [xMinEl,xMaxEl,yMinEl,yMaxEl,sampleEl,speedEl,showCurveEl,connectEl].forEach(function(el){if(el)el.addEventListener('input',function(){if(el===speedEl){var st=settings();if(st&&speedOut)speedOut.textContent=st.speed.toFixed(1)+'×';return;}refresh();});});
+ if(animateBtn)animateBtn.addEventListener('click',function(){if(animating){stopDraw();return;}startDraw(drawProgress>=1);});
+ var resetBtn=root.querySelector('#graphReset');if(resetBtn)resetBtn.addEventListener('click',reset);var dataBtn=root.querySelector('#graphApplyData');if(dataBtn)dataBtn.addEventListener('click',applyCustom);var clearBtn=root.querySelector('#graphClearData');if(clearBtn)clearBtn.addEventListener('click',function(){customPoints=[];customRevision++;if(customEl)customEl.value='';setStatus('নিজস্ব ডেটা মুছে ফেলা হয়েছে।');refresh();});
+ var csvBtn=root.querySelector('#graphExportCsv');if(csvBtn)csvBtn.addEventListener('click',exportCsv);var pngBtn=root.querySelector('#graphExportPng');if(pngBtn)pngBtn.addEventListener('click',function(){try{cn.toBlob(function(blob){if(blob)download('golden-snitch-'+d.id+'.png',blob);});}catch(e){setStatus('PNG ডাউনলোড সম্ভব হয়নি; browser permission পরীক্ষা করুন।',true);}});
+ cn.addEventListener('pointermove',function(ev){var rect=cn.getBoundingClientRect(),st=settings();if(!st||!rect.width)return;var LW=cn.width/dprNow,sm2=LW<520,mx=(ev.clientX-rect.left)/rect.width*LW,L=Math.max(sm2?54:58,LW*.085),R=sm2?14:20;if(mx<L||mx>LW-R)return;hoverX=st.xmin+(mx-L)/(LW-L-R)*(st.xmax-st.xmin);var val=seriesValues(d.plot,hoverX,st.p)[0];if(pointerOut)pointerOut.textContent='নির্বাচিত বিন্দু: x = '+fmtGraph(hoverX)+' · মডেল y = '+fmtGraph(val);});cn.addEventListener('pointerleave',function(){hoverX=null;if(pointerOut)pointerOut.textContent='গ্রাফের ওপর টাচ বা মাউস রাখলে ওই বিন্দুর মান দেখাবে।';});
+ function resizeHandler(){if(!cn.isConnected){if(resizeObserver)resizeObserver.disconnect();else window.removeEventListener('resize',resizeHandler);return;}var oldW=cn.width,oldH=cn.height;fitCanvas();if(cn.width!==oldW||cn.height!==oldH)refresh();}
+ if(typeof ResizeObserver!=='undefined'){resizeObserver=new ResizeObserver(resizeHandler);var wrap=root.querySelector('.graph-canvas-wrap');if(wrap)resizeObserver.observe(wrap);}else window.addEventListener('resize',resizeHandler,{passive:true});
+ fitCanvas();setStatus('এখনও নিজস্ব ডেটা যোগ করা হয়নি।');drawProgress=0;startDraw(true);
+}
+window.CL_GRAPHS={chapters:chapters,physicsChapters:physicsChapters,chemistryChapters:chemistryChapters,mathChapters:mathChapters,list:list,renderList:renderList,detail:detail,mount:mount,chapterCount:chapters.length,subjectCounts:{physics:physicsChapters.length,chemistry:chemistryChapters.length,math:mathChapters.length}};
+var currentFilter='all';
+document.addEventListener('click',function(ev){var btn=ev.target.closest&&ev.target.closest('[data-graph-filter]');if(!btn)return;currentFilter=btn.getAttribute('data-graph-filter')||'all';var wrap=btn.closest('.graph-subject-buttons');if(wrap)wrap.querySelectorAll('[data-graph-filter]').forEach(function(b){var on=b===btn;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');});filterSearch();});
+document.addEventListener('input',function(ev){if(ev.target&&ev.target.id==='graphSearch')filterSearch();});
+function filterSearch(){var root=document.getElementById('graphGroups'),input=document.getElementById('graphSearch');if(!root)return;var q=(input&&input.value||'').trim().toLowerCase();root.querySelectorAll('.graph-chapter-group').forEach(function(section){var subject=section.getAttribute('data-graph-subject'),filterPass=currentFilter==='all'||subject===currentFilter,shown=0;section.querySelectorAll('.graph-card').forEach(function(card){var match=!q||card.textContent.toLowerCase().indexOf(q)>=0;card.style.display=match?'':'none';if(match)shown++;});section.style.display=filterPass&&shown?'':'none';});root.querySelectorAll('.graph-subject-section-heading').forEach(function(heading){var subject=heading.getAttribute('data-graph-subject-heading'),visible=Array.prototype.some.call(root.querySelectorAll('.graph-chapter-group[data-graph-subject="'+subject+'"]'),function(section){return section.style.display!=='none';});heading.style.display=visible?'':'none';});}
+})();

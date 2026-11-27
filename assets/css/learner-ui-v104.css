@@ -1,0 +1,90 @@
+/* Golden Snitch v104 — mobile simulation selector, anchored card actions and refined quiz feedback */
+
+/* Simulation catalogue cards: keep the launch action anchored to the bottom edge. */
+#app .lab-page .lab-card-grid{align-items:stretch;grid-auto-rows:1fr}
+#app .lab-page .lab-sim-card{display:flex!important;flex-direction:column!important;align-items:flex-start;box-sizing:border-box;min-width:0;height:100%;min-height:250px;padding:clamp(15px,2vw,20px)!important}
+#app .lab-page .lab-sim-card h3{width:100%;margin:11px 0 8px;line-height:1.45;overflow-wrap:anywhere}
+#app .lab-page .lab-sim-card p{width:100%;flex:1 1 auto;margin:0 0 17px;line-height:1.72;overflow-wrap:anywhere}
+#app .lab-page .lab-sim-card .go{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;align-self:flex-start;min-height:40px;padding:9px 13px;border:1px solid color-mix(in srgb,var(--accent,#dabf80) 30%,var(--border,#ece8df));border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#dabf80) 13%,transparent),color-mix(in srgb,var(--accent,#dabf80) 6%,var(--card,#fff)));color:var(--accent,#dabf80);font-size:.84rem;font-weight:800;line-height:1.3;box-shadow:inset 0 1px rgba(255,255,255,.18)}
+
+/* Topic metadata: short centered chips instead of long inline labels. */
+#app #gm.is-chapter-quiz .cq-meta-row{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:7px;margin:12px 0 3px;text-align:center}
+#app #gm.is-chapter-quiz .cq-meta-row .cq-topic-chip{display:inline-flex;width:auto;max-width:min(100%,260px);padding:5px 11px;border:1px solid rgba(225,203,152,.28);border-radius:999px;background:linear-gradient(135deg,rgba(138,58,69,.15),rgba(197,161,92,.09));color:#f2e9d3;font-size:.69rem;font-weight:800;line-height:1.25;letter-spacing:.01em;white-space:normal;text-align:center}
+#app #gm.is-chapter-quiz .cq-meta-row .cq-type-chip{display:inline-flex;width:auto;max-width:min(100%,220px);padding:4px 9px;border:1px solid rgba(179,171,153,.2);border-radius:999px;background:rgba(179,171,153,.07);color:var(--muted,#c1bbae);font-size:.65rem;font-weight:700;line-height:1.25;white-space:normal;text-align:center}
+
+/* Correct answer: an unmistakable, full-width answer panel inside the explanation. */
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation-body .cq-correct-answer-line{display:grid!important;grid-template-columns:max-content minmax(0,1fr)!important;align-items:center;gap:9px 12px;width:100%;max-width:100%;box-sizing:border-box;margin:0 0 15px!important;padding:13px 15px!important;border:1px solid rgba(52,211,153,.36)!important;border-left:4px solid #34d399!important;border-radius:14px!important;background:linear-gradient(110deg,rgba(16,185,129,.16),rgba(16,185,129,.055))!important;box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 20px rgba(0,0,0,.08)}
+#app .play-detail-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-label{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;margin:0!important;padding:5px 9px!important;border:1px solid rgba(52,211,153,.24);border-radius:8px;background:rgba(16,185,129,.13);color:#6ee7b7!important;font-size:.72rem!important;font-weight:850!important;line-height:1.3!important;white-space:nowrap}
+#app .play-detail-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-value{display:block;min-width:0;margin:0!important;color:#d1fae5!important;font-size:clamp(.9rem,1.7vw,1.02rem)!important;font-weight:850!important;line-height:1.65!important;overflow-wrap:anywhere}
+
+/* Explanation panels: clearer hierarchy, generous rhythm and stronger readability. */
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation{display:block;width:100%;max-width:100%;margin:12px 0 0;border:1px solid rgba(225,203,152,.24);border-radius:16px;background:linear-gradient(145deg,rgba(71,61,37,.46),rgba(38,32,19,.52));overflow:hidden}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:12px 15px;color:#f2e9d3;font-size:.9rem;font-weight:850;line-height:1.45;cursor:pointer;list-style:none}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation summary::-webkit-details-marker{display:none}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation summary:after{content:'⌄';display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border:1px solid rgba(234,219,183,.22);border-radius:8px;background:rgba(225,203,152,.1);font-size:16px;transition:transform .18s ease}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation[open] summary:after{transform:rotate(180deg)}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explanation-body{padding:14px clamp(12px,2.5vw,22px) 20px!important;border-top:1px solid rgba(179,171,153,.12);color:#f3efe7}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-section{position:relative;margin:0 0 14px!important;padding:16px 17px 15px!important;border:1px solid rgba(225,203,152,.2)!important;border-left:3px solid rgba(225,203,152,.72)!important;border-radius:13px!important;background:linear-gradient(135deg,rgba(138,58,69,.105),rgba(197,161,92,.045))!important}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-section h4{display:flex;align-items:center;gap:8px;margin:0 0 10px!important;color:#f2e9d3!important;font-size:.9rem!important;font-weight:850!important;line-height:1.5!important;letter-spacing:.005em}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-section h4:before{content:'';display:block;flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:#D9B873;box-shadow:0 0 0 4px rgba(225,203,152,.13)}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-section p{margin:0!important;color:#f2efe8!important;font-size:clamp(.91rem,1.6vw,.99rem)!important;line-height:1.95!important;letter-spacing:.005em;white-space:pre-line;overflow-wrap:anywhere}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-steps ol{display:grid;gap:8px;margin:0!important;padding-left:22px!important}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-steps li{padding:2px 0 9px 4px!important;border-bottom:1px solid rgba(179,171,153,.12);color:#f2efe8!important;font-size:.94rem!important;line-height:1.85!important}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-steps li:last-child{border-bottom:0}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-options li{padding:12px 13px;border:1px solid rgba(179,171,153,.13);border-radius:11px;background:rgba(179,171,153,.06)}
+#app .play-detail-page #gm.is-chapter-quiz .cq-explain-options li>b{display:block;color:#f2e9d3;font-size:.88rem;line-height:1.6}
+#app .play-detail-page #gm.is-chapter-quiz .cq-formula-explain,#app .play-detail-page #gm.is-chapter-quiz .cq-realworld-explain,#app .play-detail-page #gm.is-chapter-quiz .cq-misconception-explain{box-sizing:border-box;width:100%;padding:14px 16px!important;border-radius:13px!important;line-height:1.85}
+#app .play-detail-page #gm.is-chapter-quiz .cq-feedback-note{display:block;margin:11px 2px 0;color:var(--muted,#c1bbae);font-size:.78rem;line-height:1.65}
+#app .play-detail-page #gm.is-chapter-quiz .cq-selected-answer{padding:9px 11px;border:1px solid rgba(248,113,113,.19);border-radius:10px;background:rgba(239,68,68,.075);color:#fecaca!important}
+
+/* Make the skip/continue action visible before the optional explanation. */
+#app .play-detail-page #gm.is-chapter-quiz .cq-next-question{display:flex!important;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;margin:14px 0 10px!important;padding:12px 18px!important;border:1px solid rgba(225,203,152,.55)!important;border-radius:14px!important;background:linear-gradient(105deg,#d2b46e,#ad8c40)!important;color:#1b140c!important;font-size:.96rem!important;font-weight:850!important;letter-spacing:.005em;box-shadow:0 9px 22px rgba(169,139,68,.22),inset 0 1px rgba(255,255,255,.2);transition:transform .18s ease,box-shadow .18s ease}
+#app .play-detail-page #gm.is-chapter-quiz .cq-next-question:hover{transform:translateY(-1px);box-shadow:0 13px 26px rgba(169,139,68,.28),inset 0 1px rgba(255,255,255,.2)}
+#app .play-detail-page #gm.is-chapter-quiz .cq-next-question span{display:inline!important;margin:0!important;color:inherit!important;font-size:1.1em;font-weight:900}
+
+/* Light theme overrides. */
+html[data-theme="light"] #app .lab-page .subject-choice{color:#352e1d;background:linear-gradient(145deg,#fff,#fdfbf6);border-color:rgba(151,138,109,.25);box-shadow:0 8px 19px rgba(72,62,38,.07)}
+html[data-theme="light"] #app .lab-page .subject-choice.on{background:linear-gradient(145deg,#fbf8f2,#fff);border-color:var(--subject-accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--subject-accent) 14%,transparent),0 10px 22px rgba(72,62,38,.08)}
+html[data-theme="light"] #app #gm.is-chapter-quiz .cq-meta-row .cq-topic-chip{color:#927a41;background:linear-gradient(135deg,#fbf8f2,#fbf9f3);border-color:rgba(205,172,94,.22)}
+html[data-theme="light"] #app #gm.is-chapter-quiz .cq-meta-row .cq-type-chip{color:#645d4c;background:#fbfbf9;border-color:#eeebe4}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-explanation{background:linear-gradient(145deg,#fff,#fdfcfa);border-color:rgba(205,172,94,.18)}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-explanation summary{color:#927a41}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-explanation-body{color:#373122}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section{background:linear-gradient(135deg,#fdfbf7,#fdfcf9)!important;border-color:rgba(205,172,94,.15)!important}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section h4{color:#927a41!important}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section p,html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-steps li{color:#443c2b!important}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-correct-answer-line{background:linear-gradient(110deg,#ecfdf5,#f4fff9)!important;border-color:rgba(16,185,129,.3)!important}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-value{color:#065f46!important}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-label{color:#047857!important}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-selected-answer{color:#991b1b!important;background:#fff1f2}
+html[data-theme="light"] #app .play-detail-page #gm.is-chapter-quiz .cq-feedback-note{color:#857d6a}
+
+/* Purple theme overrides. */
+html[data-theme="purple"] #app .lab-page .subject-choice{color:#fbf8f1;background:linear-gradient(145deg,rgba(64,55,34,.97),rgba(39,33,19,.97));border-color:rgba(228,208,161,.28)}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explanation{background:linear-gradient(145deg,rgba(71,61,38,.86),rgba(43,37,22,.9));border-color:rgba(228,208,161,.3)}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section{background:linear-gradient(135deg,rgba(207,171,88,.13),rgba(205,172,94,.07))!important;border-color:rgba(228,208,161,.24)!important}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section h4{color:#f6efde!important}
+html[data-theme="purple"] #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section p{color:#faf7ef!important}
+
+@media(max-width:760px){
+ #app .lab-page .subject-chooser{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin:17px 0 18px!important;align-items:stretch}
+ #app .lab-page .subject-chooser .subject-choice{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:6px!important;min-width:0!important;min-height:116px!important;height:100%;padding:10px 5px!important;border-radius:16px!important;text-align:center!important;white-space:normal!important}
+ #app .lab-page .subject-chooser .subject-choice>.subject-choice-copy{display:flex!important;flex:0 1 auto!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;order:2;position:relative;z-index:1;width:100%!important;min-width:0!important;min-height:0!important;padding:0!important;margin:0!important;gap:3px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;text-align:center!important}
+ #app .lab-page .subject-chooser .subject-choice>.subject-choice-visual{display:grid!important;order:1;flex:0 0 49px!important;width:49px!important;height:49px!important;min-width:49px!important;min-height:49px!important;padding:0!important;margin:0!important;border-radius:16px!important}
+ #app .lab-page .subject-chooser .subject-choice>.subject-choice-visual svg{display:block;width:45px!important;height:45px!important;max-width:100%;max-height:100%}
+ #app .lab-page .subject-chooser .subject-choice-copy b{display:block!important;width:100%;margin:0!important;font-size:clamp(10px,2.85vw,12px)!important;font-weight:850!important;line-height:1.3!important;letter-spacing:-.025em;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;text-align:center!important}
+ #app .lab-page .subject-chooser .subject-choice-copy small{display:block!important;width:100%;margin:0!important;font-size:clamp(8px,2.35vw,9.5px)!important;font-weight:700!important;line-height:1.25!important;white-space:nowrap!important;text-align:center!important}
+ #app .lab-page .lab-sim-card{min-height:230px;padding:14px!important;border-radius:17px}
+ #app .lab-page .lab-sim-card .go{min-height:38px;margin-top:auto;padding:8px 11px;font-size:.8rem}
+ #app .play-detail-page #gm.is-chapter-quiz .cq-correct-answer-line{grid-template-columns:1fr!important;gap:7px!important;padding:11px 12px!important}
+ #app .play-detail-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-label{justify-self:start}
+ #app .play-detail-page #gm.is-chapter-quiz .cq-explanation-body{padding:12px 10px 16px!important}
+ #app .play-detail-page #gm.is-chapter-quiz .cq-explain-section{padding:13px 12px!important}
+ #app .play-detail-page #gm.is-chapter-quiz .cq-next-question{min-height:48px;font-size:.9rem!important}}
+@media(max-width:350px){
+ #app .lab-page .subject-chooser{gap:6px!important}
+ #app .lab-page .subject-chooser .subject-choice{min-height:108px!important;padding:8px 3px!important}
+ #app .lab-page .subject-chooser .subject-choice-copy b{font-size:10px!important}
+ #app .lab-page .subject-chooser .subject-choice-copy small{font-size:8px!important}
+ #app .lab-page .subject-chooser .subject-choice>.subject-choice-visual{width:45px!important;height:45px!important;flex-basis:45px!important;min-width:45px!important;min-height:45px!important}}
+@media(prefers-reduced-motion:reduce){#app .lab-page .subject-choice,#app .lab-page .lab-sim-card .go,#app .play-detail-page #gm.is-chapter-quiz .cq-next-question{transition:none!important}}

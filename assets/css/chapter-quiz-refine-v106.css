@@ -1,0 +1,207 @@
+/* Golden Snitch v106 — learner-first question wording, explanation hierarchy and theme contrast. */
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-card{
+  background:linear-gradient(155deg,rgba(38,32,19,.98),rgba(44,37,22,.97))!important;
+  border:1px solid rgba(180,167,135,.28)!important;
+  color:#f9f6ef!important;
+  box-shadow:0 20px 48px -32px rgba(0,0,0,.62),inset 0 1px rgba(255,255,255,.045)!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-meta-row{
+  justify-content:center!important;align-items:center!important;gap:8px!important;
+  margin:16px 0 18px!important;padding:0 2px 2px!important;text-align:center!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-meta-row .cq-topic-chip{
+  color:#c5f3f4!important;background:linear-gradient(135deg,rgba(13,148,136,.22),rgba(154,122,53,.13))!important;
+  border:1px solid rgba(45,212,191,.34)!important;border-radius:999px!important;
+  box-shadow:0 4px 14px rgba(13,148,136,.09);font-size:.72rem!important;font-weight:800!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-meta-row .cq-type-chip{
+  color:#fde7b0!important;background:rgba(217,119,6,.13)!important;border:1px solid rgba(251,191,36,.3)!important;
+  border-radius:999px!important;font-size:.68rem!important;font-weight:750!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-question-text{
+  margin:18px auto 24px!important;color:#f8f6f2!important;line-height:1.9!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-question-media{margin:13px auto 18px!important;}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-progress-track{background:rgba(179,171,153,.2)!important;border-radius:999px;overflow:hidden}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-progress-track i{background:linear-gradient(90deg,#0ea5a4,#C5A15C)!important;border-radius:999px}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option{
+  color:#f5f2ea!important;background:linear-gradient(145deg,rgba(62,54,36,.78),rgba(46,40,25,.88))!important;
+  border:1px solid rgba(182,172,147,.28)!important;box-shadow:inset 0 1px rgba(255,255,255,.035)!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option-letter{color:#efe3c8!important;background:rgba(154,122,53,.17)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option.ok{color:#d1fae5!important;background:rgba(22,163,74,.16)!important;border-color:rgba(74,222,128,.56)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option.no{color:#ffe4e6!important;background:rgba(225,29,72,.15)!important;border-color:rgba(251,113,133,.58)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option:disabled{opacity:1!important;cursor:default}
+
+/* Answer feedback and the explanation accordion. */
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback{
+  margin-top:20px!important;padding:16px!important;border-radius:17px!important;
+  border:1px solid rgba(179,171,153,.24)!important;background:rgba(55,49,34,.68)!important;color:#f6f3ec!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-correct{background:linear-gradient(125deg,rgba(21,128,61,.2),rgba(6,95,70,.12))!important;border-color:rgba(74,222,128,.4)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-wrong{background:linear-gradient(125deg,rgba(190,24,93,.17),rgba(153,27,27,.1))!important;border-color:rgba(251,113,133,.42)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback>strong{display:block;margin:0 0 8px!important;font-size:1rem!important;font-weight:850!important;line-height:1.55!important;color:#f8f6f2!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-correct>strong{color:#bbf7d0!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-wrong>strong{color:#fecdd3!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback .cq-selected-answer{color:#ffe4e6!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation{
+  display:block!important;width:100%!important;margin:13px 0 0!important;overflow:hidden!important;
+  border:1px solid rgba(197,161,92,.3)!important;border-radius:16px!important;
+  background:linear-gradient(150deg,rgba(46,39,21,.95),rgba(49,41,23,.92))!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.13)!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation>summary{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;
+  min-height:52px!important;padding:13px 16px!important;cursor:pointer!important;list-style:none!important;
+  color:#efe3c8!important;font-size:.94rem!important;font-weight:850!important;line-height:1.5!important;
+  background:linear-gradient(100deg,rgba(14,116,144,.17),rgba(15,118,110,.11))!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation>summary::-webkit-details-marker{display:none!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation>summary:after{
+  content:'⌄';display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;
+  border:1px solid rgba(245,219,156,.3);border-radius:9px;background:rgba(154,122,53,.13);color:#efe3c8;font-size:17px;
+  transition:transform .18s ease;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation[open]>summary:after{transform:rotate(180deg)}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explanation-body{
+  padding:17px clamp(12px,2.5vw,22px) 21px!important;border-top:1px solid rgba(180,167,135,.18)!important;color:#f3efe7!important;
+}
+
+/* Correct answer: first item in the explanation, visually centred. */
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explanation-body .cq-correct-answer-line{
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+  width:100%!important;box-sizing:border-box!important;margin:0 0 17px!important;padding:15px 16px 16px!important;
+  border:1px solid rgba(74,222,128,.42)!important;border-top:4px solid #22c55e!important;border-left:1px solid rgba(74,222,128,.42)!important;
+  border-radius:15px!important;background:linear-gradient(145deg,rgba(22,163,74,.19),rgba(13,148,136,.11))!important;
+  text-align:center!important;box-shadow:0 8px 20px rgba(0,0,0,.1)!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-label{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:5px 12px!important;
+  border:1px solid rgba(74,222,128,.28)!important;border-radius:999px!important;background:rgba(34,197,94,.17)!important;
+  color:#bbf7d0!important;font-size:.78rem!important;font-weight:900!important;line-height:1.4!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-value{
+  display:block!important;width:100%!important;min-width:0!important;margin:0!important;color:#dcfce7!important;
+  font-size:clamp(.98rem,1.8vw,1.08rem)!important;font-weight:900!important;line-height:1.7!important;text-align:center!important;overflow-wrap:anywhere!important;
+}
+
+/* Distinct, restrained colours make each learning panel easy to scan. */
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section{
+  position:relative!important;margin:0 0 14px!important;padding:16px 17px!important;border:1px solid rgba(179,171,153,.22)!important;
+  border-left:4px solid #C5A15C!important;border-radius:13px!important;background:rgba(78,66,39,.27)!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section h4{
+  display:flex!important;align-items:center!important;gap:9px!important;margin:0 0 9px!important;
+  color:#efe3c8!important;font-size:.94rem!important;font-weight:900!important;line-height:1.5!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section h4:before{
+  content:'';display:block;flex:0 0 8px;width:8px;height:8px;border-radius:50%;background:#C5A15C;box-shadow:0 0 0 4px rgba(197,161,92,.13);
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section p,
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explanation-body li{
+  margin:0!important;color:#f4f1e9!important;font-size:clamp(.93rem,1.6vw,1rem)!important;line-height:1.9!important;overflow-wrap:anywhere!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-analysis{border-left-color:#0ea5a4!important;background:rgba(13,148,136,.12)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-analysis h4{color:#99f6e4!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-analysis h4:before{background:#14b8a6;box-shadow:0 0 0 4px rgba(20,184,166,.13)}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-reasoning{border-left-color:#d97706!important;background:rgba(217,119,6,.12)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-reasoning h4{color:#fde68a!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-reasoning h4:before{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.13)}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-simple{border-left-color:#16a34a!important;background:rgba(22,163,74,.11)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-simple h4{color:#bbf7d0!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-simple h4:before{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.13)}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps{border-left-color:#7a5e26!important;background:rgba(156,123,45,.1)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps h4{color:#efe3c8!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps ol{display:grid!important;gap:8px!important;margin:7px 0 0!important;padding-left:23px!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps li{padding:3px 0 8px 3px!important;border-bottom:1px solid rgba(179,171,153,.14);color:#f4f1e9!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps li::marker{color:#F5DB9C;font-weight:900}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options{border-left-color:#857d6a!important;background:rgba(100,93,76,.16)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options h4{color:#eeebe4!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options ul{display:grid!important;gap:9px!important;margin:8px 0 0!important;padding:0!important;list-style:none!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options li{padding:11px 13px!important;border:1px solid rgba(179,171,153,.18)!important;border-radius:11px!important;background:rgba(38,32,19,.27)!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options li>b{display:block!important;margin-bottom:5px!important;color:#efe3c8!important;font-size:.9rem!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-formula-explain,
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-realworld-explain,
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-misconception-explain{
+  width:100%!important;box-sizing:border-box!important;margin:14px 0!important;padding:15px 16px!important;border-radius:13px!important;line-height:1.85!important;
+}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-formula-explain{border:1px solid rgba(197,161,92,.3)!important;border-left:4px solid #9a7a35!important;background:rgba(154,122,53,.12)!important;color:#f8f3e6!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-formula-explain b{display:block;margin:0 0 7px;color:#F5DB9C!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-realworld-explain{margin-top:17px!important;border:1px solid rgba(74,222,128,.28)!important;border-left:4px solid #22c55e!important;background:rgba(22,163,74,.12)!important;color:#dcfce7!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-realworld-explain b{display:block;margin:0 0 7px;color:#86efac!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-misconception-explain{border:1px solid rgba(251,191,36,.3)!important;border-left:4px solid #f59e0b!important;background:rgba(217,119,6,.13)!important;color:#fef3c7!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-misconception-explain b{display:block;margin:0 0 7px;color:#fcd34d!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explanation-body p{overflow-wrap:anywhere!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-feedback-note{display:block;margin:12px 3px 0!important;color:#c4bdae!important;font-size:.8rem!important;line-height:1.65!important}
+#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-next-question{
+  width:100%!important;min-height:51px!important;margin:14px 0 10px!important;border:1px solid rgba(197,161,92,.42)!important;
+  border-radius:13px!important;background:linear-gradient(105deg,#0f766e,#8a6d34)!important;color:#fff!important;
+  font-weight:900!important;box-shadow:0 9px 22px rgba(156,123,45,.18)!important;
+}
+
+/* Full, explicit light-theme palette: no pale-on-pale text or low-contrast controls. */
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-card{
+  color:#332c1d!important;background:linear-gradient(155deg,#fff,#fbfaf8)!important;
+  border:1px solid #ded9ce!important;box-shadow:0 14px 32px rgba(38,32,19,.09)!important;
+}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-question-top,
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-count{color:#453e2c!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-question-text{color:#2d2616!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-meta-row .cq-topic-chip{color:#6d5520!important;background:linear-gradient(120deg,#f8f3e6,#ecfeff)!important;border-color:#F5DB9C!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-meta-row .cq-type-chip{color:#92400e!important;background:#fffbeb!important;border-color:#fcd34d!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option{
+  color:#373122!important;background:linear-gradient(145deg,#fff,#fbfbf9)!important;border:1px solid #ded9ce!important;
+  box-shadow:0 3px 10px rgba(38,32,19,.035)!important;
+}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option:hover{background:#fbf9f3!important;border-color:#C5A15C!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option-letter{color:#6d5520!important;background:#f8f3e6!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option.ok{color:#14532d!important;background:#dcfce7!important;border-color:#4ade80!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-option.no{color:#881337!important;background:#ffe4e6!important;border-color:#fb7185!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback{color:#443c2b!important;background:#f8f6f2!important;border-color:#ded9ce!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-correct{background:#ecfdf5!important;border-color:#86efac!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-wrong{background:#fff1f2!important;border-color:#fda4af!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback>strong{color:#373122!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-correct>strong{color:#166534!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback.is-wrong>strong{color:#9f1239!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-answer-feedback .cq-selected-answer{color:#9f1239!important;background:#ffe4e6!important;border-color:#fda4af!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation{background:#fff!important;border-color:#ded9ce!important;box-shadow:0 8px 22px rgba(38,32,19,.06)!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation>summary{color:#6d5520!important;background:linear-gradient(100deg,#f8f3e6,#ecfdf5)!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation>summary:after{color:#6d5520;border-color:#F5DB9C;background:#fcf9f3}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explanation-body{color:#332e23!important;background:#fff!important;border-color:#eeebe4!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-correct-answer-line{background:linear-gradient(145deg,#ecfdf5,#f0fdfa)!important;border-color:#86efac!important;border-top-color:#16a34a!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-label{color:#166534!important;background:#dcfce7!important;border-color:#86efac!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-correct-answer-line .cq-answer-value{color:#14532d!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section{background:#fbf9f3!important;border-color:#f0e6cd!important;color:#373122!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section h4{color:#6d5520!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section p,
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explanation-body li{color:#443c2b!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-concept{background:#fbf9f3!important;border-color:#f0e6cd!important;border-left-color:#8a6d34!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-analysis{background:#ecfeff!important;border-color:#a5f3fc!important;border-left-color:#0d9488!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-analysis h4{color:#0f766e!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-reasoning{background:#fffbeb!important;border-color:#fde68a!important;border-left-color:#d97706!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-reasoning h4{color:#92400e!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-simple{background:#f0fdf4!important;border-color:#bbf7d0!important;border-left-color:#16a34a!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-simple h4{color:#166534!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps{background:#fcf9f3!important;border-color:#efe3c8!important;border-left-color:#7a5e26!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps h4{color:#6d5520!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps li{color:#443c2b!important;border-color:#f7f1e2!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-steps li::marker{color:#7a5e26}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options{background:#fbfbf9!important;border-color:#ded9ce!important;border-left-color:#857d6a!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options h4,
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options li>b{color:#504938!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-options li{background:#fff!important;border-color:#eeebe4!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-formula-explain{background:#fbf9f3!important;border-color:#f0e6cd!important;border-left-color:#7a5e26!important;color:#7a632e!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-formula-explain b{color:#6d5520!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-realworld-explain{background:#f0fdf4!important;border-color:#bbf7d0!important;border-left-color:#16a34a!important;color:#14532d!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-realworld-explain b{color:#166534!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-misconception-explain{background:#fffbeb!important;border-color:#fde68a!important;border-left-color:#d97706!important;color:#78350f!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-misconception-explain b{color:#92400e!important}
+html[data-theme="light"] #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-feedback-note{color:#857d6a!important}
+
+@media(max-width:700px){
+ #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-meta-row{margin:14px 0 17px!important;gap:7px!important}
+ #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-question-text{margin:16px auto 21px!important;line-height:1.85!important}
+ #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explanation-body{padding:13px 10px 17px!important}
+ #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-correct-answer-line{padding:13px 12px 14px!important}
+ #app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz .cq-explain-section{padding:14px 13px!important;margin-bottom:12px!important}}
+@media(prefers-reduced-motion:reduce){#app .play-detail-page.ga-chapter-quiz-page #gm.is-chapter-quiz details.cq-explanation>summary:after{transition:none!important}}

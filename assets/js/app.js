@@ -1,0 +1,1774 @@
+(function(){
+'use strict';
+var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))},app=$('#app');
+/* Resolve bundled media from the document root so GitHub Pages project paths and hash routes both work. */
+function assetImage(name){
+ try{return new URL('assets/images/'+name+'?v=20261103-v6-avatar-path',document.baseURI).href;}
+ catch(e){return 'assets/images/'+name+'?v=20261103-v6-avatar-path';}
+}
+/* Bind image state in JavaScript instead of relying on inline HTML event handlers. */
+document.addEventListener('load',function(ev){
+ var img=ev.target;
+ if(!img||!img.matches||!img.matches('.creator-avatar-ring img'))return;
+ var ring=img.parentNode;
+ if(ring){ring.classList.add('image-loaded');ring.classList.remove('image-missing');}
+},true);
+document.addEventListener('error',function(ev){
+ var img=ev.target;
+ if(!img||!img.matches||!img.matches('.creator-avatar-ring img'))return;
+ var ring=img.parentNode;
+ if(ring)ring.classList.add('image-missing');
+},true);
+function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function arrangeHomeSections(sections){
+ if(!Array.isArray(sections))return sections;
+ function before(moveId,targetId){
+  var from=sections.findIndex(function(x){return x&&x.id===moveId});
+  var to=sections.findIndex(function(x){return x&&x.id===targetId});
+  if(from<0||to<0||from===to)return;
+  var item=sections.splice(from,1)[0];
+  to=sections.findIndex(function(x){return x&&x.id===targetId});
+  sections.splice(to,0,item);
+ }
+ // The homepage sequence requested: subjects before statistics; stages + flowchart before mission;
+ // purpose before the playground; learning flow before daily reflection.
+ before('s-stages','s-goals');
+ before('s-why','s-goals');
+ before('s-purpose','s-lab');
+ before('s-road','s-ayat-hadith');
+ return sections;
+}
+function ok(v){return v!==false&&v!=='0'&&v!=='false'&&v!==0}
+function safeLink(l){l=String(l||'').trim();return /^(#\/|https?:\/\/|\/)/.test(l)?l:'#/'}
+function labSubject(s){var v=String(s||'').trim().toLowerCase();if(/^(phy|physics|phys)$/.test(v)||/পদার্থবিজ্ঞান|পদার্থ/.test(v))return 'পদার্থবিজ্ঞান';if(/^(chem|chemistry)$/.test(v)||/রসায়ন|রসায়ন|chem/.test(v))return 'রসায়ন';if(/math|mathematics|higher|উচ্চতর গণিত|গণিত/.test(v))return 'উচ্চতর গণিত';return s||'অন্যান্য'}
+var DEF=window.CL_DEF,DX={};(window.CL_TXT||[]).forEach(function(g){g[1].forEach(function(t){DX[t[0]]=t[2]})});
+DX.rs_done='Done';DX.rs_now='In progress';DX.rs_next='Coming next';DX.nav_leaderboard='Leaderboard';
+var D,S,SUB,C,L,CHL,HOME,GAMES,LABS,GAM,ST=[];
+function X(k){var v=((D&&D.texts)||{})[k];return v==null||v===''?DX[k]:v}
+var DROP_GAME_IDS={
+ 'formula-pair-cosmos':1,'edu-formula-pair-cosmos':1,'edu-flame-colour-detective':1,'edu-physics-unit-rush':1,
+ 'edu-physics-formula-sprint':1,'edu-chemistry-ion-challenge':1,'edu-math-concept-scramble':1,'edu-hsc-term-scramble':1,
+ 'edu-physics-odd-one':1,'edu-math-step-order':1,'edu-math-truth-arena':1,'edu-projectile-range-challenge':1,'edu-line-slope-challenge':1,
+ 'math-concept-scramble':1,'hsc-term-scramble':1
+};
+var GAME_ICON_BY_ID={
+ "blitz":"⚡",
+ "memory":"🧠",
+ "tf":"✅",
+ "scramble":"🔤",
+ "balance":"⚖️",
+ "cannon":"🎯",
+ "slope":"✏️",
+ "flame":"🔥",
+ "physics-formula-sprint":"📝",
+ "chemistry-ion-challenge":"🧪",
+ "math-concept-scramble":"🧮",
+ "physics-unit-rush":"🔢",
+ "chem-reaction-race":"💥",
+ "math-truth-arena":"📚",
+ "hsc-term-scramble":"📜",
+ "periodic-quest":"🧬",
+ "mass-atlas":"🏋️",
+ "element-sprint":"🏃",
+ "trend-duel":"⚔️",
+ "odd-one-phy":"🧲",
+ "odd-one-chem":"🥽",
+ "odd-one-math":"∑",
+ "step-order-phy":"🪜",
+ "step-order-chem":"🧤",
+ "step-order-math":"🧩",
+ "edu-chem-reaction-race":"🧯",
+ "edu-chem-lab-sequence":"🧰"
+};
+var GAME_TITLE_BN={
+ "blitz":"Quick Quiz Blitz",
+ "memory":"Formula Memory",
+ "tf":"True or False",
+ "scramble":"Term Scramble",
+ "balance":"Equation Balance",
+ "cannon":"Projectile Target",
+ "slope":"Slope Pathfinder",
+ "flame":"Flame Test Detective",
+ "physics-formula-sprint":"Physics Formula Sprint",
+ "chemistry-ion-challenge":"Ion Detective",
+ "math-concept-scramble":"Math Concept Scramble",
+ "physics-unit-rush":"Physics Unit Rush",
+ "chem-reaction-race":"Chemical Reaction Race",
+ "math-truth-arena":"Math Truth Arena",
+ "hsc-term-scramble":"HSC Term Scramble",
+ "periodic-quest":"Periodic Table Quest",
+ "mass-atlas":"Mass Atlas",
+ "element-sprint":"Element Sprint",
+ "trend-duel":"Periodic Trends Duel",
+ "odd-one-phy":"Physics Odd One Out",
+ "odd-one-chem":"Chemistry Odd One Out",
+ "odd-one-math":"Math Odd One Out",
+ "step-order-phy":"Physics Step Order",
+ "step-order-chem":"Chemistry Step Order",
+ "step-order-math":"Math Step Order",
+ "edu-chem-reaction-race":"Reaction Race",
+ "edu-chem-lab-sequence":"Chemistry Lab Sequence",
+ "chem-organic-conversion-map":"Organic Conversion Map",
+ "chem-electron-configuration-challenge":"Electron Configuration Challenge",
+ "chem-stoichiometry-game":"Stoichiometry Challenge",
+ "virtual-lab-escape-room":"Virtual Lab Escape Room"
+};
+var GAME_ICON_FALLBACK=['🗝️','🪁','🛞','🪶','🪴','🪸','🪷','🦜','🦋','🦉','🪺','🪵','🪬','🪭','🪄','🪅','🪆','🪇','🪈','🪉','🪏','🪐','🫧','🫙','🫚','🫛','🫜','🫟','🧿','🪬','🪻','🪸','🦤','🦩','🦚','🦥','🦦','🦨','🦫','🦮','🪽','🪿','🪹','🪴','🪨'];
+function gameIcon(g){return g&&(GAME_ICON_BY_ID[g.id]||g.icon)||'🎮'}
+function gameTitle(g){return g&&(GAME_TITLE_BN[g.id]||g.t||g.title)||'গেম'}
+function iconHue(key){var h=0;String(key||'concept').split('').forEach(function(c){h=(h*31+c.charCodeAt(0))%360});return 22+(h%310)}
+var HOME_ICON_PATHS={
+ compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.3 4.7-4.7 2.3 2.3-4.7z"/>',
+ lightbulb:'<path d="M9 18h6M10 21h4M8.4 14.5A6.1 6.1 0 1 1 15.6 14.5c-.8.7-1.1 1.5-1.1 2.5h-5c0-1-.4-1.8-1.1-2.5Z"/><path d="M9.5 9.5a2.5 2.5 0 0 1 2.5-2.5"/>',
+ flask:'<path d="M9 3h6M10 3v6l-5.7 9.2A2 2 0 0 0 6 21h12a2 2 0 0 0 1.7-2.8L14 9V3"/><path d="M7.8 15h8.4M9 18h3"/>',
+ trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a4 4 0 0 0 4 4M17 6h3v2a4 4 0 0 1-4 4"/>',
+ brain:'<path d="M12 5.2A3.4 3.4 0 0 0 5.5 6a3.4 3.4 0 0 0-1 6.2 3.5 3.5 0 0 0 3.2 5.7A3.4 3.4 0 0 0 12 20Z"/><path d="M12 5.2A3.4 3.4 0 0 1 18.5 6a3.4 3.4 0 0 1 1 6.2 3.5 3.5 0 0 1-3.2 5.7A3.4 3.4 0 0 1 12 20ZM8 8.5c2 0 2 2 0 2M6.5 14h2M16 8c-2 0-2 2 0 2M15.5 14h2"/>',
+ bookopen:'<path d="M12 7c-2.2-2-5-2.3-9-1.5v13c4-.8 6.8-.5 9 1.5M12 7c2.2-2 5-2.3 9-1.5v13c-4-.8-6.8-.5-9 1.5M12 7v13"/>',
+ target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>',
+ sparkles:'<path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8zM5 2l.7 2.3L8 5l-2.3.7L5 8l-.7-2.3L2 5l2.3-.7z"/>',
+ graduation:'<path d="m2 9 10-5 10 5-10 5zM6 11v5c3.5 3 8.5 3 12 0v-5M22 9v6"/>',
+ shield:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/>',
+ rocket:'<path d="M4 16c-1 1-1.5 3-1.5 4.5C4 20.5 6.5 20 8 19l3-3-4-4zM12 14l-2-2c1-4 5-8 11-9 0 6-4 10-8 11ZM15 9h.01"/><path d="M5 14l-2 1M9 18l-1 3"/>',
+ atom:'<ellipse cx="12" cy="12" rx="9" ry="3.8"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.4"/>',
+ calculator:'<rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M8 6h8v4H8zM8 14h1M12 14h1M16 14h.01M8 17.5h1M12 17.5h1M16 17.5h.01"/>',
+ waves:'<path d="M2 8c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3M2 16c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/>',
+ medal:'<circle cx="12" cy="8" r="5"/><path d="m8.2 12-1 9 4.8-3 4.8 3-1-9"/>',
+ puzzle:'<path d="M19 13h-2a2 2 0 1 0-4 0v2H9v-2a2 2 0 1 0-4 0H3V5h6V3a2 2 0 1 1 4 0v2h6zM19 13v6h-6v2a2 2 0 1 1-4 0v-2H3v-6"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ chart:'<path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 5-6"/><circle cx="19" cy="7" r="1"/>',
+ flame:'<path d="M12 22c4.5 0 7-3.1 7-7.1 0-3.3-2-5.2-4.2-7.4-.2 2-1.1 3.1-2.1 3.7C12.5 7.5 10 4.8 8 2 8 7 5 9 5 14.7 5 18.8 7.7 22 12 22Z"/><path d="M12 18c1.6 0 2.5-1.1 2.5-2.4 0-1-.7-1.8-1.6-2.8-.1 1-.8 1.4-1.3 1.7-.2-.7-.8-1.3-1.5-2-.3 2-.8 2.5-.8 3.4 0 1.3 1 2.1 2.7 2.1Z"/>',
+ eye:'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/>',
+ check:'<circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/>'
+};
+var HOME_ICON_ALIASES={'💡':'lightbulb','🧪':'flask','📖':'bookopen','📚':'bookopen','📈':'chart','🏆':'trophy','🔥':'flame','🧠':'brain','🧭':'compass','🎯':'target','✨':'sparkles','🎓':'graduation','🛡️':'shield','🚀':'rocket','⚛️':'atom','🧮':'calculator','🌊':'waves','🏅':'medal','🧩':'puzzle','⏱':'clock','☑':'check','👁':'eye'};
+var HOME_STAGE_ICONS=['compass','lightbulb','flask','trophy'];
+var HOME_STAGE_COLORS=['#38bdf8','#a78bfa','#34d399','#fbbf24'];
+/* Counts written as {{HUB_TOOLS}} / {{GRAPH_LABS}} in content are replaced with the live numbers (Bengali digits). */
+function bnDigits(n){return String(n).replace(/[0-9]/g,function(d){return '০১২৩৪৫৬৭৮৯'.charAt(+d)})}
+function fillCountTokens(h){var hub=window.CL_HUB_TOOL_COUNT?window.CL_HUB_TOOL_COUNT():0,gr=window.CL_GRAPHS&&window.CL_GRAPHS.list?window.CL_GRAPHS.list.length:0;return String(h).replace(/\{\{HUB_TOOLS\}\}/g,bnDigits(hub)).replace(/\{\{GRAPH_LABS\}\}/g,bnDigits(gr))}
+function homeAccent(c,i){return /^#[0-9a-f]{6}$/i.test(String(c||''))?String(c):HOME_STAGE_COLORS[(i||0)%HOME_STAGE_COLORS.length]}
+function safeVisualImage(src){src=String(src||'').trim();return /^(https?:\/\/|\/|assets\/|data:image\/)/i.test(src)?src:''}
+function homeIcon(name){name=String(name||'sparkles');name=HOME_ICON_ALIASES[name]||name;var path=HOME_ICON_PATHS[name];if(!path)return '<span class="premium-home-emoji">'+E(name)+'</span>';return '<svg class="premium-home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+path+'</svg>'}
+function homeIconVisual(name,image,cls){var src=safeVisualImage(image);return src?'<img class="'+cls+'-image" src="'+E(src)+'" alt="" loading="lazy" decoding="async">':homeIcon(name)}
+var PHYSICS_UNIT_RUSH_MORE=[
+ {q:'বলের মাত্রা কোনটি?',o:['MLT⁻²','ML²T⁻²','ML⁻¹T⁻²','MLT⁻¹'],a:0,e:'F = ma; তাই মাত্রা MLT⁻²।'},
+ {q:'চাপের SI একক কী?',o:['নিউটন','পাস্কাল','জুল','ওয়াট'],a:1,e:'চাপ = বল/ক্ষেত্রফল; SI একক Pa বা N/m²।'},
+ {q:'ঘনত্বের SI একক কোনটি?',o:['kg/m³','kg·m/s','N/m²','J/s'],a:0,e:'ঘনত্ব = ভর/আয়তন, তাই kg/m³।'},
+ {q:'ঘাত (Impulse)-এর মাত্রা কোনটি?',o:['MLT⁻¹','MLT⁻²','ML²T⁻²','M⁰LT⁻¹'],a:0,e:'Impulse = বল × সময় = ভরবেগের পরিবর্তন।'},
+ {q:'টর্কের SI একক কোনটি?',o:['N·m','N/m','kg/m³','W/s'],a:0,e:'টর্ক = বল × লম্ব দূরত্ব; একক N·m।'},
+ {q:'স্প্রিংয়ে সঞ্চিত স্থিতিস্থাপক বিভবশক্তি কোনটি?',o:['kx','½kx²','mv','mgh²'],a:1,e:'স্প্রিং ধ্রুবক k এবং প্রসারণ x হলে U = ½kx²।'},
+ {q:'বৃত্তাকার গতিতে কেন্দ্রমুখী ত্বরণ কোনটি?',o:['vr','v²/r','r/v²','ω/r'],a:1,e:'কেন্দ্রমুখী ত্বরণ a = v²/r।'},
+ {q:'সমবেগে বৃত্তাকার গতিতে বেগ বদলায় কেন?',o:['শুধু মান বদলায়','দিক বদলায়','ভর বদলায়','সময় থেমে যায়'],a:1,e:'দ্রুতির মান ধ্রুব হলেও বেগের দিক ক্রমাগত পরিবর্তিত হয়।'},
+ {q:'বেগ-সময় গ্রাফের ঢাল কী?',o:['সরণ','ত্বরণ','ভরবেগ','কাজ'],a:1,e:'বেগের সময়-অনুসারে পরিবর্তনের হার হলো ত্বরণ।'},
+ {q:'সরণ-সময় গ্রাফের ঢাল কী নির্দেশ করে?',o:['বেগ','বল','ক্ষমতা','ভর'],a:0,e:'সরণ/সময়ের পরিবর্তনের হার বেগ।'},
+ {q:'সমবেগে ত্বরণ কত?',o:['শূন্য','g','v/t সবসময়','অসীম'],a:0,e:'বেগের মান ও দিক ধ্রুব থাকলে ত্বরণ শূন্য।'},
+ {q:'গতির তৃতীয় সমীকরণ কোনটি?',o:['v = u + at','s = vt','v² = u² + 2as','F = mv'],a:2,e:'ধ্রুব ত্বরণে v² = u² + 2as।'},
+ {q:'প্রক্ষেপণের সর্বাধিক পাল্লা (একই উচ্চতায় পতন) আদর্শভাবে কোন কোণে?',o:['৩০°','৪৫°','৬০°','৯০°'],a:1,e:'বায়ুর বাধা উপেক্ষা করে একই উচ্চতায় নামলে ৪৫°-এ পাল্লা সর্বাধিক।'},
+ {q:'সর্বোচ্চ বিন্দুতে প্রক্ষেপণের উল্লম্ব বেগ কত?',o:['শূন্য','সর্বাধিক','g','প্রাথমিক বেগের সমান'],a:0,e:'সর্বোচ্চ বিন্দুতে উল্লম্ব বেগের উপাংশ মুহূর্তের জন্য শূন্য।'},
+ {q:'ভরবেগ সংরক্ষিত থাকে কখন?',o:['বাহ্যিক লব্ধি বল শূন্য হলে','ঘর্ষণ সর্বদা থাকলে','বেগ শূন্য হলেই','ভর পরিবর্তিত হলে'],a:0,e:'বিচ্ছিন্ন সিস্টেমে মোট বাহ্যিক বল শূন্য হলে মোট ভরবেগ সংরক্ষিত থাকে।'},
+ {q:'নিউটনের তৃতীয় সূত্রে ক্রিয়া-প্রতিক্রিয়া বল—',o:['একই বস্তুর ওপর লাগে','ভিন্ন দুটি বস্তুর ওপর সমান ও বিপরীতভাবে লাগে','সবসময় বাতিল হয়','একটি বড় হয়'],a:1,e:'ক্রিয়া ও প্রতিক্রিয়া ভিন্ন বস্তুর ওপর কাজ করে।'},
+ {q:'কাজ শূন্য হতে পারে কোন ক্ষেত্রে?',o:['বল সরণের লম্ব হলে','বল ও সরণ একই দিকে হলে','সরণ বলের দিকে হলে','শক্তি থাকলেই'],a:0,e:'W = Fs cosθ; θ = 90° হলে কাজ শূন্য।'},
+ {q:'ঘর্ষণ সহগের একক কী?',o:['N','m/s','কোনো একক নেই','kg'],a:2,e:'ঘর্ষণ সহগ μ = ঘর্ষণ বল/লম্ব প্রতিক্রিয়া; দুটি বলের অনুপাত।'},
+ {q:'পৃষ্ঠটানের SI একক কোনটি?',o:['N/m','N·m','Pa','kg/m³'],a:0,e:'পৃষ্ঠটান = বল/দৈর্ঘ্য; একক N/m।'},
+ {q:'সান্দ্রতার গতিশীল সহগের SI একক কী?',o:['Pa·s','N/m','W','C'],a:0,e:'Dynamic viscosity-এর SI একক Pa·s।'},
+ {q:'তরঙ্গের বেগ, কম্পাঙ্ক ও তরঙ্গদৈর্ঘ্যের সম্পর্ক কোনটি?',o:['v = fλ','v = f/λ','v = λ/f','v = f + λ'],a:0,e:'তরঙ্গের বেগ v = fλ।'},
+ {q:'পর্যায়কাল T ও কম্পাঙ্ক f-এর সম্পর্ক কী?',o:['T = f','T = 1/f','T = f²','T = 2f'],a:1,e:'কম্পাঙ্ক f = 1/T, তাই T = 1/f।'},
+ {q:'শব্দ চলাচলের জন্য কী প্রয়োজন?',o:['একটি মাধ্যম','শুধু শূন্যস্থান','শুধু আলো','চৌম্বক ক্ষেত্র'],a:0,e:'শব্দ যান্ত্রিক তরঙ্গ; চলতে পদার্থগত মাধ্যম লাগে।'},
+ {q:'প্রতিসরাঙ্ক n-এর একটি সম্পর্ক কোনটি?',o:['n = c/v','n = v/c','n = cv','n = c + v'],a:0,e:'প্রতিসরাঙ্ক n = শূন্যস্থানে আলোর বেগ/মাধ্যমে আলোর বেগ।'},
+ {q:'বিদ্যুৎ ক্ষমতার সূত্র কোনটি?',o:['P = VI','P = V/I','P = IR','P = Q/t²'],a:0,e:'বৈদ্যুতিক ক্ষমতা P = VI; ওহমের সূত্রে P = I²R = V²/R।'},
+ {q:'সমান্তরাল সংযোগে প্রতিটি রোধের দুই প্রান্তে কী সমান থাকে?',o:['বিদ্যুৎ প্রবাহ','বিভব পার্থক্য','রোধ','ক্ষমতা'],a:1,e:'সমান্তরাল শাখাগুলো একই দুই নোডে যুক্ত, তাই ভোল্টেজ সমান।'},
+ {q:'শ্রেণি সংযোগে প্রতিটি রোধে কোনটি সমান?',o:['বিদ্যুৎ প্রবাহ','বিভব পার্থক্য','রোধ','ক্ষমতা'],a:0,e:'একটি পথ থাকায় শ্রেণি বর্তনীতে একই প্রবাহ যায়।'},
+ {q:'বৈদ্যুতিক আধানের SI একক কী?',o:['কুলম্ব','অ্যাম্পিয়ার','ভোল্ট','ফ্যারাড'],a:0,e:'আধানের একক কুলম্ব (C)।'},
+ {q:'ধারকের ধারকত্বের SI একক কী?',o:['ফ্যারাড','ওয়েবার','টেসলা','হেনরি'],a:0,e:'Capacitance-এর SI একক ফ্যারাড (F)।'},
+ {q:'চৌম্বক ফ্লাক্সের SI একক কোনটি?',o:['ওয়েবার','টেসলা','অ্যাম্পিয়ার','কুলম্ব'],a:0,e:'চৌম্বক ফ্লাক্সের একক ওয়েবার (Wb)।'},
+ {q:'তাপের পরিমাণের সরল সূত্র কোনটি?',o:['Q = mcΔT','Q = m/cT','Q = mv','Q = P/t'],a:0,e:'অবস্থার পরিবর্তন না হলে Q = mcΔT।'},
+ {q:'তাপগতীয় সমীকরণ PV = nRT-এ T কোন স্কেলে?',o:['সেলসিয়াস','কেলভিন','ফারেনহাইট','ডিগ্রি কোণ'],a:1,e:'আদর্শ গ্যাস সমীকরণে তাপমাত্রা পরম স্কেল কেলভিনে বসাতে হয়।'},
+ {q:'মহাকর্ষীয় বিভবশক্তির নিকট-পৃথিবী পৃষ্ঠের সূত্র কোনটি?',o:['mgh','½mv²','F/a','mv'],a:0,e:'পৃষ্ঠের কাছাকাছি উচ্চতা h হলে U = mgh।'},
+ {q:'যান্ত্রিক দক্ষতার সূত্র কোনটি?',o:['উপযোগী আউটপুট/ইনপুট × ১০০%','ইনপুট/আউটপুট','ভর × বেগ','বল/সময়'],a:0,e:'দক্ষতা = উপযোগী শক্তি-আউটপুট ÷ শক্তি-ইনপুট × ১০০%।'},
+ {q:'বস্তুর ঘূর্ণন জড়তার SI একক কী?',o:['kg·m²','kg/m²','N/m','J/s'],a:0,e:'ঘূর্ণন জড়তা I = Σmr², তাই একক kg·m²।'},
+ {q:'লেন্সের ক্ষমতার একক ডাইঅপ্টার হলে ফোকাল দৈর্ঘ্য কোন এককে নিতে হয়?',o:['মিটার','সেন্টিমিটার','কিলোমিটার','মিলিমিটার'],a:0,e:'P = 1/f; ফোকাল দৈর্ঘ্য মিটারে নিলে ক্ষমতা diopter-এ হয়।'},
+ {q:'গোলীয় দর্পণের বক্রতার ব্যাসার্ধ R ও ফোকাল দৈর্ঘ্য f-এর সম্পর্ক কী?',o:['f = R/2','f = 2R','f = R²','f = 1/R²'],a:0,e:'প্যারাক্সিয়াল রশ্মির জন্য গোলীয় দর্পণে f = R/2।'},
+ {q:'সমতাপীয় প্রক্রিয়ায় আদর্শ গ্যাসের কোন রাশি ধ্রুব?',o:['তাপমাত্রা','চাপ ও আয়তন দুটোই','ভরবেগ','তাপমাত্রা সবসময় বাড়ে'],a:0,e:'সমতাপীয় (isothermal) প্রক্রিয়ায় তাপমাত্রা ধ্রুব থাকে।'},
+ {q:'অর্ধায়ু বলতে কী বোঝায়?',o:['নমুনার অর্ধেক নিউক্লিয়াস ক্ষয় হতে প্রয়োজনীয় সময়','সম্পূর্ণ ক্ষয়ের সময়','বেগ অর্ধেক হওয়ার সময়','তাপমাত্রা দ্বিগুণের সময়'],a:0,e:'একটি তেজস্ক্রিয় নমুনার নিউক্লিয়াসের সংখ্যা অর্ধেক হতে যে সময় লাগে সেটি অর্ধায়ু।'},
+ {q:'ফোটনের শক্তির সম্পর্ক কোনটি?',o:['E = hf','E = h/f','E = mv','E = mc'],a:0,e:'ফোটনের শক্তি E = hf, যেখানে h প্ল্যাঙ্ক ধ্রুবক।'},
+ {q:'দুটি সমান ও বিপরীত সমান্তরাল বলের যুগল কী সৃষ্টি করে?',o:['টর্ক','শুধু সরলরৈখিক ত্বরণ','শূন্য ভর','তরঙ্গদৈর্ঘ্য'],a:0,e:'বল-যুগল লব্ধি বল শূন্য হলেও একটি টর্ক সৃষ্টি করে।'}
+];
+var ION_CHALLENGE_MORE=[
+ {q:'ধনায়ন (cation) কোন আধান বহন করে?',o:['ধনাত্মক','ঋণাত্মক','আধানহীন','পরিবর্তনশীল নিউট্রন আধান'],a:0,e:'ইলেকট্রন হারালে সাধারণত ধনাত্মক আয়ন তৈরি হয়।'},
+ {q:'সালফেট আয়নের সংকেত কোনটি?',o:['SO₄²⁻','SO₃²⁻','S²⁻','HSO₃⁻'],a:0,e:'সালফেট হলো SO₄²⁻।'},
+ {q:'অ্যামোনিয়াম আয়নের সংকেত কী?',o:['NH₄⁺','NO₃⁻','NH₂⁻','N³⁻'],a:0,e:'অ্যামোনিয়াম একটি বহুপারমাণবিক ধনায়ন: NH₄⁺।'},
+ {q:'ক্লোরিন সাধারণত কোন আয়ন গঠন করে?',o:['Cl⁻','Cl⁺','Cl²⁺','Cl²⁻ সবসময়'],a:0,e:'একটি ইলেকট্রন গ্রহণ করে ক্লোরাইড Cl⁻ তৈরি হয়।'},
+ {q:'আয়নের নিট আধান নির্ভর করে কোন পার্থক্যের ওপর?',o:['প্রোটন ও ইলেকট্রনের সংখ্যা','শুধু নিউট্রন সংখ্যা','শুধু ভর','শুধু নিউক্লিয়াসের ব্যাস'],a:0,e:'নিট আধান = প্রোটনের ধনাত্মক আধান ও ইলেকট্রনের ঋণাত্মক আধানের যোগফল।'},
+ {q:'গ্রুপ ১-এর মৌল সাধারণত কী ধরনের আয়ন গঠন করে?',o:['+1','−1','+2','−2'],a:0,e:'ক্ষার ধাতুরা সাধারণত একটি ইলেকট্রন হারিয়ে +1 আয়ন হয়।'},
+ {q:'গ্রুপ ১৭-এর হ্যালোজেন সাধারণত কী আয়ন গঠন করে?',o:['−1','+1','+2','−3'],a:0,e:'বহিঃস্ত স্তরে একটি ইলেকট্রন গ্রহণ করে সাধারণত −1 আয়ন গঠন করে।'},
+ {q:'অ্যালুমিনিয়াম আয়নের সংকেত কী?',o:['Al³⁺','Al⁺','Al²⁻','Al³⁻'],a:0,e:'অ্যালুমিনিয়াম সাধারণত তিনটি ইলেকট্রন হারিয়ে Al³⁺ হয়।'},
+ {q:'MgCl₂-এ ম্যাগনেসিয়াম আয়নের আধান কত?',o:['+2','+1','−1','−2'],a:0,e:'Mg²⁺-এর আধান +2; দুটি Cl⁻-এর মোট −2 আধান সেটিকে সাম্য করে।'},
+ {q:'অম্লে কার্বনেট যোগ করলে কোন গ্যাস নির্গত হয়?',o:['CO₂','O₂','H₂','NH₃'],a:0,e:'কার্বনেট ও অম্ল থেকে কার্বন ডাই-অক্সাইড তৈরি হয়।'},
+ {q:'ক্লোরাইড শনাক্তকরণে AgNO₃ যোগে সাধারণত কী দেখা যায়?',o:['সাদা AgCl অবক্ষেপ','নীল দ্রবণ','বেগুনি শিখা','হলুদ গ্যাস'],a:0,e:'অম্লায়িত নমুনায় Ag⁺ ক্লোরাইডের সঙ্গে সাদা AgCl অবক্ষেপ তৈরি করে।'},
+ {q:'সালফেট শনাক্তে অম্লীয় দ্রবণে BaCl₂ যোগে কোন অবক্ষেপ হয়?',o:['সাদা BaSO₄','নীল Cu(OH)₂','বাদামি Fe(OH)₃','AgCl কালো'],a:0,e:'Ba²⁺ ও SO₄²⁻ অদ্রবণীয় সাদা BaSO₄ দেয়।'},
+ {q:'Cu²⁺-এর সঙ্গে NaOH যোগে কোন অবক্ষেপ হয়?',o:['নীল Cu(OH)₂','সাদা AgCl','সবুজ গ্যাস','লাল Cu₂O সবসময়'],a:0,e:'কপার(II) হাইড্রোক্সাইড সাধারণত নীল অবক্ষেপ।'},
+ {q:'Fe³⁺-এর সঙ্গে NaOH যোগে সাধারণত কী হয়?',o:['লালচে-বাদামি অবক্ষেপ','নীল শিখা','অক্সিজেন গ্যাস','সাদা AgCl'],a:0,e:'Fe(OH)₃ লালচে-বাদামি অবক্ষেপ তৈরি করে।'},
+ {q:'pH = 3 হলে পানিভিত্তিক দ্রবণটি সাধারণত—',o:['অম্লীয়','নিরপেক্ষ','ক্ষারীয়','অবশ্যই pH 7'],a:0,e:'২৫°C-এ pH 7-এর কম হলে দ্রবণ অম্লীয়।'},
+ {q:'আয়নিক বন্ধন সাধারণত কীভাবে গঠিত হয়?',o:['ইলেকট্রন স্থানান্তর ও বিপরীত আয়নের আকর্ষণে','শুধু নিউট্রন ভাগে','শুধু তাপ দিয়ে','আধান মুছে দিয়ে'],a:0,e:'ইলেকট্রন স্থানান্তরের পর বিপরীত আধানযুক্ত আয়নের তড়িৎস্থির আকর্ষণে আয়নিক বন্ধন গঠিত হয়।'},
+ {q:'Na₂SO₄ সূত্রে মোট ধনাত্মক আধানের মান কত?',o:['+2','+1','−2','+4'],a:0,e:'দুটি Na⁺-এর মোট আধান +2; SO₄²⁻-এর −2 আধানের সঙ্গে সাম্য হয়।'},
+ {q:'হ্রাস (reduction) বলতে আধুনিক ইলেকট্রন ধারণায় কী বোঝায়?',o:['ইলেকট্রন গ্রহণ','ইলেকট্রন ত্যাগ','প্রোটন সবসময় হারানো','নিউট্রন নির্গমন'],a:0,e:'OIL RIG: Oxidation Is Loss, Reduction Is Gain of electrons।'},
+ {q:'কোনটি পলিআটমিক আয়ন?',o:['NH₄⁺','Na⁺','Cl⁻','Mg²⁺'],a:0,e:'NH₄⁺ একাধিক পরমাণু নিয়ে গঠিত একটি আয়ন।'}
+];
+var CANONICAL_SIM_ID_BY_KEY={
+ wave:'wave',projectile:'hsc-phy-projectile',pendulum:'hsc-phy-periodic',spring:'hsc-phy-spring',circuit:'hsc-phy-circuit',gas:'hsc-phy-gas',
+ force:'hsc-phy-newton',vectors:'hsc-math-vectors',unit:'hsc-math-trig',tangent:'hsc-math-diff',matrix:'hsc-math-matrix',circle:'hsc-math-circle',line:'hsc-math-line',
+ flame:'hsc-chem-flame',kinetics:'hsc-chem-kinetics',electrochem:'hsc-chem-electrochem'
+};
+function normalizeCatalog(){
+ var allGames=D.games||[],primaryScramble=allGames.filter(function(g){return g&&g.id==='scramble'})[0];
+ if(primaryScramble){primaryScramble.data=primaryScramble.data||{};var wordBank=Array.isArray(primaryScramble.data.words)?primaryScramble.data.words.slice():[],wordSeen=Object.create(null);wordBank.forEach(function(w){wordSeen[String(w.w||'').toUpperCase()]=1});
+  allGames.filter(function(g){return g&&['math-concept-scramble','hsc-term-scramble','edu-math-concept-scramble','edu-hsc-term-scramble'].indexOf(g.id)>=0}).forEach(function(g){((g.data||{}).words||[]).forEach(function(w){var k=String(w.w||'').toUpperCase();if(k&&!wordSeen[k]){wordSeen[k]=1;wordBank.push(w)}})});
+  primaryScramble.data.words=wordBank;
+ }
+ var kept=[],titles=Object.create(null),seenIcons=Object.create(null);
+ (D.games||[]).forEach(function(g){if(!g||!g.id||DROP_GAME_IDS[g.id])return;var raw=String(GAME_TITLE_BN[g.id]||g.t||g.title||g.id).toLowerCase().normalize('NFKD');var title=raw.replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]+/gu,'');if(!title)title=String(g.id).toLowerCase();if(title==='flamecolourdetective'||title==='formulapaircosmos')return;if(titles[title])return;titles[title]=1;kept.push(g)});
+ (D.labs||[]).forEach(function(l,i){var ico=SIM_ICON_BY_ID[l.id]||l.icon||'🧩';if(seenIcons[ico]){var j=0;while(j<GAME_ICON_FALLBACK.length&&seenIcons[GAME_ICON_FALLBACK[j]])j++;ico=GAME_ICON_FALLBACK[j]||('🔹'+(i+1));if(!SIM_ICON_BY_ID[l.id])l.icon=ico;}seenIcons[ico]=1});
+ kept.forEach(function(g,i){var ico=GAME_ICON_BY_ID[g.id]||g.icon||GAME_ICON_FALLBACK[i%GAME_ICON_FALLBACK.length];if(seenIcons[ico]){var j=0;while(j<GAME_ICON_FALLBACK.length&&seenIcons[GAME_ICON_FALLBACK[j]])j++;ico=GAME_ICON_FALLBACK[j]||('🔹'+(i+1))}g.icon=ico;seenIcons[ico]=1});
+ kept.sort(function(a,b){return a.id==='chemistry-ion-challenge'?-1:b.id==='chemistry-ion-challenge'?1:0});D.games=kept;
+ var rawLabs=D.labs||[],seenSimRenderers=Object.create(null);
+ D.labs=rawLabs.filter(function(l){if(!l)return false;if(l.id==='pendulum'||l.id==='hsc-phy-magnetic')return false;var canonical=CANONICAL_SIM_ID_BY_KEY[l.sim];if(canonical&&l.id!==canonical)return false;var renderer=String(l.sim||'').trim();if(renderer&&seenSimRenderers[renderer])return false;if(renderer)seenSimRenderers[renderer]=l.id||true;return true});
+ D.labs.forEach(function(l){if(l.id==='wave'||l.id==='projectile'||l.id==='flame')l.on=true});
+ var rush=kept.filter(function(g){return g.id==='physics-unit-rush'})[0];if(rush){rush.t='Physics Unit Rush';rush.d='HSC পদার্থবিজ্ঞানের SI একক, মাত্রা, সূত্র ও মৌলিক ধারণা নিয়ে দ্রুত MCQ চ্যালেঞ্জ। চারটি বিকল্প থেকে সঠিক উত্তর বেছে নিন; ভুল হলে ব্যাখ্যা দেখুন।';rush.data=rush.data||{};rush.data.time=Math.max(70,+rush.data.time||50);rush.data.useChapters='0';var qs=rush.data.q||[],have=Object.create(null);qs.forEach(function(q){have[String(q.q||'').trim().toLowerCase()]=1});PHYSICS_UNIT_RUSH_MORE.forEach(function(q){var k=q.q.trim().toLowerCase();if(!have[k]){qs.push(q);have[k]=1}});rush.data.q=qs}
+ var ion=kept.filter(function(g){return g.id==='chemistry-ion-challenge'})[0];if(ion){ion.type='ionDetective';ion.on=true;ion.icon='🛟';ion.t='Ion Detective: আয়ন শনাক্তকরণ';ion.d='ভার্চুয়াল ল্যাবে বিকারক যোগ, পর্যবেক্ষণ নোট, ধনায়ন-ঋণায়ন শনাক্তকরণ, শিখা ও অধঃক্ষেপ পরীক্ষা এবং ভর্তি-ধাঁচের চ্যালেঞ্জ।';ion.diff='Medium';ion.xp=Math.max(50,+ion.xp||50);ion.data=ion.data||{};ion.data.time=Math.max(60,+ion.data.time||60);ion.data.useChapters='0';var iq=ion.data.q||[],ih=Object.create(null);iq.forEach(function(q){ih[String(q.q||'').trim().toLowerCase()]=1});ION_CHALLENGE_MORE.forEach(function(q){var k=q.q.trim().toLowerCase();if(!ih[k]){iq.push(q);ih[k]=1}});ion.data.q=iq}
+ var priority=['river-boat','hsc-phy-projectile','projectile','hsc-phy-optics','mirror-optics','tiger-deer','bus-train-motion','inclined-plane-friction','road-banking','cycle-banking','motorcycle-banking','newtonian-mechanics-lab','force','hsc-phy-vectors','hsc-phy-newton','hsc-phy-work-energy','hsc-phy-gravity'];var pri=Object.create(null);priority.forEach(function(id,i){pri[id]=i});D.labs=(D.labs||[]).slice().sort(function(a,b){var ai=Object.prototype.hasOwnProperty.call(pri,a.id)?pri[a.id]:1000,bi=Object.prototype.hasOwnProperty.call(pri,b.id)?pri[b.id]:1000;return ai-bi});
+}
+
+/* ------------------------------------------------------------ content */
+function load(d){
+ d=d||{};var def=clone(DEF);
+ D={settings:Object.assign({},def.settings,d.settings||{}),theme:Object.assign({},def.theme,d.theme||{}),texts:d.texts||{},
+  subjects:(d.subjects&&d.subjects.length)?d.subjects:def.subjects,
+  chapters:(function(){var defaults=def.chapters||[],saved=Array.isArray(d.chapters)?d.chapters:[],byId={};saved.forEach(function(x){if(x&&x.id)byId[x.id]=x});var merged=defaults.map(function(x){var old=byId[x.id];if(!old)return x;var out=Object.assign({},x,old);if(/^qc-\d+$/.test(x.id)&&x.sim)out.sim=x.sim;
+    /* Migrate old saved qualitative-chemistry mappings that predated the topic-specific simulation set. */
+    if(x.id==='qc-01'&&['dalton','bohr'].indexOf(out.sim)>=0)out.sim='atomBasics';
+    if(x.id==='qc-03'&&out.sim==='bohr')out.sim='thomson';
+    if(x.id==='qc-04'&&['bohr','rutherford'].indexOf(out.sim)>=0)out.sim='rutherfordModel';
+    if(x.id==='qc-05'&&['bohr','cathode'].indexOf(out.sim)>=0)out.sim='rutherford';
+    if(x.id==='qc-09'&&['bohr','quantum'].indexOf(out.sim)>=0)out.sim='planckQuantum';
+    if(x.id==='qc-10'&&['bohr','quantum'].indexOf(out.sim)>=0)out.sim='deBroglie';
+    if(x.id==='qc-11'&&['bohr','quantum'].indexOf(out.sim)>=0)out.sim='uncertainty';
+    if(x.id==='qc-12'&&['bohr','quantum'].indexOf(out.sim)>=0)out.sim='quantumNumbers';
+    return out});saved.forEach(function(x){if(x&&x.id&&!defaults.some(function(y){return y.id===x.id}))merged.push(x)});return merged})(),
+  home:(function(){
+    var base=def.home||{sections:[]};
+    if(!(d.home&&Array.isArray(d.home.sections)))return base;
+    var h=Object.assign({},d.home),sections=d.home.sections.slice();
+    if(!sections.some(function(x){return x&&(x.id==='s-ayat-hadith'||x.type==='ayatHadith')})){
+      var added=(base.sections||[]).filter(function(x){return x.id==='s-ayat-hadith'})[0];
+      if(added){var at=sections.findIndex(function(x){return x&&(x.id==='s-stages'||x.type==='stages')});sections.splice(at>=0?at+1:sections.length,0,clone(added));}
+    }
+    // Keep the reflection directly after the 'Why Golden Snitch?' section, followed by motivation.
+    var why=sections.findIndex(function(x){return x&&(x.id==='s-why'||x.type==='features'&&x.h==='কেন এই ওয়েবসাইট তৈরি হচ্ছে?')});
+    var ah=sections.findIndex(function(x){return x&&(x.id==='s-ayat-hadith'||x.type==='ayatHadith')});
+    var mot=sections.findIndex(function(x){return x&&(x.id==='s-motivation'||x.type==='motivation')});
+    var baseSections=base.sections||[];
+    if(ah<0){var addAh=baseSections.find(function(x){return x.id==='s-ayat-hadith'});if(addAh){sections.push(clone(addAh));ah=sections.length-1;}}
+    if(mot<0){var addMot=baseSections.find(function(x){return x.id==='s-motivation'});if(addMot){sections.push(clone(addMot));mot=sections.length-1;}}
+    function moveAfter(id,afterId){var i=sections.findIndex(function(x){return x&&x.id===id}),j=sections.findIndex(function(x){return x&&x.id===afterId});if(i>=0&&j>=0){var item=sections.splice(i,1)[0];j=sections.findIndex(function(x){return x&&x.id===afterId});sections.splice(j+1,0,item);}}
+    if(why>=0){moveAfter('s-ayat-hadith','s-why');moveAfter('s-motivation','s-ayat-hadith');}
+    h.sections=sections;
+    return h;
+  })(),
+  games:(function(){var saved=Array.isArray(d.games)?d.games:null;if(!saved)return def.games;var ids={};saved.forEach(function(x){if(x&&x.id)ids[x.id]=1});var gone={};(d.deletedGames||[]).forEach(function(x){gone[x]=1});var fresh={'mass-atlas':1,'periodic-quest':1,'element-sprint':1,'trend-duel':1,'odd-one-phy':1,'odd-one-chem':1,'odd-one-math':1,'step-order-phy':1,'step-order-chem':1,'step-order-math':1,'chemistry-ion-challenge':1,'organic-pathway':1,'stoichiometry-sprint':1,'molecular-shape-challenge':1,'hsc-boss-battle':1,'precision-lab-mastery':1,'photon-fringe-detective':1};var defaultsById={};(def.games||[]).forEach(function(x){if(x&&x.id)defaultsById[x.id]=x});var merged=saved.map(function(x){return x&&x.id==='stoichiometry-sprint'&&defaultsById[x.id]?defaultsById[x.id]:x});return merged.concat((def.games||[]).filter(function(x){return (fresh[x.id]||/^edu-/.test(x.id))&&!ids[x.id]&&(!gone[x.id]||x.id==='chemistry-ion-challenge')}))})(),
+  navigation:(function(){var base=Array.isArray(def.navigation)?def.navigation:[],saved=Array.isArray(d.navigation)?d.navigation:[],byId={};saved.forEach(function(x){if(x&&x.id)byId[x.id]=x});var out=base.map(function(x){return Object.assign({},x,byId[x.id]||{})});saved.forEach(function(x){if(x&&x.id&&!base.some(function(y){return y.id===x.id}))out.push(x)});return out})(),
+  customPages:Array.isArray(d.customPages)?d.customPages:[],
+  labs:(function(){var defaults=Array.isArray(def.labs)?def.labs:[],saved=Array.isArray(d.labs)?d.labs:[],byId={};saved.forEach(function(x){if(x&&x.id)byId[x.id]=x});var merged=defaults.map(function(x){return byId[x.id]||x});saved.forEach(function(x){if(x&&x.id&&!defaults.some(function(y){return y.id===x.id}))merged.push(x)});return merged})(),
+  gam:Object.assign({},def.gam,d.gam||{}),
+  daily:Object.assign({},def.daily||{},d.daily||{}),missions:Array.isArray(d.missions)?d.missions:(def.missions||[]),practice:Object.assign({},def.practice||{},d.practice||{}),deletedGames:Array.isArray(d.deletedGames)?d.deletedGames:[]};
+ // Merge editable stage/feature presentation fields into older saved CMS content without overwriting administrator copy.
+ var homeDefSections=(def.home&&def.home.sections)||[];
+ (D.home.sections||[]).forEach(function(sec){if(!sec||['stages','features'].indexOf(sec.type)<0)return;var base=homeDefSections.filter(function(x){return x.id===sec.id})[0];if(!base)return;sec.animation=sec.animation||base.animation||'float';sec.items=Array.isArray(sec.items)?sec.items:clone(base.items||[]);sec.items.forEach(function(it,i){var bi=(base.items||[])[i]||{};['i','tag','color','image'].forEach(function(k){if(it[k]==null||it[k]==='')it[k]=bi[k]!==undefined?bi[k]:(k==='image'?'':k==='color'?HOME_STAGE_COLORS[i%4]:'')});if(sec.type==='stages'){var oldP=['বাস্তব জীবনের একটি প্রশ্ন দিয়ে শুরু।','মূল ধারণাটি সহজ ভাষায়।','স্লাইডার ও বোতাম দিয়ে নিজে পরীক্ষা করুন।','কুইজে যাচাই করুন, রেফারেন্স দেখুন।'];if(!it.t)it.t=bi.t||['Real-World Hook','Core Intuition','Interactive Simulation','Quiz & References'][i]||'Learning stage';if(oldP.indexOf(it.p)>=0&&bi.p)it.p=bi.p;if(!it.p)it.p=bi.p||'';}else if(sec.type==='features'){var oldFeatureCopy=['প্রতিটি সূত্রের পেছনের কারণ আগে, সূত্র পরে।','স্লাইডার ও বোতাম বদলে ফলাফল সঙ্গে সঙ্গে দেখুন।','জটিল বিষয়ও সহজ বাংলায় বোঝানো হয়।','ধাপ শেষ করলে My Progress পেজে অগ্রগতি জমা হয়।','পড়ে, খেলে ও কুইজ দিয়ে XP জমান, লেভেল বাড়ান, ব্যাজ জিতুন।','প্রতিদিন একটি বিশেষ গেম—খেললে দ্বিগুণ XP।'];if(oldFeatureCopy.indexOf(it.p)>=0&&bi.p)it.p=bi.p;if(!it.p)it.p=bi.p||'';if(!it.t)it.t=bi.t||'';} });});
+ normalizeCatalog();
+ if(window.CL_GAME_ACADEMY&&typeof window.CL_GAME_ACADEMY.merge==='function')D.games=window.CL_GAME_ACADEMY.merge(D.games);
+ if(window.CL_PHYSICS_CATALOG&&window.CL_PHYSICS_CATALOG.apply)window.CL_PHYSICS_CATALOG.apply(D.labs);
+ /* Arcade simulation engines are catalogued here instead of living in a separate Arcade section. */
+ (function integrateArcadeSimulations(){
+  var labs=D.labs||(D.labs=[]),seen=Object.create(null);
+  labs.forEach(function(l){if(l&&l.id)seen[l.id]=1;});
+  var academy=window.CL_GAME_ACADEMY;
+  (D.games||[]).forEach(function(g){
+   if(!g||g.type!=='simExplorer'||g.on===false||g.on==='0'||seen[g.id])return;
+   var meta=academy&&academy.meta?academy.meta(g):{chapter:[]},ch=meta&&meta.chapter&&meta.chapter[0]||{};
+   var subject=g.subjectKey==='chemistry'?'Chemistry':g.subjectKey==='math'?'Higher Math':'Physics';
+   var simCfg=g.data&&g.data.sim||{};
+   labs.push({id:g.id,sim:'arcade:'+g.id,arcadeImported:true,arcadeGameId:g.id,on:g.on!==false,
+    icon:g.icon||'🔬',t:g.t||g.title||g.id,sub:subject,d:g.d||'পরামিতি বদলে ফলাফল পর্যবেক্ষণ করুন।',
+    tip:simCfg.formula||simCfg.mission||'',chapter:ch.title||'',concept:g.t||'',chapterKey:(meta.chapterKeys||[])[0]||'',
+    arcadeSubjectKey:g.subjectKey||'physics'});
+   seen[g.id]=1;
+  });
+ })();
+
+ // Remove retired simulations and graph-only cards after every catalogue source has merged.
+ var CL_REMOVED_LAB_IDS={"impulse-force-time-lab":1,"power-efficiency-lab":1,"work-force-displacement-lab":1,"energy-conservation-lab":1,"universal-gravitation-lab":1,"sim-orbit-speed-explorer":1,"buoyancy-floating-lab":1,"viscosity-terminal-velocity-lab":1,"bernoulli-flow-lab":1,"surface-tension-capillary-lab":1,"shm-explorer-lab":1,"shm-energy-lab":1,"sim-spring-oscillator":1,"hsc-phy-standing-waves":1,"air-column-resonance-lab":1,"doppler-effect-lab":1,"sound-intensity-distance-lab":1,"sim-sound-pitch-lab":1,"sim-calorimetry-mixer":1,"sim-capacitor-charging":1,"sim-ohm-law-bench":1,"sim-resistor-network":1,"sim-magnetic-force-track":1,"sim-faraday-induction":1,"sim-ac-waveform":1,"motion-graph-studio":1,"motion-graph-match":1,"sim-velocity-time-lab":1,"sim-straight-line-studio":1,"sim-quadratic-curve-lab":1,"sim-absolute-value-graph":1,"sim-exponential-growth":1,"sim-logarithm-domain":1,"sim-sine-wave-graph":1,"sim-cosine-wave-graph":1,"sim-derivative-function":1,"sim-integral-area-studio":1,"sim-riemann-sum":1,"sim-line-intersection-lab":1};
+ var CL_REMOVED_LAB_TITLES={"impulseforcetimelab":1,"powerefficiencystudio":1,"workforcedisplacementlab":1,"energyconservationplayground":1,"universalgravitationlab":1,"orbitalspeedexplorer":1,"buoyancyfloatingobjects":1,"viscosityterminalvelocity":1,"fluidflowbernoullilab":1,"surfacetensioncapillaryrise":1,"shmexplorer":1,"shmenergylab":1,"springoscillatorstudio":1,"standingwavesresonance":1,"aircolumnresonancelab":1,"dopplereffectsimulator":1,"soundintensitydecibellab":1,"soundpitchtemperature":1,"calorimetrymixer":1,"capacitorchargingexplorer":1,"ohmslawbench":1,"resistornetworkstudio":1,"magneticforcetrack":1,"faradayinductionlab":1,"acwaveformstudio":1,"motiontrackgraphstudio":1,"matchthemotiongraph":1};
+ var CL_REMOVED_GAME_KEYS={"precisionlab":1,"measurementprotocol":1,"dimensionforge":1,"dimensionalforge":1,"uniterrorinspector":1,"vectorcompass":1,"vectorbalanceboard":1,"launchcontrol":1,"projectiletimeline":1,"motionequationforge":1,"rangefinder":1,"probabilityroute":1,"probabilitytree":1,"datascout":1,"distributionclues":1,"probabilitybalance":1,"pendulumtuner":1,"waveformstudio":1,"wavetypesort":1,"thermalbalance":1,"heatexchange":1,"circuitworkshop":1,"materialsort":1,"ohmlawcircuitdial":1,"ohmslawcircuitdial":1,"opticsstudio":1,"lensfocusdial":1,"opticsrayexaminer":1,"wavearena":1,"interferencepath":1,"dimensionlinksipairing":1,"instrumentmatchreadouttool":1,"physicslawmatch":1,"wavelinkpropertypairing":1,"cosmoslinkobjectsignature":1,"atomicidentitymatch":1,"moleculegeometrymatch":1,"chemlinksubstanceproperty":1,"moleculematchstructurelink":1,"moleratioreactionbalance":1,"linefitslopehunter":1,"geometrylinktheorempairing":1,"graphmatchshapemeaning":1,"biolinkstructurefunction":1};
+ function clCatalogKey(x){return String(x||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'');}
+ function clDropLab(x){if(!x)return true;var id=String(x.id||''),title=clCatalogKey(x.t||x.title),probe=clCatalogKey([x.id,x.sim,x.t,x.title].join(' '));return !!CL_REMOVED_LAB_IDS[id]||!!CL_REMOVED_LAB_TITLES[title]||/graph/.test(probe);}
+ function clDropGame(x){if(!x)return true;var title=clCatalogKey(x.t||x.title);return Object.keys(CL_REMOVED_GAME_KEYS).some(function(k){return title.indexOf(k)>=0;})||title.indexOf('precisionlab')===0;}
+ D.labs=(D.labs||[]).filter(function(x){return !clDropLab(x);});
+ D.games=(D.games||[]).filter(function(x){return !clDropGame(x);});
+ (D.missions||[]).forEach(function(m){if(m&&String(m.link||'').replace(/\/$/,'')==='#/chapters')m.link='#/lab'});
+ if(!(d.home&&d.home.sections)&&d.settings){D.home.sections.forEach(function(s){if(s.type=='purpose'){if(d.settings.missionTitle)s.h=d.settings.missionTitle;if(d.settings.mission1)s.p=d.settings.mission1;if(d.settings.mission2)s.p2=d.settings.mission2}})}
+
+ // Refresh old saved homepage copy so the platform is presented as a practical study toolkit.
+ var CL_HOME_COPY={
+ 's-goals':{h:'পড়াশোনাকে সহজ করার চারটি উপায়',p:'শুধু একটি পাঠ নয়—প্রয়োজনীয় সহায়তা, অনুশীলন ও পরীক্ষা এক জায়গায়।'},
+ 's-stages':{pill:'STUDY EXPERIENCE',h:'পড়াশোনার চারটি সহায়ক অভিজ্ঞতা',p:'প্রয়োজন অনুযায়ী টুল ব্যবহার করুন, গেমে অংশ নিন, সিমুলেশনে পরীক্ষা করুন এবং নিজের অগ্রগতি দেখুন।'},
+ 's-lab':{pill:'INTERACTIVE SIMULATIONS',h:'নিজে পরীক্ষা চালান। ফলাফল দেখুন।',p:'চলক ও শর্ত বদলে পরীক্ষা চালান এবং ফলাফল কীভাবে বদলায় তা সঙ্গে সঙ্গে পর্যবেক্ষণ করুন।',items:[{t:'Physics'},{t:'Live controls'},{t:'Try it yourself'}]},
+ 's-arcade':{pill:'INTERACTIVE ARCADE',h:'শুধু কুইজ নয়—খেলে, সাজিয়ে, তৈরি করে শিখুন',p:'ম্যাচিং, সাজানো, বিল্ডিং, পাজল ও ছোট মিশনে নিজে অংশ নিন এবং XP অর্জন করুন।'},
+ 's-purpose':{h:'পড়াশোনাকে সহজ, সক্রিয় ও গোছানো করা।',p:'শিক্ষার্থীদের দরকারি সহায়তা যেন এক জায়গায় থাকে—এটাই Golden Snitch-এর প্রধান উদ্দেশ্য।',p2:'স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, হাতে-কলমে সিমুলেশন, স্মার্ট প্র্যাকটিস ও অগ্রগতি ব্যবস্থাপনার মাধ্যমে পড়াশোনাকে আরও সহজ ও কার্যকর করা হয়।'},
+ 's-why':{h:'পুরো পড়াশোনার কাজে লাগা সহায়ক প্ল্যাটফর্ম',p:'টুল ব্যবহার, গেম খেলা, পরীক্ষা চালানো ও নিজের পড়া গুছিয়ে রাখা—সব এক জায়গায়।'},
+ 's-road':{pill:'YOUR STUDY TOOLKIT',h:'টুল থেকে অগ্রগতি—একটি সহজ পথ',p:'প্রয়োজনীয় টুল বেছে নিন, ইন্টারঅ্যাকটিভ গেম খেলুন, সিমুলেশনে পরীক্ষা চালান এবং নিজের অগ্রগতি দেখুন।'},
+ 's-faq':{p:'স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, সিমুলেশন ও ব্যক্তিগত পড়াশোনা ব্যবস্থাপনা নিয়ে সাধারণ প্রশ্ন।'},
+ 's-stats':{items:[{t:'Interactive activities',k:'activities',v:''},{t:'Live simulations',k:'labs',v:''},{t:'Interactive games',k:'games',v:''},{t:'XP you earned',k:'xp',v:''},{t:'Graph Lab',k:'graphlabs',v:''},{t:'Student Hub tools',k:'hubtools',v:''}]}
+ };
+ (D.home.sections||[]).forEach(function(sec){var c=CL_HOME_COPY[sec.id];if(!c)return;Object.keys(c).forEach(function(k){sec[k]=c[k]});});
+
+var CL_HOME_ITEMS={
+ 's-stats':[{t:'Interactive activities',k:'activities',v:''},{t:'Live simulations',k:'labs',v:''},{t:'Interactive games',k:'games',v:''},{t:'XP you earned',k:'xp',v:''},{t:'Graph Lab',k:'graphlabs',v:''},{t:'Student Hub tools',k:'hubtools',v:''}],
+ 's-goals':[
+  {i:'🧰',t:'দরকারি স্টাডি টুল',p:'ক্যালকুলেটর, ফর্মুলা শিট, নোট, ফ্ল্যাশকার্ড ও পরিকল্পনার টুল হাতের কাছে রাখুন।'},
+  {i:'🎮',t:'ইন্টারঅ্যাকটিভ গেম',p:'ম্যাচিং, সাজানো, বিল্ডিং, পাজল ও মিশনে নিজে অংশ নিয়ে শিখুন।'},
+  {i:'🔬',t:'হাতে-কলমে সিমুলেশন',p:'চলক বদলান, পরীক্ষা চালান এবং ফলাফল কীভাবে বদলায় দেখুন।'},
+  {i:'📈',t:'নিজের পড়া গুছিয়ে রাখুন',p:'প্রগতি, রিভিশন, লক্ষ্য ও ভুলের তালিকা এক জায়গায় পরিচালনা করুন।'}],
+ 's-stages':[
+  {t:'Study Tools',tag:'TOOLS · কাজে লাগান',p:'ক্যালকুলেটর, ফর্মুলা, নোট, ফ্ল্যাশকার্ড ও পরিকল্পনার টুল দিয়ে পড়াশোনা গুছিয়ে নিন।',i:'compass',color:'#38bdf8',image:''},
+  {t:'Interactive Games',tag:'PLAY · অংশ নিন',p:'ম্যাচিং, পাজল, সাজানো ও বিল্ডিং মিশনে নিজে কাজ করে শিখুন।',i:'lightbulb',color:'#a78bfa',image:''},
+  {t:'Live Simulations',tag:'SIMULATE · পরীক্ষা করুন',p:'চলক ও শর্ত বদলে নিজেরাই পরীক্ষা চালান এবং ফলাফলের পরিবর্তন দেখুন।',i:'flask',color:'#34d399',image:''},
+  {t:'Progress & Revision',tag:'TRACK · এগিয়ে যান',p:'নিজের অগ্রগতি, লক্ষ্য, নোট ও রিভিশন এক জায়গায় রাখুন।',i:'trophy',color:'#fbbf24',image:''}],
+ 's-why':[
+  {i:'calculator',color:'#fbbf24',image:'',tag:'USEFUL TOOLS',t:'কাজের স্টাডি টুল',p:'ক্যালকুলেটর, ফর্মুলা, ফ্ল্যাশকার্ড, নোট ও পরিকল্পনা ব্যবহার করুন।'},
+  {i:'flask',color:'#34d399',image:'',tag:'INTERACTIVE SIMULATIONS',t:'নিজে চালান সিমুলেশন',p:'চলক বদলে পরীক্ষা চালান এবং ফলাফল তাৎক্ষণিক দেখুন।'},
+  {i:'gamepad',color:'#38bdf8',image:'',tag:'PLAY & BUILD',t:'কুইজের বাইরেও গেম',p:'ম্যাচিং, সাজানো, বিল্ডিং ও পাজল মিশনে অংশ নিন।'},
+  {i:'chart',color:'#a78bfa',image:'',tag:'TRACK PROGRESS',t:'পড়াশোনা গুছিয়ে রাখুন',p:'রিভিশন, লক্ষ্য, নোট ও অগ্রগতি এক জায়গায় দেখুন।'},
+  {i:'graduation',color:'#38bdf8',image:'',tag:'STUDENT HUB',t:'স্টুডেন্ট হাব',p:'প্ল্যানার, টাইমার, ক্যালকুলেটর ও রিভিশন টুল—সব এক জায়গায়।'},
+  {i:'chart',color:'#a78bfa',image:'',tag:'SEPARATE GRAPH LAB',t:'আলাদা Graph Lab',p:'ফাংশন, সরলরেখা, বৃত্ত ও ভেক্টর ইন্টারঅ্যাকটিভভাবে দেখুন।'},
+  {i:'calculator',color:'#34d399',image:'',tag:'SOLVE & CALCULATE',t:'সমাধান ও ক্যালকুলেটর',p:'সূত্রের অজানা রাশি বের করুন, পাশে বৈজ্ঞানিক ক্যালকুলেটরে হিসাব করুন।'}],
+ 's-road':[
+  {t:'Choose Tools',p:'প্রয়োজন অনুযায়ী ক্যালকুলেটর, নোট, ফর্মুলা ও পরিকল্পনার টুল খুলুন।'},
+  {t:'Play & Build',p:'ম্যাচিং, সিকোয়েন্স, বিল্ডিং ও পাজল গেমে অংশ নিন।'},
+  {t:'Run Simulations',p:'নিজে চলক বদলে পরীক্ষা চালান এবং ফলাফল পর্যবেক্ষণ করুন।'},
+  {t:'Track Progress',p:'রিভিশন, লক্ষ্য ও নিজের অগ্রগতি দেখে পরের পদক্ষেপ ঠিক করুন।'}]
+};
+(D.home.sections||[]).forEach(function(sec){if(CL_HOME_ITEMS[sec.id])sec.items=CL_HOME_ITEMS[sec.id];});
+
+var CL_HOME_FAQ=[
+ {q:'Golden Snitch-এ কী কী ব্যবহার করা যাবে?',a:'স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, Physics ও অন্যান্য বিষয়ের সিমুলেশন, স্মার্ট প্র্যাকটিস, Graph Lab এবং Student Hub-এর পরিকল্পনা ও রিভিশন টুল ব্যবহার করতে পারবেন।'},
+ {q:'সিমুলেশন আর Graph Lab কি একই?',a:'না। সিমুলেশন আলাদা করে পদার্থবিজ্ঞানসহ বিভিন্ন মডেল পরীক্ষা করার জন্য। Graph Lab আলাদা বিভাগে ফাংশন ও গ্রাফ নিয়ে কাজ করার জন্য।'},
+ {q:'গেমগুলো কি শুধু কুইজ?',a:'না। Arcade-এ matching, sequence, build, connect, sort ও অন্যান্য hands-on mission আছে। Quiz আলাদা ট্যাবে রাখা হয়েছে।'},
+ {q:'আমার অগ্রগতি কোথায় জমা থাকে?',a:'সাইন-ইন না করলে এই ডিভাইসের ব্রাউজারে থাকে। অ্যাকাউন্টে সাইন-ইন করলে সমর্থিত অগ্রগতি অ্যাকাউন্টের সঙ্গে যুক্ত হয়।'},
+ {q:'Student Hub-এ কী কী আছে?',a:'Study Planner, Focus Timer, Flashcards, Notes, Formula Sheet, Revision Tracker, GPA Calculator, Score Tracker এবং আরও সহায়ক টুল আছে।'}
+];
+(D.home.sections||[]).forEach(function(sec){if(sec.id==='s-faq')sec.items=CL_HOME_FAQ;});
+
+
+ // Keep the saved creator attribution intact; update only legacy purpose text.
+ if(/প্রতিটি কনসেপ্ট|মূল ধারণা বোঝানো/.test(D.settings.about||''))D.settings.about='Golden Snitch একটি স্বাধীন, শিক্ষার্থী-পরিচালিত শিক্ষামূলক প্রকল্প, তৈরি করেছেন Taimur Shams ও Moshiur Rahman Araf। লক্ষ্য হলো দরকারি স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, হাতে-কলমে সিমুলেশন, স্মার্ট অনুশীলন ও অগ্রগতি ব্যবস্থাপনার মাধ্যমে পড়াশোনা সহজ করা।';
+ if(/মুখস্থ নয়, কনসেপ্ট বুঝুন|Unlocking core concepts/.test(D.settings.h1||''))D.settings.h1='Golden Snitch: পড়াশোনার জন্য দরকারি সব টুল';
+ if(/প্রতিটি অধ্যায় ধারণা থেকে শুরু/.test(D.settings.lead||''))D.settings.lead='Physics, Chemistry ও Higher Math-এর পড়াশোনা সহজ করতে দরকারি স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, হাতে-কলমে সিমুলেশন, স্মার্ট প্র্যাকটিস ও আলাদা Graph Lab—সব এক জায়গায়।';
+ // Apply the requested homepage copy even when an older copy is stored in the CMS.
+ if(D.settings.badge==='TOOLS · GAMES · SIMULATIONS')D.settings.badge='';
+ // Golden Snitch hero copy: swap only the previous built-in defaults; custom admin text is kept.
+ if(/^Golden Snitch:\s*\S/.test(D.settings.h1||''))D.settings.h1='Study that feels like a magical adventure';
+ if(D.settings.lead==='HSC-এর পড়াশোনাকে সহজ ও আনন্দদায়ক করতে প্রয়োজনীয় সবকিছু এক জায়গায়। স্টাডি টুলস, ইন্টারঅ্যাকটিভ গেমস, হাতে-কলমে সিমুলেশন, স্মার্ট প্র্যাকটিস এর মাধ্যমে শেখো বুঝে, এগিয়ে যাও আত্মবিশ্বাসের সঙ্গে।')D.settings.lead='খেলতে খেলতে শিখুন, নিজে পরীক্ষা করুন, আর প্রতিটি কনসেপ্ট সত্যিকারভাবে বুঝে নিন।';
+ if(D.settings.lead==='Physics, Chemistry ও Higher Math-এর পড়াশোনা সহজ করতে দরকারি স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, হাতে-কলমে সিমুলেশন, স্মার্ট প্র্যাকটিস ও আলাদা Graph Lab—সব এক জায়গায়।')D.settings.lead='HSC-এর পড়াশোনাকে সহজ ও আনন্দদায়ক করতে প্রয়োজনীয় সবকিছু এক জায়গায়। স্টাডি টুলস, ইন্টারঅ্যাকটিভ গেমস, হাতে-কলমে সিমুলেশন, স্মার্ট প্র্যাকটিস এর মাধ্যমে শেখো বুঝে, এগিয়ে যাও আত্মবিশ্বাসের সঙ্গে।';
+ if(D.settings.lead==='HSC-এর পড়াশোনাকে সহজ ও আনন্দদায়ক করতে প্রয়োজনীয় সবকিছু এক জায়গায়। স্টাডি টুলস, ইন্টারঅ্যাকটিভ গেমস, হাতে-কলমে সিমুলেশন, স্মার্ট প্র্যাকটিস এর মাধ্যমে শেখো বুঝে, এগিয়ে যাও আত্মবিশ্বাসের সঙ্গে।')D.settings.lead='খেলতে খেলতে শিখুন, নিজে পরীক্ষা করুন, আর প্রতিটি কনসেপ্ট সত্যিকারভাবে বুঝে নিন।';
+ if(/কৌতূহল দিয়ে শিখুন/.test(D.settings.footerTitle||''))D.settings.footerTitle='পড়াশোনা হোক সহজ, সক্রিয় ও গোছানো।';
+ if(/ধারণা বোঝা|গ্রাফ এবং স্টুডেন্ট হাবের পড়াশোনার টুল/.test(D.settings.footerText||''))D.settings.footerText='Golden Snitch শিক্ষার্থীদের দরকারি স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, হাতে-কলমে সিমুলেশন, অনুশীলন ও অগ্রগতি ব্যবস্থাপনা এক জায়গায় দেয়।';
+ // Preserve administrator-authored footer/about text exactly; never rewrite creator names.
+ D.settings.footer=String(D.settings.footer==null?'':D.settings.footer);D.settings.about=String(D.settings.about==null?'':D.settings.about);D.settings.footerText=String(D.settings.footerText==null?'':D.settings.footerText).replace(/\s*Graph Lab আলাদা বিভাগে রয়েছে\.?/g,'').trim();D.settings.about=D.settings.about.replace(/\s*Graph Lab আলাদা বিভাগে রয়েছে\.?/g,'').trim();var oldAbout='Golden Snitch একটি স্বাধীন, শিক্ষার্থী-পরিচালিত শিক্ষামূলক প্রকল্প, তৈরি করেছেন Taimur Shams। লক্ষ্য: মুখস্থের বাইরে গিয়ে মূল ধারণা বোঝানো।';if(D.settings.about===oldAbout)D.settings.about='Golden Snitch একটি স্বাধীন, শিক্ষার্থী-পরিচালিত শিক্ষামূলক প্রকল্প, তৈরি করেছেন Taimur Shams ও Moshiur Rahman Araf। লক্ষ্য: মুখস্থের বাইরে গিয়ে মূল ধারণা বোঝানো।';
+ // Migrate the old homepage heading even when saved CMS content still contains it.
+ (D.home.sections||[]).forEach(function(sec){if(sec.id==='s-stages'&&sec.h==='প্রতিটি চ্যাপ্টারে চারটি ধাপ')sec.h='প্রতিটি কনসেপ্টের চারটি ধাপ'});
+ D.home.sections=(D.home.sections||[]).filter(function(sec){return sec&&sec.id!=='s-subjects'&&sec.type!=='subjects'});
+ (D.home.sections||[]).forEach(function(sec){if(sec.id==='s-purpose'){sec.p2=String(sec.p2||'').replace(/\s*Graph Lab আলাদা বিভাগে রয়েছে\.?/g,'').replace(/সূত্রের আগে ধারণা/g,'').trim();sec.items=(sec.items||[]).filter(function(it){return it&&String(it.t||'').trim()!=='সূত্রের আগে ধারণা'});}});
+ arrangeHomeSections(D.home.sections||[]);
+ S=D.settings;GAM=D.gam;HOME=D.home.sections;GAMES=D.games;LABS=D.labs;CHL=D.chapters;
+ // Ensure catalogue metadata agrees with the actual simulation engine.
+ var simCatalogFixes=window.CL_SIM_CATALOG_CORRECTIONS_V102||{};
+ LABS.forEach(function(l){var fix=simCatalogFixes[l.id];if(fix){if(fix.chapter)l.chapter=fix.chapter;if(fix.concept)l.concept=fix.concept;}});
+ SUB={};D.subjects.forEach(function(s){SUB[s.id]=s.name});L={};Object.keys(SUB).forEach(function(k){L[k]=[]});C={};
+ CHL.forEach(function(c){if(!L[c.s])return;L[c.s].push(c);if(c.status=='available'){c.q=c.q||[];C[c.id]=c}});
+ applyTheme();statics();
+}
+function applyTheme(){var t=D.theme||{},r=document.documentElement,st=r.style,mode='dark';window.__clBaseTheme=t;var m=$('meta[name=theme-color]');if(mode==='purple'){if(m)m.content='#1b1728';FX.setTheme({p:'#9078cd',s:'#b7a8e6',fx:'off',motion:true});return}['p','s','a','bg','glow'].forEach(function(k){if(/^#[0-9a-f]{6}$/i.test(t[k]))st.setProperty('--'+k,t[k])});if(m)m.content=mode==='dark'?'#080e1c':(t.bg||'#080e1c');FX.setTheme(t)}
+function statics(){
+ ST=[X('stage1'),X('stage2'),X('stage3'),X('stage4')];
+ var nav=$('header nav');if(nav){
+  var navKeys={home:'nav_home',progress:'nav_progress',leaderboard:'nav_leaderboard',about:'nav_about'},navBase={home:'Home',progress:'My Progress',leaderboard:'Leaderboard',about:'About'};
+  var navItems=(D.navigation||[]).filter(function(item){return item&&item.id!=='chapters'&&item.enabled!==false&&item.enabled!==0&&item.enabled!=='0'}),byId={};navItems.forEach(function(item){byId[item.id]=item});nav.innerHTML='';
+  var menuIcons={home:'🏠',play:'🎮',lab:'🔬',graphs:'📊',shortcuts:'⚡',hub:'🎓',progress:'📈','study-space':'🔖',daily:'📅','smart-practice':'🧠',analytics:'📊',leaderboard:'🏆',about:'✨',solver:'🧮',reference:'📚','share-card':'🏅',settings:'⚙️',profile:'👤'};
+  var menuDescriptions={home:'মূল ড্যাশবোর্ড ও সব গুরুত্বপূর্ণ লিংক',play:'পাজল, ম্যাচিং, বিল্ডিং ও হাতে-কলমে মিশন',lab:'চলক বদলে নিজে পরীক্ষা চালানোর সিমুলেশন',graphs:'সিমুলেশন থেকে আলাদা ইন্টারঅ্যাকটিভ Graph Lab',shortcuts:'দরকারি সূত্র, ক্যালকুলেশন ও দ্রুত সহায়তা',hub:'পড়াশোনার টুল ও ব্যক্তিগত পরিকল্পনা',progress:'শেখার অগ্রগতি, লেভেল ও ব্যাজ','study-space':'নোট, বুকমার্ক ও সংরক্ষিত সিমুলেশন',daily:'আজকের ছোট লক্ষ্য ও মিশন','smart-practice':'ভুল প্রশ্নের স্মার্ট রিভিশন',analytics:'কুইজ ও শেখার পরিসংখ্যান',leaderboard:'শিক্ষার্থীদের অর্জন ও স্কোর',about:'প্রকল্প, লক্ষ্য ও যোগাযোগ',solver:'পদার্থ, রসায়ন ও গণিতের সূত্র ধাপে ধাপে সমাধান',reference:'ধ্রুবক, আয়ন, একক ও পরিচিতি', 'share-card':'XP, লেভেল ও অর্জনের কার্ড তৈরি',appearance:'ফন্ট, রং, অ্যানিমেশন ও লেআউট সাজান',settings:'সাইন-আপ ছাড়াই ব্যক্তিগত পছন্দ বদলান',profile:'আপনার প্রোফাইল, XP ও শেখার অগ্রগতি'};
+  function menuHeading(label){var h=document.createElement('div');h.className='menu-group-label';h.textContent=label;nav.appendChild(h)}
+  function menuLink(item){var id=String(item.id||''),rawLabel=item.label||item.title||id,label=id==='play'?'Arcade':(navKeys[id]&&rawLabel===navBase[id]?X(navKeys[id]):rawLabel),a=document.createElement('a');a.className='menu-tile';a.href=item.href||('#/'+(id==='home'?'':id));a.setAttribute('data-menu-id',id);a.innerHTML='<span class="menu-tile-icon" aria-hidden="true">'+(menuIcons[id]||'◇')+'</span><span class="menu-tile-copy"><b>'+E(label)+'</b><small>'+E(item.description||menuDescriptions[id]||'এই ফিচারটি খুলুন')+'</small></span>';nav.appendChild(a)}
+  var groups=[{title:'EXPLORE & LEARN',ids:['home','play','lab','graphs']},{title:'YOUR LEARNING SPACE',ids:['hub','shortcuts','study-space','daily','smart-practice']},{title:'PROGRESS & COMMUNITY',ids:['progress','analytics','leaderboard']},{title:'GOLDEN SNITCH',ids:['about']}],used={};
+  groups.forEach(function(group){var rows=group.ids.map(function(id){return byId[id]}).filter(Boolean);if(!rows.length)return;menuHeading(group.title);rows.forEach(function(item){used[item.id]=1;menuLink(item)})});
+  var hubTools=[
+   ['focus','⏱','ফোকাস টাইমার','Pomodoro সেশন ও বিরতি'],['week','🗓','সাপ্তাহিক রুটিন','সপ্তাহের পড়ার পরিকল্পনা'],['monthly','🗓','মাসিক পরিকল্পনা','মাসজুড়ে বিষয়, বই ও ব্যক্তিগত টাস্ক'],['exam','📅','পরীক্ষার কাউন্টডাউন','পরীক্ষার দিন গুনে রাখুন'],['gpa','🎓','GPA ক্যালকুলেটর','HSC গ্রেড পয়েন্ট হিসাব'],['plan','☑','পড়ার পরিকল্পনা','দৈনিক পড়ার কাজ সাজান'],['goals','🎯','পড়ার লক্ষ্য','লক্ষ্য ও অগ্রগতি ট্র্যাক করুন'],['scores','📈','নম্বরের হিসাব','পরীক্ষার নম্বর ও গড় ফলাফল'],['cards','🃏','ফ্ল্যাশকার্ড','প্রশ্ন ও উত্তর দিয়ে রিভিশন'],['review','🔁','স্মার্ট রিভিশন','পুনরাবৃত্তির সময়সূচি অনুযায়ী রিভিশন'],['notes','📝','দ্রুত নোট','গুরুত্বপূর্ণ নোট সংরক্ষণ'],['revision','📚','রিভিশন প্ল্যান','বিষয়ভিত্তিক রিভিশন চিহ্নিত করুন'],['syllabus','📖','সিলেবাসের অগ্রগতি','সব বিষয়ের সিলেবাস ও অগ্রগতি ট্র্যাক করুন'],['form','📐','সূত্রের খাতা','গণিত, রসায়ন ও পদার্থের সূত্র'],['hab','🌱','পড়ার অভ্যাস','পড়ার অভ্যাসের ধারাবাহিকতা'],['backup','💾','ডেটা ব্যাকআপ','Student Hub-এর ডেটা ব্যাকআপ ও পুনরুদ্ধার'],
+   ['solver','🧮','সূত্র সমাধান','পদার্থ, রসায়ন ও উচ্চতর গণিতের সূত্র ধাপে ধাপে সমাধান','#/solver'],['reference','📚','রেফারেন্স গাইড','ধ্রুবক, আয়ন, একক ও গণিতের পরিচিতি','#/reference'],['share-card','🏅','অগ্রগতির কার্ড','XP, লেভেল ও অর্জনের শেয়ারযোগ্য কার্ড','#/share-card']
+  ];
+  var seenHubHrefs={};hubTools.forEach(function(t){seenHubHrefs[t[4]||('#/hub/'+t[0])]=1});
+  ((window.CL_STUDIO&&window.CL_STUDIO.tiles)||[]).forEach(function(t){var href=String(t.href||'');if(href.indexOf('#/hub/')!==0||seenHubHrefs[href])return;seenHubHrefs[href]=1;var id=href.replace(/^#\/hub\//,'').split(/[/?]/)[0];hubTools.push([id,t.icon||'◇',t.label||id,t.desc||'স্টুডেন্ট হাবের প্রয়োজনীয় টুল',href])});
+  menuHeading('STUDENT HUB · ALL TOOLS');
+  hubTools.forEach(function(t){var a=document.createElement('a');a.className='menu-tile hub-tool';a.href=t[4]||('#/hub/'+t[0]);a.setAttribute('data-menu-id',t[4]?t[0]:'hub-'+t[0]);if(t[4])used[t[0]]=1;a.innerHTML='<span class="menu-tile-icon" aria-hidden="true">'+t[1]+'</span><span class="menu-tile-copy"><b>'+E(t[2])+'</b><small>'+E(t[3])+'</small></span>';nav.appendChild(a)});
+  var extra=navItems.filter(function(item){return !used[item.id]});if(extra.length){menuHeading('MORE PAGES');extra.forEach(menuLink)}
+  (D.customPages||[]).filter(function(page){return page&&page.on!==false&&page.on!==0&&page.on!=='0'}).forEach(function(page){var a=document.createElement('a');a.className='menu-tile';a.href='#/page/'+encodeURIComponent(page.slug||page.id);a.innerHTML='<span class="menu-tile-icon" aria-hidden="true">◇</span><span class="menu-tile-copy"><b>'+E(page.navLabel||page.title||'Custom page')+'</b><small>Golden Snitch-এর অতিরিক্ত পেজ</small></span>';nav.appendChild(a)});
+ }
+
+ var hb=$('.hbtn');if(hb)hb.textContent='▶ '+X('btn_play');
+ var lg=$('.brand svg, .brand .logo');if(lg)lg.outerHTML='<img class="logo" src="assets/images/golden-snitch-emblem.webp" alt="" width="38" height="38">'
+ var set=function(i,t){var n=document.getElementById(i);if(n)n.textContent=t};
+ set('bn',S.siteName);set('fb',S.siteName);set('ft',S.credit==null?'':S.credit);
+ set('footerTagline',S.footerText||S.footerTitle||'');set('footerFacebookLabel',S.facebookLabel||'Join our Facebook Page');set('footerYear',String(new Date().getFullYear()));
+ var fba=document.getElementById('footerFacebook');if(fba)fba.href=S.facebookUrl||'https://www.facebook.com';
+ var fs=document.getElementById('footerSocials');
+ if(fs){
+  var links=[{label:S.facebookLabel||'Join our Facebook Page',url:S.facebookUrl||'https://www.facebook.com',kind:'facebook'}].concat(Array.isArray(S.socialLinks)?S.socialLinks:[]);
+  fs.innerHTML=links.filter(function(x){return x&&x.url&&x.label}).map(function(x){
+   var kind=String(x.kind||'social').toLowerCase();
+   var icon=kind==='facebook'?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.7 21v-8.2h2.8l.4-3.2h-3.2V7.5c0-.9.3-1.6 1.6-1.6H17V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.3H7.5v3.2h2.8V21z"/></svg>':'<span aria-hidden="true">↗</span>';
+   return '<a class="footer-social" href="'+String(x.url).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" target="_blank" rel="noopener noreferrer">'+icon+'<span>'+String(x.label).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span></a>';
+  }).join('');
+ }
+ set('ftop',X('ft_top'));document.title=S.siteName+' | Student Tools, Interactive Games & Simulations'; chip();
+}
+
+/* ------------------------------------------------------------ progress, XP, badges */
+function P(){try{return JSON.parse(localStorage.getItem('cl')||'{}')}catch(e){return{}}}
+function cnt(id){return(P()[id]||[]).reduce(function(a,b){return a+b},0)}
+function tot(){return Object.keys(C).reduce(function(a,k){return a+cnt(k)},0)}
+function GS(){var g={};try{g=JSON.parse(localStorage.getItem('cl2')||'{}')}catch(e){}return Object.assign({xp:0,streak:0,last:'',quiz:{},games:{},sims:{},badges:{},daily:''},g)}
+function save(g){try{localStorage.setItem('cl2',JSON.stringify(g))}catch(e){}cloudPush()}
+function STUDY(){var s={bookmarks:{},notes:{},savedSims:{},review:[],history:[],formulaBookmarks:[]};try{s=Object.assign(s,JSON.parse(localStorage.getItem('clstudy_v1')||'{}'))}catch(e){};['bookmarks','notes','savedSims'].forEach(function(k){if(!s[k]||typeof s[k]!=='object')s[k]={}});['review','history','formulaBookmarks'].forEach(function(k){if(!Array.isArray(s[k]))s[k]=[]});return s}
+function saveStudy(s){try{localStorage.setItem('clstudy_v1',JSON.stringify(s))}catch(e){}cloudPush()}
+function studyMistake(id,qi,chosen){var s=STUDY(),key=id+':'+qi,x=s.review.find(function(a){return a.key===key}),first=PR().intervals[0]*DAY;if(x){x.wrongCount=(x.wrongCount||1)+1;x.stage=0;x.dueAt=Date.now()+first;x.lastWrongAt=Date.now();x.lastChoice=chosen}else s.review.push({key:key,conceptId:id,qIndex:qi,wrongCount:1,stage:0,createdAt:Date.now(),lastWrongAt:Date.now(),dueAt:Date.now()+first,lastChoice:chosen});saveStudy(s)}
+function studyRecord(id,got,total,elapsed){var s=STUDY(),c=C[id];s.history.push({id:id,subject:c?c.s:'',got:got,total:total,accuracy:total?Math.round(got/total*100):0,elapsed:Math.round(elapsed/1000),at:Date.now()});if(s.history.length>500)s.history=s.history.slice(-500);saveStudy(s)}
+function studySpace(){var s=STUDY(),ids=Object.keys(s.bookmarks).filter(function(id){return C[id]}),notes=Object.keys(s.notes).filter(function(id){return String(s.notes[id]||'').trim()}),sims=Object.keys(s.savedSims),opts=Object.keys(C).map(function(id){return'<option value="'+E(id)+'">'+E(C[id].t)+' · '+E(SUB[C[id].s]||'')+'</option>'}).join('');return '<div class="w pgw study-page"><span class="pill">PERSONAL STUDY SPACE</span><h1>My Study Space</h1><p class="lead">সূত্র, নোট, সিমুলেশন ও রিভিশন—এক জায়গায়। এই ব্রাউজারে স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে।</p><div class="study-stats"><div class="card"><b>'+ids.length+'</b><span>Bookmarks</span></div><div class="card"><b>'+notes.length+'</b><span>Notes</span></div><div class="card"><b>'+sims.length+'</b><span>Saved simulations</span></div><div class="card"><b>'+s.review.length+'</b><span>Review items</span></div></div><div class="study-grid"><section class="card study-panel"><h2>📝 অধ্যায়ভিত্তিক নোট</h2><form id="studyNoteForm"><label>Concept<select name="concept" required><option value="">কনসেপ্ট বেছে নিন</option>'+opts+'</select></label><label>আপনার নোট<textarea name="note" rows="4" maxlength="5000" required placeholder="সূত্র, ধারণা বা নিজের ব্যাখ্যা…"></textarea></label><p id="studyNoteStatus" role="status"></p><button class="btn pri">নোট সংরক্ষণ করুন</button></form><div class="study-list">'+(notes.length?notes.map(function(id){return'<article><div><b>'+E(C[id].t)+'</b><p>'+E(s.notes[id]).slice(0,240)+'</p><a href="#/chapter/'+E(id)+'">কনসেপ্ট খুলুন →</a></div><button class="btn mini" data-study-delete-note="'+E(id)+'">মুছুন</button></article>'}).join(''):'<p class="mutt">এখনো কোনো নোট নেই।</p>')+'</div></section><section class="card study-panel"><h2>🔖 Bookmarks & Formulae</h2><form id="formulaBookmarkForm"><input name="formula" maxlength="240" required placeholder="সূত্র, যেমন F = ma"><input name="label" maxlength="120" placeholder="সূত্রের নাম (ঐচ্ছিক)"><button class="btn pri">সূত্র Bookmark</button></form><div class="study-list">'+(ids.length?ids.map(function(id){return'<article><div><b>'+E(C[id].t)+'</b><p>'+E(SUB[C[id].s]||'')+' · '+E(C[id].chapterTitle||C[id].chapter||'')+'</p><a href="#/chapter/'+E(id)+'">আবার শিখুন →</a></div><button class="btn mini" data-study-unbookmark="'+E(id)+'">Remove</button></article>'}).join(''):'<p class="mutt">কনসেপ্ট পেজে Bookmark চাপলে এখানে আসবে।</p>')+(s.formulaBookmarks||[]).map(function(f,i){return'<article><div><b>'+E(f.label||'Saved formula')+'</b><p>'+E(f.formula)+'</p></div><button class="btn mini" data-study-delete-formula="'+i+'">মুছুন</button></article>'}).join('')+'</div></section><section class="card study-panel"><h2>⚛️ Saved Simulations</h2><div class="study-list">'+(sims.length?sims.map(function(id){var l=LABS.find(function(x){return x.id===id});return l?'<article><div><b>'+E(simTitle(l))+'</b><p>'+E(labSubject(l.sub))+'</p><a href="#/lab/'+E(id)+'">সিমুলেশন চালান →</a></div><button class="btn mini" data-study-unsave-sim="'+E(id)+'">Remove</button></article>':''}).join(''):'<p class="mutt">সিমুলেশন পেজে Save simulation চাপুন।</p>')+'</div></section><section class="card study-panel"><h2>🔁 Revision List</h2><div class="study-list">'+(s.review.length?s.review.slice().sort(function(a,b){return a.dueAt-b.dueAt}).map(function(x){return'<article><div><b>'+E(C[x.conceptId]?C[x.conceptId].t:x.conceptId)+'</b><p>ভুল হয়েছে '+(x.wrongCount||1)+' বার · '+(x.dueAt<=Date.now()?'এখন রিভিশনের সময়':'পরবর্তী রিভিশন: '+new Date(x.dueAt).toLocaleDateString())+'</p></div><a class="btn mini" href="#/smart-practice">Practice</a></article>'}).join(''):'<p class="mutt">কুইজে ভুল উত্তর দিলে এখানে যোগ হবে।</p>')+'<a class="btn pri" href="#/smart-practice">Smart Practice →</a></div></section></div><p class="mutt">এই সংস্করণে Study Space ডেটা এই ব্রাউজার/ডিভাইসে থাকে; অ্যাকাউন্ট-ভিত্তিক cloud sync নয়।</p></div>'}
+function studyAnalytics(){var s=STUDY(),h=s.history.slice().sort(function(a,b){return a.at-b.at}),avg=h.length?Math.round(h.reduce(function(a,x){return a+x.accuracy},0)/h.length):0,secs=h.length?Math.round(h.reduce(function(a,x){return a+x.elapsed},0)/h.length):0,subjects=[['phy','Physics'],['chem','Chemistry'],['math','Mathematics']];return '<div class="w pgw study-page"><span class="pill">PERFORMANCE ANALYTICS</span><h1>আপনার শেখার অগ্রগতি</h1><p class="lead">কুইজের স্কোর, সময় ও বিষয়ভিত্তিক দক্ষতার সারাংশ।</p><div class="study-stats"><div class="card"><b>'+avg+'%</b><span>গড় স্কোর</span></div><div class="card"><b>'+h.length+'</b><span>কুইজ Attempt</span></div><div class="card"><b>'+secs+'s</b><span>গড় সময়</span></div><div class="card"><b>'+s.review.length+'</b><span>Review items</span></div></div><h2>বিষয়ভিত্তিক mastery</h2><div class="study-subjects">'+subjects.map(function(pair){var a=h.filter(function(x){return x.subject===pair[0]}),total=a.reduce(function(n,x){return n+x.total},0),got=a.reduce(function(n,x){return n+x.got},0),pc=total?Math.round(got/total*100):0;return'<article class="card"><div><span>'+pair[1]+'</span><b>'+pc+'%</b></div><div class="study-track"><i style="width:'+pc+'%"></i></div><small>'+got+'/'+total+' সঠিক · '+a.length+' কুইজ</small></article>'}).join('')+'</div><section class="card study-panel"><h2>সাম্প্রতিক কুইজ</h2>'+(h.length?h.slice(-10).reverse().map(function(x){return'<article class="study-history"><span>'+E(C[x.id]?C[x.id].t:x.id)+'<small>'+new Date(x.at).toLocaleDateString()+' · '+x.elapsed+'s</small></span><b>'+x.accuracy+'%</b><div class="study-track"><i style="width:'+x.accuracy+'%"></i></div></article>'}).join(''):'<p class="mutt">কুইজ শেষ করলে এখানে স্কোরের ইতিহাস দেখা যাবে।</p>')+'</section><h2 style="margin-top:26px">গত ৭ দিনের কার্যক্রম</h2>'+weekBars()+'<div class="card cloudcard" style="margin-top:16px"><div id="cloudBadge">'+cloudHtml()+'</div></div><p class="mutt">এই পাতায় আপনার কুইজের স্কোর, সময় ও বিষয়ভিত্তিক অগ্রগতির সারাংশ দেখতে পাবেন।</p></div>'}
+function studentToken(){return localStorage.getItem('clstudentToken')||''}
+function student(){try{return JSON.parse(localStorage.getItem('clstudent')||'null')}catch(e){return null}}
+function setStudent(u){try{localStorage.setItem('clstudent',JSON.stringify(u))}catch(e){};syncAccountHeader();if(u&&studentToken())setTimeout(cloudPull,300)}
+function syncAccountHeader(){var u=student(),actions=$('#accountActions'),link=$('#profileLink');if(u||studentToken()){try{localStorage.setItem('clHasAccount','1')}catch(e){}}if(actions){actions.hidden=!!u;var a=actions.querySelector('a');if(a){var known=false;try{known=localStorage.getItem('clHasAccount')==='1'}catch(e){}a.href=known?'#/account/signin':'#/account/signup';a.textContent=known?'Log in':'Sign up';a.classList.toggle('account-primary',!known);}}if(link){link.hidden=!u;if(u){var av=u.avatar?'<img src="'+E(u.avatar)+'" alt="Profile picture">':'<span class="profile-avatar-letter">'+E((u.name||'S').trim().charAt(0).toUpperCase())+'</span>';link.innerHTML=av;link.title=(u.name||'Student')+' · Profile and settings';link.setAttribute('aria-label','Profile and settings for '+(u.name||'Student'));}}}
+function apiStudent(path,opts){opts=opts||{};opts.headers=Object.assign({},opts.headers||{},studentToken()?{Authorization:'Bearer '+studentToken()}:{});return fetch('/api/'+path,opts)}
+function syncStudentXP(){var token=studentToken();if(!token)return;fetch('/api/student-progress',{headers:{Authorization:'Bearer '+token},cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('session');return r.json()}).then(function(d){if(!d.user)return;var g=GS();if(g.xp!==Number(d.user.xp||0)){g.xp=Number(d.user.xp||0);save(g);chip()}}).catch(function(){})}
+
+function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+function touchStreak(){var g=GS(),t=today();if(g.last==t)return;var y=new Date();y.setDate(y.getDate()-1);var ys=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();g.streak=(g.last==ys)?g.streak+1:1;g.last=t;save(g)}
+function lvl(xp){var s=+GAM.lvl||100;return{n:Math.floor(xp/s)+1,into:xp%s,size:s}}
+function metric(k,g){switch(k){case'xp':return g.xp;case'stages':return tot();case'sims':return Object.keys(g.sims).length;case'games':return Object.keys(g.games).reduce(function(a,id){return a+(g.games[id].plays||0)},0);case'streak':return g.streak;case'perfect':return Object.keys(g.quiz).filter(function(q){return g.quiz[q].total>0&&g.quiz[q].got>=g.quiz[q].total}).length}return 0}
+function badges(){var g=GS(),got=false;(GAM.badges||[]).forEach(function(b){if(g.badges[b.id])return;if(metric(b.k,g)>=+b.n){g.badges[b.id]=Date.now();got=true;FX.toast(E(b.i)+' <b>Badge unlocked:</b> '+E(b.t),'bd');FX.confetti()}});if(got)save(g)}
+function award(n,why){n=Math.round(n);if(!(n>0))return;var g=GS(),b=lvl(g.xp).n;g.xp+=n;save(g);var token=studentToken();if(token){var left=n,chain=Promise.resolve();while(left>0){(function(c){chain=chain.then(function(){return fetch('/api/student-progress',{method:'POST',headers:{'content-type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({delta:c})}).then(function(r){if(!r.ok)throw new Error('XP sync');return r.json()}).then(function(d){var gg=GS();gg.xp=Number(d.xp)||gg.xp;try{localStorage.setItem('cl2',JSON.stringify(gg))}catch(e){}chip()})})})(Math.min(100,left));left-=100}chain.catch(function(){})}var a=lvl(g.xp).n;FX.toast('<b>+'+n+' XP</b>'+(why?' · '+E(why):''),'xp');if(a>b){FX.toast('🎉 <b>Level '+a+'!</b>','lv');FX.confetti()}chip();badges()}
+function chip(){var el=$('#xpchip');if(!el)return;var g=GS(),l=lvl(g.xp);el.innerHTML='<span class="cf">🔥'+g.streak+'</span><span class="cl">Lv '+l.n+'</span><i class="xb"><b style="width:'+Math.round(l.into/l.size*100)+'%"></b></i><span class="cx">'+g.xp+' XP</span>'}
+function mark(id,i){var p=P();p[id]=p[id]||[0,0,0,0];if(p[id][i])return;p[id][i]=1;try{localStorage.setItem('cl',JSON.stringify(p))}catch(e){}cloudPush();award(GAM.xpStage,'Stage complete');if(cnt(id)==4){FX.toast('🏁 <b>Concept complete!</b> '+E((C[id]||{}).t||''),'bd');FX.confetti()}badges()}
+function markSim(key){var g=GS();if(g.sims[key])return;g.sims[key]=1;save(g);award(GAM.xpSim,'Simulation explored')}
+function dailyGame(){var l=GAMES.filter(function(g){return g.on!==false&&g.on!=='0'&&g.type!=='simExplorer'&&!/physics-formula-sprint/i.test(String(g.id||''))&&String(g.t||'').trim()!=='Physics Formula Sprint'});return l.length?l[Math.floor(Date.now()/864e5)%l.length]:null}
+
+/* ------------------------------------------------------------ small html helpers */
+function hd(t,v){t=String(t||'');if(v){t=t.replace('{n}',chapterCount()).replace('{s}',Object.keys(SUB).length)}var i=t.indexOf('|');return i<0?E(t).replace(/\n/g,'<br>'):E(t.slice(0,i))+'<br><em>'+E(t.slice(i+1))+'</em>'}
+function secHead(s,v){return((s.pill||s.h||s.p)?'<div class="c sh2">'+(s.pill?'<span class="pill rv"><i></i>'+E(s.pill)+'</span>':'')+(s.h?'<h2 class="rv">'+hd(s.h,v)+'</h2>':'')+(s.p?'<p class="rv">'+E(s.p)+'</p>':'')+'</div>':'')}
+function BL(c){return(c.blocks||[]).map(function(b){var v=b.v||'';if(b.t=='image')return v?'<figure class="fg"><img src="'+E(v)+'" alt="">'+(b.c?'<figcaption>'+E(b.c)+'</figcaption>':'')+'</figure>':'';if(b.t=='video'){var m=v.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);return m?'<div class="vd"><iframe src="https://www.youtube-nocookie.com/embed/'+m[1]+'" allowfullscreen loading="lazy"></iframe></div>':''}if(b.t=='pdf')return v?'<div class="pdf">'+(b.c?'<h3 class="bh">'+E(b.c)+'</h3>':'')+'<iframe src="'+E(v)+'" loading="lazy"></iframe><a class="btn" href="'+E(v)+'" target="_blank" rel="noopener">Open / download PDF</a></div>':'';if(b.t=='note')return'<div class="card bl">'+E(v)+'</div>';if(b.t=='head')return'<h3 class="bh">'+E(v)+'</h3>';return'<p class="bn bl">'+E(v)+'</p>'}).join('')}
+function chapterCount(){var seen={};CHL.forEach(function(c){var k=String(c.s)+'::'+String(c.chapterTitle||c.chapter||c.t||'Chapter').trim();seen[k]=1});return Object.keys(seen).length}
+function NT(){return chapterCount()}
+var SIM_ICON_BY_ID={
+ "hsc-chem-rutherford":"☄️",
+ "hsc-chem-bohr":"⚛️",
+ "wave":"🌊",
+ "projectile":"🏹",
+ "pendulum":"⏱️",
+ "spring":"🪀",
+ "circuit":"🔌",
+ "gas":"🎈",
+ "force":"🛒",
+ "vectors":"↗️",
+ "unit":"⭕",
+ "tangent":"📈",
+ "matrix":"🔲",
+ "circle":"🔵",
+ "line":"📏",
+ "flame":"🕯️",
+ "river-boat":"🚤",
+ "mirror-optics":"🪞",
+ "tiger-deer":"🐅",
+ "bus-train-motion":"🚆",
+ "inclined-plane-friction":"🛝",
+ "ion-identification":"🔎",
+ "wet-test":"🧫",
+ "hsc-phy-vectors":"🧭",
+ "hsc-phy-projectile":"🪂",
+ "hsc-phy-newton":"🪨",
+ "hsc-phy-work-energy":"⚙️",
+ "hsc-phy-gravity":"🌍",
+ "hsc-phy-periodic":"🎼",
+ "hsc-phy-spring":"🎛️",
+ "hsc-phy-wave":"〰️",
+ "hsc-phy-gas":"💨",
+ "hsc-phy-circuit":"💡",
+ "hsc-phy-magnetic":"🌐",
+ "hsc-phy-optics":"🔭",
+ "hsc-chem-flame":"♨️",
+ "hsc-chem-periodic":"🧿",
+ "hsc-chem-bond":"🔗",
+ "hsc-chem-kinetics":"⚗️",
+ "hsc-chem-equilibrium":"♻️",
+ "hsc-chem-ph":"🧴",
+ "hsc-chem-titration":"💧",
+ "hsc-chem-electrochem":"🔋",
+ "hsc-chem-gas":"🫧",
+ "hsc-chem-stoich":"🧾",
+ "hsc-chem-redox":"🔁",
+ "hsc-chem-thermo":"🌡️",
+ "hsc-math-line":"📉",
+ "hsc-math-circle":"🟠",
+ "hsc-math-matrix":"🧊",
+ "hsc-math-vectors":"🛩️",
+ "hsc-math-trig":"📐",
+ "hsc-math-diff":"∂",
+ "hsc-math-integration":"∫",
+ "hsc-math-functions":"ƒ",
+ "hsc-math-probability":"🎲",
+ "hsc-math-complex":"ℂ",
+ "hsc-math-conics":"🥏",
+ "hsc-math-trig-graph":"〽️",
+ "hsc-math-vector-products":"✖️",
+ "hsc-math-limit":"↝",
+ "hsc-math-combinatorics":"🧩",
+ "hsc-chem-isomers":"🔬",
+ "hsc-chem-intermolecular":"🤝",
+ "hsc-chem-solution-prep":"🧪",
+ "hsc-chem-solubility":"🫙",
+ "hsc-chem-electrolysis":"🪫",
+ "hsc-chem-organic-mechanism":"🧬",
+ "hsc-phy-circular-motion":"🌀",
+ "hsc-phy-standing-waves":"🎶",
+ "hsc-phy-capacitor":"⚡",
+ "hsc-phy-induction":"🧲",
+ "hsc-phy-photoelectric":"☀️",
+ "road-banking":"🛣️",
+ "cycle-banking":"🚴",
+ "motorcycle-banking":"🏍️",
+ "newtonian-mechanics-lab":"🍎"
+};
+var SIM_TITLE_BN={
+ "hsc-chem-rutherford":"Rutherford Alpha Scattering",
+ "hsc-chem-bohr":"Bohr Atom & Electron Levels",
+ "wave":"Wave Machine",
+ "projectile":"Projectile Motion Lab",
+ "pendulum":"Simple Harmonic Motion",
+ "spring":"Spring & Mass",
+ "circuit":"Ohm's Law Circuit",
+ "gas":"Gas Particles",
+ "force":"Force & Motion",
+ "vectors":"Vector Addition Lab",
+ "unit":"Unit Circle Explorer",
+ "tangent":"Differentiation: Tangent & Gradient",
+ "matrix":"Matrix Transformation Lab",
+ "circle":"Circle Equation Explorer",
+ "line":"Straight Line Explorer",
+ "flame":"Flame Test Lab",
+ "river-boat":"River Boat: Relative Velocity",
+ "mirror-optics":"Spherical & Plane Mirrors",
+ "tiger-deer":"বাঘ–হরিণ ধাওয়া: আপেক্ষিক গতি",
+ "bus-train-motion":"Bus & Train: Relative Motion",
+ "inclined-plane-friction":"Inclined Plane with Friction",
+ "ion-identification":"Ion Identification Lab",
+ "wet-test":"Wet Test Lab",
+ "hsc-phy-vectors":"Vector Resolution Lab",
+ "hsc-phy-projectile":"Projectile Motion: Angle & Range",
+ "hsc-phy-newton":"Newton's Second Law",
+ "hsc-phy-work-energy":"Work & Kinetic Energy",
+ "hsc-phy-gravity":"Gravity & Orbital Motion",
+ "hsc-phy-periodic":"Simple Harmonic Motion",
+ "hsc-phy-spring":"Spring Constant & Oscillation",
+ "hsc-phy-wave":"Wave Equation Explorer",
+ "hsc-phy-gas":"Kinetic Theory of Gases",
+ "hsc-phy-circuit":"Current Electricity & Ohm's Law",
+ "hsc-phy-magnetic":"Magnetic Field of a Current",
+ "hsc-phy-optics":"Geometrical Optics: Thin Lens",
+ "hsc-chem-flame":"Qualitative Analysis: Flame Test",
+ "hsc-chem-periodic":"Periodic Trend Explorer",
+ "hsc-chem-bond":"Chemical Bonding & Polarity",
+ "hsc-chem-kinetics":"Reaction Rate & Temperature",
+ "hsc-chem-equilibrium":"Chemical Equilibrium & Le Chatelier's Principle",
+ "hsc-chem-ph":"pH & Hydrogen Ion Concentration",
+ "hsc-chem-titration":"Acid–Base Titration Curve",
+ "hsc-chem-electrochem":"Electrochemical Cell",
+ "hsc-chem-gas":"Gas Laws & Molar Volume",
+ "hsc-chem-stoich":"Stoichiometry & Limiting Reagent",
+ "hsc-chem-redox":"Redox & Electron Transfer",
+ "hsc-chem-thermo":"Reaction Energy & Temperature",
+ "hsc-math-line":"Straight-Line Equation Explorer",
+ "hsc-math-circle":"Circle Equation Explorer",
+ "hsc-math-matrix":"Matrix Transformation & Determinant",
+ "hsc-math-vectors":"ভেক্টর যোগ: ত্রিভুজ, সামান্তরিক, বহুভুজ ও উপাংশ",
+ "hsc-math-trig":"Trigonometry: Unit Circle",
+ "hsc-math-diff":"Differentiation: Tangent & Gradient",
+ "hsc-math-integration":"Integration & Area Explorer",
+ "hsc-math-functions":"Function & Graph Transformation Lab",
+ "hsc-math-probability":"Probability Simulator",
+ "hsc-math-complex":"Complex Plane Transformer",
+ "hsc-math-conics":"Circle & Conic Explorer",
+ "hsc-math-trig-graph":"Trigonometric Graph Explorer",
+ "hsc-math-vector-products":"Vector Dot & Cross Product Lab",
+ "hsc-math-limit":"Limit Explorer",
+ "hsc-math-combinatorics":"Permutation & Combination Lab",
+ "hsc-chem-isomers":"Isomer Builder",
+ "hsc-chem-intermolecular":"Intermolecular Forces Explorer",
+ "hsc-chem-solution-prep":"Solution Preparation Lab",
+ "hsc-chem-solubility":"Solubility Curve Challenge",
+ "hsc-chem-electrolysis":"Electrolysis & Faraday's Law",
+ "hsc-chem-organic-mechanism":"Organic Reaction Mechanism Lab",
+ "hsc-phy-circular-motion":"Circular Motion & Banking",
+ "hsc-phy-standing-waves":"Standing Waves & Resonance",
+ "hsc-phy-capacitor":"Electric Field & Capacitor",
+ "hsc-phy-induction":"Electromagnetic Induction Lab",
+ "hsc-phy-photoelectric":"Photoelectric Effect"
+};
+function simCopy(l){if(!l)return null;var book=window.CL_SIM_COPYBOOK_V103||{};if(book[l.id])return book[l.id];var old=window.CL_SIM_COPYBOOK_V102||{};if(old[l.id])return old[l.id];return typeof window.CL_SIM_COPY_FACTORY_V103==='function'?window.CL_SIM_COPY_FACTORY_V103(l):null}
+function simIcon(l){return l&&(SIM_ICON_BY_ID[l.id]||l.icon)||'🔬'}
+function simTitle(l){var c=simCopy(l),bn=window.CL_SIM_TITLES_BN||{};return l&&((c&&c[0])||bn[l.id]||SIM_TITLE_BN[l.id]||l.t||l.title)||'সিমুলেশন'}
+function simSubtitle(l){var c=simCopy(l);return c?c[1]:''}
+function simDescription(l){if(!l)return '';var c=simCopy(l);if(c)return c[2];var bn=window.CL_SIM_DESCRIPTIONS_BN||{};if(l.descriptionBn||l.description_bn||l.dBn)return String(l.descriptionBn||l.description_bn||l.dBn);if(bn[l.id])return bn[l.id];var raw=String(l.d||'').trim();if(/[\u0980-\u09FF]/.test(raw)&&!/[A-Za-z]{4,}/.test(raw))return raw;return 'এই সিমুলেশনের দৃশ্য ও ফলাফল পর্যবেক্ষণ করে সংশ্লিষ্ট ধারণাটি বুঝুন।'}
+function simTip(l){var c=simCopy(l);if(c)return c[3];if(!l||!l.tip)return '';var tip=String(l.tip).trim();return /[\u0980-\u09FF]/.test(tip)&&!/[A-Za-z]{4,}/.test(tip)?tip:'সিমুলেশনের নিয়ন্ত্রণগুলো একবারে একটি করে ব্যবহার করুন এবং প্রতিটি পরিবর্তনের ফল লক্ষ্য করুন।'}
+function simControlHelp(l){var c=simCopy(l),help=window.CL_SIM_ENGINE_HELP_V102||{};return c?c[4]:(l&&help[l.sim]||'উপলভ্য নিয়ন্ত্রণগুলো ব্যবহার করে একটি করে মান পরিবর্তন করুন এবং ফলাফল পর্যবেক্ষণ করুন।')}
+function labIcon(key){var l=LABS.filter(function(x){return x.sim==key})[0];return l?simIcon(l):'🔬'}
+
+/* ------------------------------------------------------------ home sections */
+/* Science hero (v117): one inline SVG scene whose colours come from CSS variables (assets/css/hero-science-v117.css),
+   so Dark / Light / Violet cross-fade without rebuilding any markup. */
+function heroScene(){return '<svg class="sci-svg" viewBox="0 0 760 640" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"><defs><clipPath id="sciClipD"><path transform="translate(-40 0)" d="M340-600V-20C340 40 150 100 130 250C112 372 215 430 245 510C268 566 236 610 215 650C205 672 205 700 205 720V1240H800V-600Z"/></clipPath><clipPath id="sciClipM"><path d="M380 28C560 8 722 92 732 262C742 426 690 562 520 612C380 652 200 622 110 520C20 418 30 250 100 150C170 50 280 40 380 28Z"/></clipPath><linearGradient id="sciSky" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="266" y2="640"><stop offset="0" class="scis-sky1"/><stop offset=".55" class="scis-sky2"/><stop offset="1" class="scis-sky3"/></linearGradient><linearGradient id="sciRib" gradientUnits="userSpaceOnUse" x1="0" y1="-100" x2="0" y2="740"><stop offset="0" class="scis-r1"/><stop offset=".5" class="scis-r2"/><stop offset="1" class="scis-r3"/></linearGradient><radialGradient id="sciGlow"><stop offset="0" class="scis-g1"/><stop offset="1" class="scis-g0"/></radialGradient><radialGradient id="sciPro" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".45" class="scis-pw1"/><stop offset="1" class="scis-pw2"/></radialGradient><radialGradient id="sciNeu" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".45" class="scis-nc1"/><stop offset="1" class="scis-nc2"/></radialGradient><pattern id="sciGridP" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" class="sci-gl"/></pattern><filter id="sciBlur" x="-20%" y="-20%" width="140%" height="160%"><feGaussianBlur stdDeviation="9"/></filter></defs><g class="sci-rib sci-rib-d" fill="none" stroke-linecap="round" transform="translate(-40 0)"><path class="sci-rib1" d="M340-600V-20C340 40 150 100 130 250C112 372 215 430 245 510C268 566 236 610 215 650C205 672 205 700 205 720V1240"/><path class="sci-rib2" transform="translate(-18 0)" d="M340-600V-20C340 40 150 100 130 250C112 372 215 430 245 510C268 566 236 610 215 650C205 672 205 700 205 720V1240"/></g><g class="sci-rib sci-rib-m" fill="none" stroke-linecap="round"><path class="sci-rib1" d="M380 28C560 8 722 92 732 262C742 426 690 562 520 612C380 652 200 622 110 520C20 418 30 250 100 150C170 50 280 40 380 28Z"/><path class="sci-rib2" transform="translate(-9 9)" d="M380 28C560 8 722 92 732 262C742 426 690 562 520 612C380 652 200 622 110 520C20 418 30 250 100 150C170 50 280 40 380 28Z"/></g><g class="sci-scene"><rect x="-200" y="-600" width="960" height="1840" fill="url(#sciSky)"/><g class="sci-par" style="--k:3"><circle cx="470" cy="285" r="330" fill="url(#sciGlow)"/><rect x="-200" y="-600" width="960" height="1840" fill="url(#sciGridP)" class="sci-heavy"/><g class="sci-spin sci-heavy"><circle cx="470" cy="285" r="232" class="sci-ring"/><circle cx="702" cy="285" r="4.5" class="sci-bead"/><circle cx="470" cy="285" r="284" class="sci-ring sci-ring2"/></g></g><g class="sci-par" style="--k:5"><circle class="sci-pt" cx="190" cy="120" r="2" style="--dl:-.4s"/><circle class="sci-pt" cx="262" cy="212" r="1.5" style="--dl:-1.6s"/><circle class="sci-pt" cx="404" cy="62" r="2.5" style="--dl:-2.4s"/><circle class="sci-pt" cx="566" cy="40" r="1.6" style="--dl:-.9s"/><circle class="sci-pt" cx="706" cy="124" r="2" style="--dl:-3s"/><circle class="sci-pt" cx="738" cy="232" r="1.5" style="--dl:-1.2s"/><circle class="sci-pt" cx="604" cy="166" r="2" style="--dl:-2.1s"/><circle class="sci-pt" cx="382" cy="204" r="1.4" style="--dl:-.2s"/><circle class="sci-pt" cx="212" cy="300" r="2" style="--dl:-2.7s"/><circle class="sci-pt" cx="252" cy="468" r="1.8" style="--dl:-1.9s"/><circle class="sci-pt" cx="424" cy="428" r="2.2" style="--dl:-.7s"/><circle class="sci-pt" cx="660" cy="398" r="1.8" style="--dl:-3.3s"/><circle class="sci-pt" cx="736" cy="452" r="2" style="--dl:-1.4s"/><circle class="sci-pt" cx="338" cy="336" r="1.4" style="--dl:-2.5s"/></g><g class="sci-par" style="--k:7"><g class="sci-hill" style="--sp:34s"><path class="sci-hl3" d="M-760 548Q-665 508 -570 548T-380 548T-190 548T0 548T190 548T380 548T570 548T760 548T950 548T1140 548T1330 548T1520 548V1240H-760Z"/></g><g class="sci-hill sci-wl" style="--sp:26s"><path d="M-760 505Q-665 465 -570 505T-380 505T-190 505T0 505T190 505T380 505T570 505T760 505T950 505T1140 505T1330 505T1520 505" fill="none" class="sci-wline"/></g><g class="sci-hill" style="--sp:28s"><path class="sci-hl2" d="M-760 580Q-665 548 -570 580T-380 580T-190 580T0 580T190 580T380 580T570 580T760 580T950 580T1140 580T1330 580T1520 580V1240H-760Z"/></g><g class="sci-hill" style="--sp:22s"><path class="sci-hl1" d="M-760 612Q-665 590 -570 612T-380 612T-190 612T0 612T190 612T380 612T570 612T760 612T950 612T1140 612T1330 612T1520 612V1240H-760Z"/></g></g><g class="sci-dx sci-par" style="--k:6"><g class="sci-hill" style="--sp:16s"><path d="M-760 657Q-665 652 -570 657T-380 657T-190 657T0 657T190 657T380 657T570 657T760 657T950 657T1140 657T1330 657T1520 657" class="sci-flow"/></g><g class="sci-tick-g"><text class="sci-tick" x="-760" y="647" textLength="760" lengthAdjust="spacing">λ = v/f  ·  ΔG = ΔH − TΔS  ·  sin²θ + cos²θ = 1  ·  PV = nRT  ·  E = hν  ·  ∫ f(x) dx  ·  F = ma  ·  </text><text class="sci-tick" x="0" y="647" textLength="760" lengthAdjust="spacing">λ = v/f  ·  ΔG = ΔH − TΔS  ·  sin²θ + cos²θ = 1  ·  PV = nRT  ·  E = hν  ·  ∫ f(x) dx  ·  F = ma  ·  </text><text class="sci-tick" x="760" y="647" textLength="760" lengthAdjust="spacing">λ = v/f  ·  ΔG = ΔH − TΔS  ·  sin²θ + cos²θ = 1  ·  PV = nRT  ·  E = hν  ·  ∫ f(x) dx  ·  F = ma  ·  </text></g><g class="sci-cons"><path d="M452 10L498 -6L548 12L590 -4L640 14" class="sci-cl"/><circle cx="452" cy="10" r="2.6" class="sci-cd" style="--dl:0.0s"/><circle cx="498" cy="-6" r="2.6" class="sci-cd" style="--dl:-0.7s"/><circle cx="548" cy="12" r="2.6" class="sci-cd" style="--dl:-1.4s"/><circle cx="590" cy="-4" r="2.6" class="sci-cd" style="--dl:-2.0999999999999996s"/><circle cx="640" cy="14" r="2.6" class="sci-cd" style="--dl:-2.8s"/><path d="M330 12L362 -2L398 14L434 0" class="sci-cl"/><circle cx="330" cy="12" r="2.6" class="sci-cd" style="--dl:0.0s"/><circle cx="362" cy="-2" r="2.6" class="sci-cd" style="--dl:-0.7s"/><circle cx="398" cy="14" r="2.6" class="sci-cd" style="--dl:-1.4s"/><circle cx="434" cy="0" r="2.6" class="sci-cd" style="--dl:-2.0999999999999996s"/><circle cx="345" cy="26" r="1.6" class="sci-cd" style="--dl:-1s"/><circle cx="470" cy="24" r="1.6" class="sci-cd" style="--dl:-2.2s"/><circle cx="520" cy="22" r="1.6" class="sci-cd" style="--dl:-0.4s"/><circle cx="612" cy="18" r="1.6" class="sci-cd" style="--dl:-3s"/><circle cx="676" cy="2" r="1.6" class="sci-cd" style="--dl:-1.6s"/><circle cx="740" cy="18" r="1.6" class="sci-cd" style="--dl:-2.6s"/></g><g transform="translate(340 -6)"><g class="sci-shoot" style="--dl:0s;--du:11s"><line x1="0" y1="0" x2="-64" y2="-24" class="sci-tail"/><circle r="2.4" class="sci-tip"/></g></g><g transform="translate(540 -10)"><g class="sci-shoot" style="--dl:5.5s;--du:13s"><line x1="0" y1="0" x2="-64" y2="-24" class="sci-tail"/><circle r="2.4" class="sci-tip"/></g></g><g transform="translate(706 12)"><g class="sci-fl" style="--dx:-4px;--dy:6px;--d:10s;--dl:-2s"><ellipse rx="22" ry="6.5" transform="rotate(-22)" class="sci-pring"/><circle r="10" fill="url(#sciPro)"/><path d="M-22 6.2A22 6.5 0 0 0 22-6.2" transform="rotate(-22)" class="sci-pring2"/></g></g><circle class="sci-bub" cx="120" cy="626" r="4" style="--du:9s;--dl:-1s"/><circle class="sci-bub" cx="210" cy="612" r="3" style="--du:11s;--dl:-4s"/><circle class="sci-bub" cx="300" cy="630" r="5" style="--du:10s;--dl:-7s"/><circle class="sci-bub" cx="390" cy="620" r="3.2" style="--du:12s;--dl:-2s"/><circle class="sci-bub" cx="470" cy="628" r="4.5" style="--du:9.5s;--dl:-6s"/><circle class="sci-bub" cx="560" cy="618" r="3" style="--du:11s;--dl:-3s"/><circle class="sci-bub" cx="640" cy="630" r="5" style="--du:10.5s;--dl:-8s"/><circle class="sci-bub" cx="720" cy="622" r="3.6" style="--du:9s;--dl:-5s"/><circle class="sci-bub" cx="520" cy="636" r="2.6" style="--du:13s;--dl:-9s"/><path class="sci-gl2" d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" transform="translate(430 541)" style="--dl:-0.4s"/><path class="sci-gl2" d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" transform="translate(575 524)" style="--dl:-1.8s"/><path class="sci-gl2" d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" transform="translate(690 548)" style="--dl:-2.6s"/><path class="sci-gl2" d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" transform="translate(318 585)" style="--dl:-1.2s"/><path class="sci-gl2" d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" transform="translate(640 590)" style="--dl:-3.1s"/></g><g class="sci-par" style="--k:10"><g class="sci-m-atom" transform="translate(470 285)"><circle r="96" fill="url(#sciGlow)" class="sci-pulse"/><g class="sci-heavy"><circle r="40" class="sci-rip"/><circle r="40" class="sci-rip sci-rip2"/></g><g class="sci-atom"><g transform="rotate(0)"><ellipse rx="190" ry="62" class="sci-orb"/><g><circle r="12" class="sci-eh sci-e1"/><circle r="6" class="sci-ed sci-e1"/><animateMotion dur="7.5s" repeatCount="indefinite" path="M190 0A190 62 0 1 1-190 0A190 62 0 1 1 190 0Z"/></g></g><g transform="rotate(60)"><ellipse rx="190" ry="62" class="sci-orb"/><g><circle r="12" class="sci-eh sci-e2"/><circle r="6" class="sci-ed sci-e2"/><animateMotion dur="9.5s" repeatCount="indefinite" path="M190 0A190 62 0 1 0-190 0A190 62 0 1 0 190 0Z"/></g></g><g transform="rotate(120)"><ellipse rx="190" ry="62" class="sci-orb"/><g><circle r="12" class="sci-eh sci-e3"/><circle r="6" class="sci-ed sci-e3"/><animateMotion dur="8.5s" repeatCount="indefinite" path="M190 0A190 62 0 1 1-190 0A190 62 0 1 1 190 0Z"/></g></g></g><g class="sci-nuc"><circle cx="-8" cy="-7" r="12" fill="url(#sciPro)"/><circle cx="9" cy="-5" r="11" fill="url(#sciNeu)"/><circle cx="1" cy="9" r="12" fill="url(#sciPro)"/><circle cx="-12" cy="8" r="9" fill="url(#sciNeu)"/><circle cx="12" cy="9" r="9" fill="url(#sciPro)"/></g></g></g><g class="sci-par" style="--k:16"><g class="sci-m-force" transform="translate(296 44)"><g class="sci-fl" style="--dx:5px;--dy:-9px;--d:8s;--dl:-1s"><rect class="sci-sh" x="4" y="12" width="150" height="104" rx="18" filter="url(#sciBlur)"/><rect class="sci-glass" width="150" height="104" rx="18"/><text class="sci-cap" x="16" y="25">FORCE</text><line class="sci-v1" x1="46" y1="82" x2="112" y2="82"/><path class="sci-vh1" d="M120 82l-11-5.5v11z"/><line class="sci-v2" x1="46" y1="82" x2="46" y2="42"/><path class="sci-vh2" d="M46 34l-5.5 11h11z"/><line class="sci-v3" x1="46" y1="82" x2="114" y2="40"/><circle class="sci-vd" cx="46" cy="82" r="4.5"/><text class="sci-tx" x="106" y="100">F₁</text><text class="sci-tx" x="24" y="46">F₂</text><text class="sci-tx" x="119" y="44">ΣF</text></g></g><g class="sci-m-chip" transform="translate(606 64)"><g class="sci-fl" style="--dx:-4px;--dy:8px;--d:9s;--dl:-3s"><rect class="sci-sh" x="3" y="9" width="106" height="34" rx="17" filter="url(#sciBlur)"/><rect class="sci-glass" width="106" height="34" rx="17"/><text class="sci-tx sci-chip" x="53" y="22.5" text-anchor="middle">E = mc²</text></g></g><g class="sci-m-int" transform="translate(314 476)"><g class="sci-fl" style="--dx:4px;--dy:-7px;--d:10s;--dl:-5s"><rect class="sci-sh" x="3" y="9" width="116" height="34" rx="17" filter="url(#sciBlur)"/><rect class="sci-glass" width="116" height="34" rx="17"/><text class="sci-tx sci-chip" x="58" y="22.5" text-anchor="middle">∫ f(x) dx</text></g></g><g class="sci-m-benz" transform="translate(292 392)"><g class="sci-fl" style="--dx:-5px;--dy:8px;--d:11s;--dl:-2s"><g class="sci-spin-s"><path class="sci-bond" d="M0-40L34.6-20V20L0 40L-34.6 20V-20Z" fill="none"/><path class="sci-bond sci-bond2" d="M0-29.6L25.6-14.8M25.6 14.8L0 29.6M-25.6 14.8L-25.6-14.8" fill="none"/><path class="sci-bond sci-bond3" d="M0-40V-58M34.6-20L50.2-29M34.6 20L50.2 29M0 40V58M-34.6 20L-50.2 29M-34.6-20L-50.2-29" fill="none"/><circle class="sci-ac" cx="0" cy="-40" r="8"/><circle class="sci-ac" cx="34.6" cy="-20" r="8"/><circle class="sci-ac" cx="34.6" cy="20" r="8"/><circle class="sci-ac" cx="0" cy="40" r="8"/><circle class="sci-ac" cx="-34.6" cy="20" r="8"/><circle class="sci-ac" cx="-34.6" cy="-20" r="8"/><circle class="sci-ah" cx="0" cy="-65" r="5.5"/><circle class="sci-ah" cx="56" cy="-32.4" r="5.5"/><circle class="sci-ah" cx="56" cy="32.4" r="5.5"/><circle class="sci-ah" cx="0" cy="65" r="5.5"/><circle class="sci-ah" cx="-56" cy="32.4" r="5.5"/><circle class="sci-ah" cx="-56" cy="-32.4" r="5.5"/></g></g></g><g transform="translate(666 206)"><g class="sci-fl" style="--dx:5px;--dy:-8px;--d:9.5s;--dl:-4s"><path class="sci-bond" d="M0 0L-26 20M0 0L26 20" fill="none"/><circle class="sci-ao" r="15"/><circle class="sci-ah2" cx="-26" cy="20" r="9"/><circle class="sci-ah2" cx="26" cy="20" r="9"/></g></g><g class="sci-m-graph" transform="translate(512 404)"><g class="sci-fl" style="--dx:-4px;--dy:-8px;--d:10s;--dl:-6s"><rect class="sci-sh" x="4" y="12" width="200" height="134" rx="18" filter="url(#sciBlur)"/><rect class="sci-glass" width="200" height="134" rx="18"/><text class="sci-cap" x="16" y="25">y = sin x</text><path class="sci-gline" d="M24 52H186M24 74H186M24 96H186"/><path class="sci-axis" d="M24 118H188M24 118V36"/><path class="sci-curve" d="M24 74C40 36 64 36 80 74S120 112 136 74S176 36 188 62"/></g></g><g class="sci-dx" transform="translate(330 556)"><g class="sci-fl" style="--dx:4px;--dy:-7px;--d:10.5s;--dl:-3.5s"><rect class="sci-sh" x="3" y="9" width="100" height="34" rx="17" filter="url(#sciBlur)"/><rect class="sci-glass" width="100" height="34" rx="17"/><text class="sci-tx sci-chip" x="50" y="22.5" text-anchor="middle">F = ma</text></g></g><g class="sci-m-cube" transform="translate(712 336) scale(1.15)"><g class="sci-fl" style="--dx:-3px;--dy:-9px;--d:8.5s;--dl:-2.5s"><path class="sci-cf1" d="M0-30L26-15L0 0L-26-15Z"/><path class="sci-cf2" d="M-26-15L0 0V30L-26 15Z"/><path class="sci-cf3" d="M26-15L0 0V30L26 15Z"/></g></g></g></g></svg>'}
+function heroPhone(){var T='<svg class="sci-m-orbit sci-m-oa" viewBox="-200 -200 400 400" aria-hidden="true" focusable="false"><ellipse rx="190" ry="62" class="sci-orb"/><ellipse rx="190" ry="62" transform="rotate(120)" class="sci-orb"/><circle cx="190" r="12" class="sci-eh sci-e1"/><circle cx="190" r="6" class="sci-ed sci-e1"/><g transform="rotate(120)"><circle cx="-190" r="12" class="sci-eh sci-e3"/><circle cx="-190" r="6" class="sci-ed sci-e3"/></g></svg>'+
+'<svg class="sci-m-orbit sci-m-ob" viewBox="-200 -200 400 400" aria-hidden="true" focusable="false"><ellipse rx="190" ry="62" transform="rotate(60)" class="sci-orb"/><circle r="150" class="sci-ring"/><g transform="rotate(60)"><circle cx="190" r="12" class="sci-eh sci-e2"/><circle cx="190" r="6" class="sci-ed sci-e2"/></g><circle cx="150" r="5" class="sci-bead"/></svg>'+
+'<svg class="sci-m-nuc" viewBox="-40 -40 80 80" aria-hidden="true" focusable="false"><circle r="38" fill="url(#sciGlow)"/><circle cx="-8" cy="-7" r="12" fill="url(#sciPro)"/><circle cx="9" cy="-5" r="11" fill="url(#sciNeu)"/><circle cx="1" cy="9" r="12" fill="url(#sciPro)"/><circle cx="-12" cy="8" r="9" fill="url(#sciNeu)"/><circle cx="12" cy="9" r="9" fill="url(#sciPro)"/></svg>'+
+'<svg class="sci-m-waves" viewBox="0 0 1520 150" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="sci-hl3" d="M0 52Q95 12 190 52T380 52T570 52T760 52T950 52T1140 52T1330 52T1520 52V150H0Z"/><path class="sci-wline" fill="none" d="M0 30Q95 -6 190 30T380 30T570 30T760 30T950 30T1140 30T1330 30T1520 30"/><path class="sci-hl2" d="M0 86Q95 56 190 86T380 86T570 86T760 86T950 86T1140 86T1330 86T1520 86V150H0Z"/><path class="sci-hl1" d="M0 118Q95 98 190 118T380 118T570 118T760 118T950 118T1140 118T1330 118T1520 118V150H0Z"/></svg>';return T}
+function secHero(){
+ var words=String(S.heroWords||'').split(',').map(function(w){return w.trim()}).filter(Boolean);
+ var h1=String(S.h1||''),ci=h1.indexOf(':');
+ var title=ci>0&&ci<h1.length-1?'<span class="sci-h1a">'+E(h1.slice(0,ci+1))+'</span> <span class="sci-h1b">'+E(h1.slice(ci+1).trim())+'</span>':'<span class="sci-h1a">'+E(h1)+'</span>';
+ function txt(v,d){return String(v==null?d:v).trim()}
+ var c1=txt(S.heroCta,'Start Exploring'),c2=txt(S.heroCta2,'Student Hub');
+ var u1=txt(S.heroCtaHref,'#/lab')||'#/lab',u2=txt(S.heroCta2Href,'#/hub')||'#/hub';
+ var ico='<svg viewBox="0 0 24 24" aria-hidden="true">';
+ return '<section class="sci" data-sci><div class="sci-bg" aria-hidden="true"><i class="sci-aur a1"></i><i class="sci-dots"></i><i class="sci-orbr r1"></i><i class="sci-orbr r2"></i><span class="sci-sym" style="--x:6%;--y:14%;--s:54px;--d:13s;--dl:-2s">∑</span><span class="sci-sym" style="--x:34%;--y:9%;--s:44px;--d:11s;--dl:-5s">π</span><span class="sci-sym" style="--x:46%;--y:62%;--s:64px;--d:15s;--dl:-1s">∫</span><span class="sci-sym" style="--x:9%;--y:72%;--s:44px;--d:12s;--dl:-7s">Δ</span><span class="sci-sym" style="--x:52%;--y:24%;--s:46px;--d:14s;--dl:-9s">ψ</span><span class="sci-sym" style="--x:30%;--y:86%;--s:48px;--d:12s;--dl:-4s">√</span></div><div class="sci-copy"><i class="sci-bar" aria-hidden="true"></i>'+(String(S.badge||'').trim()?'<span class="pill rv"><i></i>'+E(S.badge)+'</span>':'')+'<h1 class="rv sci-t">'+title+'</h1><p class="lead rv">'+E(S.lead)+'</p>'+(words.length?'<p class="typed rv">'+E(S.heroPre)+' <b data-type="'+E(words.join('|'))+'"></b><span class="caret"></span></p>':'')+((c1||c2)?'<div class="sci-cta rv">'+(c1?'<a class="sci-btn sci-btn--p" href="'+E(u1)+'">'+E(c1)+' <b aria-hidden="true">→</b></a>':'')+(c2?'<a class="sci-btn sci-btn--s" href="'+E(u2)+'">'+E(c2)+'</a>':'')+'</div>':'')+'<ul class="sci-subj rv" aria-label="Subjects"><li>'+ico+'<ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg>Physics</li><li>'+ico+'<path d="M9.5 3.5h5M10.5 3.5v5.8L5.2 18a2 2 0 0 0 1.7 3h10.2a2 2 0 0 0 1.7-3l-5.3-8.7V3.5M8 14.5h8"/></svg>Chemistry</li><li>'+ico+'<path d="M18 5H7l5.5 7L7 19h11"/></svg>Higher Mathematics</li></ul></div><div class="sci-art rv" role="img" aria-label="Animated science illustration: an atom with orbiting electrons, a benzene molecule, force vectors, a sine graph and formula cards">'+heroScene()+heroPhone()+'</div></section>'
+}
+/* Hero behaviour: subtle pointer parallax (fine pointers only), SMIL electrons paused when off-screen / hidden / reduced motion. */
+function mountHero(root){
+ var h=(root||document).querySelector('.sci');if(!h||h.__sci)return;h.__sci=1;
+ var art=h.querySelector('.sci-art'),svg=h.querySelector('.sci-svg');
+ var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function smil(on){try{if(svg&&svg.pauseAnimations){on?svg.unpauseAnimations():svg.pauseAnimations()}}catch(e){}}
+ var vis=true;function sync(){smil(vis&&!document.hidden&&!rm&&!ph)}
+ var ph=window.matchMedia&&matchMedia('(max-width:640px)').matches;if(rm||ph)smil(false);
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){vis=es[0].isIntersecting;sync()},{rootMargin:'120px 0px'}).observe(h)}
+ document.addEventListener('visibilitychange',sync);
+ if(!rm&&art&&window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine) and (min-width:900px)').matches){
+  var raf=0,tx=0,ty=0;
+  function apply(){raf=0;art.style.setProperty('--px',tx.toFixed(3));art.style.setProperty('--py',ty.toFixed(3))}
+  h.addEventListener('pointermove',function(e){var r=h.getBoundingClientRect();tx=((e.clientX-r.left)/r.width-.5)*-2;ty=((e.clientY-r.top)/r.height-.5)*-2;if(!raf)raf=requestAnimationFrame(apply)},{passive:true});
+  h.addEventListener('pointerleave',function(){tx=0;ty=0;if(!raf)raf=requestAnimationFrame(apply)});
+ }
+}
+
+function homeQuickAccess(){
+ var tools=[['#/hub/focus','⏱','ফোকাস টাইমার'],['#/hub/week','🗓','সাপ্তাহিক রুটিন'],['#/hub/monthly','🗓','মাসিক পরিকল্পনা'],['#/hub/exam','📅','পরীক্ষার কাউন্টডাউন'],['#/hub/gpa','🎓','GPA ক্যালকুলেটর'],['#/hub/plan','✅','পড়ার পরিকল্পনা'],['#/hub/goals','🎯','পড়ার লক্ষ্য'],['#/hub/scores','📈','নম্বরের হিসাব'],['#/hub/cards','🃏','ফ্ল্যাশকার্ড'],['#/hub/review','🔁','স্মার্ট রিভিশন'],['#/hub/notes','📝','দ্রুত নোট'],['#/hub/revision','📚','রিভিশন প্ল্যান'],['#/hub/syllabus','📖','সিলেবাসের অগ্রগতি'],['#/hub/form','📐','সূত্রের খাতা'],['#/hub/hab','🌱','পড়ার অভ্যাস'],['#/hub/backup','💾','ডেটা ব্যাকআপ'],['#/shortcuts','⚡','দ্রুত শর্টকাট'],['#/solver','🧮','সূত্র সমাধান'],['#/reference','📚','রেফারেন্স গাইড'],['#/share-card','🏅','অগ্রগতির কার্ড']];
+ var homeToolSeen={};tools=tools.filter(function(t){if(homeToolSeen[t[0]])return false;homeToolSeen[t[0]]=1;return true});((window.CL_STUDIO&&window.CL_STUDIO.tiles)||[]).forEach(function(t){var href=String(t.href||'');if(!href||homeToolSeen[href])return;homeToolSeen[href]=1;tools.push([href,t.icon||'◇',t.label||'Study Tool'])});
+ return'<section class="home-launchpad" aria-label="Student Hub and Golden Snitch features"><div class="w"><a class="hub-home-spotlight" href="#/hub"><div class="hub-home-spotlight-copy"><span class="hub-home-spotlight-kicker"><i></i> STUDENT HUB · YOUR STUDY COMMAND CENTER</span><h2>পড়াশোনার সেরা সব ফিচার—এক জায়গায়</h2><p>Study Planner, Focus Timer, Flashcards, GPA Calculator, Revision Tracker ও আরও অনেক টুল। পড়া সাজানো থেকে অগ্রগতি দেখা—সবকিছুই আপনার Student Hub-এ।</p><span class="hub-home-spotlight-cta">Explore Student Hub <b aria-hidden="true">↗</b></span><span class="hub-home-spotlight-tags"><i>PLAN</i><i>FOCUS</i><i>REVISE</i><i>TRACK</i></span></div><div class="hub-home-spotlight-art" aria-hidden="true"><div class="hub-home-art-card hub-home-art-main"><span>STUDY HUB PREVIEW</span><b>Stay on track</b><i class="hub-home-art-bar"><em></em></i><small>Sample study progress</small></div><div class="hub-home-art-card hub-home-art-float"><i>⏱</i><span><b>Focus session</b><small>25:00 · Ready</small></span></div><div class="hub-home-art-card hub-home-art-note"><i>✦</i><span><b>Quick revision</b><small>Flashcards · Formula</small></span></div><span class="hub-home-art-orbit"></span><span class="hub-home-art-spark">✧</span></div></a><section class="home-feature-showcase" aria-labelledby="homeFeatureShowcaseTitle"><div class="home-feature-showcase-head"><span class="home-feature-showcase-kicker">DISCOVER GOLDEN SNITCH</span><h2 id="homeFeatureShowcaseTitle">পড়াশোনার দরকারি সবকিছু—এক জায়গায়</h2><p>স্টাডি টুল, ইন্টারঅ্যাকটিভ গেম, হাতে-কলমে সিমুলেশন ও আলাদা Graph Lab—পড়াশোনা হোক আরও সহজ ও সক্রিয়।</p></div><div class="home-feature-showcase-grid"><a class="home-feature-showcase-card" data-tone="violet" href="#/play"><span class="showcase-card-top"><span class="showcase-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 8h10a4 4 0 0 1 3.9 4.8l-.8 3.4a2.4 2.4 0 0 1-4 1.2L14 16h-4l-2.1 1.4a2.4 2.4 0 0 1-4-1.2l-.8-3.4A4 4 0 0 1 7 8Z"/><path d="M8 10.5v4m-2-2h4m6-1h.01m2 2h.01"/></svg></span><span class="showcase-card-kicker">PLAY TO LEARN</span></span><strong>Arcade &amp; Challenges</strong><span class="showcase-card-copy">ম্যাচিং, সাজানো, বিল্ডিং, পাজল ও মিশন—শুধু প্রশ্নের উত্তর নয়, নিজে কাজ করে শিখুন।</span><span class="showcase-card-bottom"><span>Enter the arcade</span><b aria-hidden="true">↗</b></span></a><a class="home-feature-showcase-card" data-tone="mint" href="#/lab"><span class="showcase-card-top"><span class="showcase-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></span><span class="showcase-card-kicker">HANDS-ON EXPLORATION</span></span><strong>Interactive Simulations</strong><span class="showcase-card-copy">চলক পরিবর্তন করে দেখুন—বিজ্ঞানের ধারণা কীভাবে কাজ করে।</span><span class="showcase-card-bottom"><span>Open the lab</span><b aria-hidden="true">↗</b></span></a><a class="home-feature-showcase-card" data-tone="amber" href="#/graphs"><span class="showcase-card-top"><span class="showcase-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19 4H6l7 8-7 8h13"/><path d="M4 4h2M4 20h2"/></svg></span><span class="showcase-card-kicker">VISUAL THINKING</span></span><strong>Graphs &amp; Formula Labs</strong><span class="showcase-card-copy">সিমুলেশন থেকে আলাদা Graph Lab-এ ফাংশন ও গাণিতিক সম্পর্ক পরীক্ষা করুন।</span><span class="showcase-card-bottom"><span>Open Graph Lab</span><b aria-hidden="true">↗</b></span></a></div></section><div class="launch-tool-head"><div><span class="launch-eyebrow">STUDENT HUB TOOLKIT</span><h3>Student Hub-এর সব টুল</h3></div><a href="#/hub">Student Hub খুলুন <span aria-hidden="true">→</span></a></div><div class="launch-swipe-hint" aria-hidden="true"><b>‹</b><span>ডানে-বামে swipe করে আরও টুল দেখুন</span><b>›</b></div><div class="launch-tool-carousel"><button class="launch-tool-arrow-btn prev" type="button" data-launch-dir="prev" aria-controls="launchToolGrid" aria-label="আগের টুল দেখুন" title="আগের টুল"><span aria-hidden="true">‹</span></button><div class="launch-tool-grid" id="launchToolGrid">'+tools.map(function(x){return'<a class="launch-tool" href="'+x[0]+'"><span class="launch-tool-icon" aria-hidden="true">'+x[1]+'</span><span>'+E(x[2])+'</span><span class="launch-tool-arrow" aria-hidden="true">↗</span></a>'}).join('')+'</div><button class="launch-tool-arrow-btn next" type="button" data-launch-dir="next" aria-controls="launchToolGrid" aria-label="পরের টুল দেখুন" title="পরের টুল"><span aria-hidden="true">›</span></button></div><div class="launch-swipe-bar" aria-hidden="true"><i></i></div></div></section>'
+}
+function homeFlowchart(section){
+  var I={
+    bulb:'<path d="M9 18h6M10 21h4M8.5 14.5a6 6 0 1 1 7 0c-.8.6-1.3 1.5-1.5 2.5h-4c-.2-1-.7-1.9-1.5-2.5Z"/><path d="M12 3v2M4.9 5.9l1.4 1.4M19.1 5.9l-1.4 1.4"/>',
+    book:'<path d="M4 5.5c3-.8 5.6-.2 8 1.7 2.4-1.9 5-2.5 8-1.7v12.5c-3-.8-5.6-.2-8 1.7-2.4-1.9-5-2.5-8-1.7z"/><path d="M12 7.2v12.6"/>',
+    flask:'<path d="M9.5 3.5h5M10.5 3.5v5.8L5.2 18a2 2 0 0 0 1.7 3h10.2a2 2 0 0 0 1.7-3l-5.3-8.7V3.5"/><path d="M8 14.5h8"/>',
+    graph:'<path d="M4 4v16h16"/><path d="M7.5 15l3.5-4 3 2.5 4.5-6"/>',
+    hub:'<path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11.3v4.4c0 1.3 2.5 2.8 5.5 2.8s5.5-1.5 5.5-2.8v-4.4"/>',
+    daily:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8.5 3.5v3M15.5 3.5v3M9.5 15l2 2 3.5-4"/>',
+    bars:'<path d="M5 20V12M10 20V6M15 20v-5M20 20V9"/>',
+    cup:'<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5v1.5A3.5 3.5 0 0 0 8 11M16 6h3.5v1.5A3.5 3.5 0 0 1 16 11M12 13v4M8.5 20h7M10 17h4"/>',
+    flame:'<path d="M12 22c4 0 7-2.8 7-6.7 0-2.6-1.5-4.7-4.3-7.3.1 2.4-1 3.4-1.8 4.1.1-3.7-1.7-6.8-4.3-9.3.2 4.2-3.3 7.4-3.3 12.2C5.3 18.9 8.2 22 12 22Z"/><path d="M12 18.5c1.2 0 2.2-1 2.2-2.2 0-.8-.4-1.5-1.2-2.3-.2 1-.7 1.4-1.2 1.8-.1-.9-.5-1.5-1.2-2.1-.1 1.4-1 2-1 2.9 0 1.1 1 1.9 2.4 1.9Z"/>',
+    calculator:'<rect x="5" y="2.8" width="14" height="18.4" rx="2.2"/><path d="M8 6.5h8M8.3 11h.1M12 11h.1M15.7 11h.1M8.3 15h.1M12 15h.1M15.7 15h.1M8.3 18.5h.1M12 18.5h.1M15.7 18.5h.1"/>'
+  };
+  var routes=[
+    
+    ['#/lab','flask','নিজে করে দেখুন','স্লাইডার বদলে ফলাফল দেখুন, নিজেই পরীক্ষা করুন।'],
+    
+    ['#/progress','bars','অগ্রগতি দেখুন','ধাপ ও কুইজের অগ্রগতি এক জায়গায় দেখুন।'],
+    ['#/progress','cup','XP, লেভেল ও ব্যাজ','শেখা ও অনুশীলনে XP জমান, নতুন ব্যাজ আনলক করুন।'],
+    ['#/daily','flame','প্রতিদিনের চ্যালেঞ্জ','প্রতিদিনের চ্যালেঞ্জে দক্ষতা ঝালিয়ে নিন, XP অর্জন করুন।'],
+    ['#/hub','hub','স্টুডেন্ট হাব','প্ল্যানার, টাইমার, ক্যালকুলেটর ও রিভিশন টুল—সব এক জায়গায়।'],
+    ['#/graphs','graph','গ্রাফ এঁকে বিশ্লেষণ করুন','ফাংশন, সরলরেখা, বৃত্ত ও ভেক্টর ইন্টারঅ্যাকটিভভাবে দেখুন।'],
+    ['#/solver','calculator','ধাপে ধাপে সমাধান ও ক্যালকুলেটর','সূত্রের অজানা রাশি বের করুন, পাশে বৈজ্ঞানিক ক্যালকুলেটরে হিসাব করুন।'],
+    ['#/reference','book','Reference Shelf','Reference Shelf-এ ধ্রুবক, একক, আয়ন ও দরকারি তথ্য দ্রুত খুঁজে নিন।']
+  ];
+  var saved=section&&Array.isArray(section.items)?section.items:[];
+  for(var i=0;i<routes.length;i++){
+    var item=saved[i]||{};
+    if(item.t)routes[i][2]=item.t;
+    if(item.p)routes[i][3]=item.p;
+  }
+  var L=routes.slice(0,4),R=routes.slice(4),O=[0,18,28,18];
+  function node(x,i){return '<a class="fc-node" style="--o:'+O[i]+'px;--r:'+i+'" href="'+x[0]+'"><svg class="fc-ico" viewBox="0 0 24 24" aria-hidden="true">'+I[x[1]]+'</svg><span class="fc-txt"><b>'+E(x[2])+'</b><small>'+E(x[3])+'</small></span></a>'}
+  return '<section class="home-flow" aria-label="Golden Snitch learning features"><div class="w"><div class="fc-head"><h2>সবকিছু এক জায়গায়</h2><p>ধারণা বুঝুন, অনুশীলন করুন, অগ্রগতি দেখুন—প্রতিটি অংশ একটি কেন্দ্র থেকে।</p></div><div class="fc-board"><div class="fc-col fc-left">'+L.map(node).join('')+'</div><div class="fc-hub" aria-hidden="true"><span class="fc-ring"></span><span class="fc-ring fc-ring-2"></span><div class="fc-core"><img src="assets/images/golden-snitch-emblem.webp" alt="Golden Snitch logo" width="92" height="92" loading="eager" fetchpriority="high" decoding="async"><span>Golden Snitch</span></div></div><div class="fc-col fc-right">'+R.map(function(x,i){return node(x,i)}).join('')+'</div><i class="fc-trunk" aria-hidden="true"></i></div></div></section>';
+}
+function homeScienceOutro(){return '<section class="home-science-outro" aria-label="Explore the beauty of science"><div class="w"><div class="science-outro-panel"><div class="science-outro-copy"><span class="pill"><i></i> THE BEAUTY OF DISCOVERY</span><h2>Every question opens a new orbit.</h2><p>Connect the dots, test an idea, and see how the pieces of science fit together.</p><a class="btn ghost" href="#/lab">Explore the simulations →</a></div><div class="science-outro-art" aria-hidden="true"><svg viewBox="0 0 520 220" role="img"><defs><linearGradient id="scienceLine" x1="0" x2="1"><stop offset="0" stop-color="#38bdf8" stop-opacity=".2"/><stop offset=".5" stop-color="#7dd3fc"/><stop offset="1" stop-color="#a78bfa" stop-opacity=".3"/></linearGradient></defs><path class="so-path" d="M12 150 C75 150 75 45 138 45 S201 175 264 175 S327 70 390 70 S453 150 508 150"/><path class="so-path so-path-alt" d="M12 85 C70 85 85 190 145 190 S220 25 280 25 S355 160 415 160 S470 85 508 85"/><g class="so-atom" transform="translate(260 105)"><ellipse rx="72" ry="27" transform="rotate(25)"/><ellipse rx="72" ry="27" transform="rotate(-25)"/><ellipse rx="72" ry="27" transform="rotate(90)"/><circle class="so-node" r="5"/><circle class="so-node so-node-alt" cx="70" cy="-18" r="4"/></g><g class="so-flask" transform="translate(62 22)"><path d="M-8 0h16M-5 0v24l-22 38q-4 8 7 8h40q11 0 7-8L5 24V0"/><path d="M-18 48h36"/><circle cx="-5" cy="57" r="2"/><circle cx="7" cy="61" r="2"/></g><g class="so-wave"><path d="M360 183q12-36 24 0t24 0t24 0t24 0t24 0"/></g></svg></div></div></div></section>'}
+function homeDiscoveryMotion(){return '<section class="home-discovery-motion" aria-label="Explore science through animation"><div class="w"><div class="discovery-motion-head"><span class="pill"><i></i> SCIENCE IN MOTION</span><h2>Ideas come alive when you explore.</h2><p>Watch patterns move, forces connect, and tiny discoveries turn into big ideas.</p></div><div class="discovery-motion-grid"><article class="discovery-motion-card motion-wave"><div class="dm-visual" aria-hidden="true"><svg viewBox="0 0 260 100"><path class="dm-gridline" d="M5 20H255M5 50H255M5 80H255M30 5V95M80 5V95M130 5V95M180 5V95M230 5V95"/><path class="dm-wave-line" d="M5 50 C20 5 40 5 55 50 S90 95 105 50 S140 5 155 50 S190 95 205 50 S240 5 255 50"/><circle class="dm-wave-dot" cx="155" cy="50" r="4"/></svg></div><span class="dm-kicker">01 · WAVE LAB</span><h3>Patterns in motion</h3><p>Trace the rhythm of a wave as it travels through space.</p></article><article class="discovery-motion-card motion-orbit"><div class="dm-visual" aria-hidden="true"><svg viewBox="0 0 260 100"><g class="dm-orbit-group"><ellipse cx="130" cy="50" rx="58" ry="22"/><ellipse cx="130" cy="50" rx="58" ry="22" transform="rotate(58 130 50)"/><ellipse cx="130" cy="50" rx="58" ry="22" transform="rotate(-58 130 50)"/><circle class="dm-sun" cx="130" cy="50" r="9"/><circle class="dm-planet" cx="181" cy="29" r="4"/></g></svg></div><span class="dm-kicker">02 · ORBIT ROOM</span><h3>Gravity at work</h3><p>Follow the paths that keep a system connected.</p></article><article class="discovery-motion-card motion-magnet"><div class="dm-visual" aria-hidden="true"><svg viewBox="0 0 260 100"><path class="dm-field" d="M45 75 C25 10 95 4 130 50 C165 4 235 10 215 75"/><path class="dm-field dm-field-two" d="M58 76 C49 30 98 23 130 50 C162 23 211 30 202 76"/><rect class="dm-magnet" x="100" y="31" width="60" height="38" rx="8"/><path class="dm-magnet-cut" d="M130 32V68"/><circle class="dm-particle" cx="70" cy="40" r="3"/><circle class="dm-particle dm-particle-two" cx="194" cy="54" r="3"/></svg></div><span class="dm-kicker">03 · FIELD NOTES</span><h3>Invisible forces</h3><p>See how a field can shape what happens around it.</p></article></div></div></section>'}
+var MOTIVATION_QUOTES=[
+['আজ যতটুকু বুঝলে, কালকের পথটা ততটুকু সহজ হবে।','Golden Snitch'],
+['Somewhere, something incredible is waiting to be known.','Carl Sagan'],
+['প্রশ্ন করা থামিও না; কৌতূহলেরই নিজস্ব কারণ আছে।','Albert Einstein'],
+['The important thing is not to stop questioning.','Albert Einstein'],
+['ছোট ছোট নিয়মিত চেষ্টাই বড় ফলাফলের জন্ম দেয়।','Golden Snitch'],
+['What I cannot create, I do not understand.','Richard Feynman'],
+['ভুল করা মানে হেরে যাওয়া নয়, নতুন কিছু শেখার শুরু।','Golden Snitch'],
+['Nothing in life is to be feared, it is only to be understood.','Marie Curie'],
+['কঠিন বিষয়ও ধাপে ধাপে সহজ হয়ে যায়—শুধু শুরুটা করো।','Golden Snitch'],
+['I have no special talent. I am only passionately curious.','Albert Einstein'],
+['আজকের ২৫ মিনিটের মনোযোগ কালকের আত্মবিশ্বাস তৈরি করে।','Golden Snitch'],
+['The more I learn, the more I realize how much I don\u2019t know.','Albert Einstein']
+];
+function dailyMotivation(){var d=new Date(),k=d.getFullYear()*1000+Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);return MOTIVATION_QUOTES[k%MOTIVATION_QUOTES.length]}
+var SEC={
+ marquee:function(s){var it=(s.items||[]).map(function(i){return i.t}).filter(Boolean);if(!it.length)return'';var row=it.map(function(t){return'<span>'+E(t)+'</span><i>✦</i>'}).join(''),k=Math.max(1,Math.ceil(24/it.length)),half=new Array(k+1).join(row);return'<div class="marq" aria-hidden="true"><div class="mtk">'+half+half+'</div></div>'},
+ stats:function(s){var g=GS();function val(it){switch(it.k){case'activities':return GAMES.filter(function(x){return x.on!==false&&x.on!=='0'}).length+LABS.filter(function(x){return x.on!==false&&x.on!=='0'}).length;case'hubtools':return window.CL_HUB_TOOL_COUNT?window.CL_HUB_TOOL_COUNT():0;case'graphlabs':return window.CL_GRAPHS&&window.CL_GRAPHS.list?window.CL_GRAPHS.list.length:0;case'chapters':return Number(it.v)||chapterCount();case'available':return Object.keys(C).length;case'games':return GAMES.filter(function(x){return x.on!==false&&x.on!=='0'}).length;case'labs':return LABS.filter(function(x){return x.on!==false&&x.on!=='0'}).length;case'done':return tot();case'xp':return Math.max(0,Number(g.xp)||0);case'level':return lvl(g.xp).n;default:return Math.max(0,Number(it.v)||0)}}
+  var cards=(s.items||[]).map(function(it,i){return'<div class="stat home-stat-card rv" data-stat-key="'+E(it.k||'custom')+'" style="--d:'+(i*.05)+'s"><b data-count="'+val(it)+'">0</b><span>'+E(it.t||'Learning metric')+'</span></div>'}).join('');
+  return'<section class="home-stats-section" aria-label="Golden Snitch learning statistics"><div class="w"><div class="home-stats-panel"><div class="home-stats-heading"><div><span class="home-stats-kicker">GOLDEN SNITCH AT A GLANCE</span><p>এক নজরে শেখার উপকরণ ও আপনার অগ্রগতি</p></div><span class="home-stats-live"><i></i> LIVE COUNTS</span></div><div class="stats home-stats-grid">'+cards+'</div></div></div></section>'},
+ goals:function(s){return'<section class="goals"><div class="w">'+secHead(s)+'<div class="gA g2">'+(s.items||[]).map(function(it,i){return'<article class="card goal tilt rv" style="--d:'+(i*.1)+'s"><span class="gn">'+(i<9?'0':'')+(i+1)+'</span><div class="gi">'+E(it.i)+'</div><h3>'+E(it.t)+'</h3><p>'+E(it.p)+'</p></article>'}).join('')+'</div></div></section>'},
+ stages:function(s){var items=s.items||[],tags=['NOTICE · প্রশ্ন করুন','UNDERSTAND · বুঝুন','EXPLORE · পরীক্ষা করুন','REFLECT · যাচাই করুন'];return'<section class="sec-stages stage-premium-section" data-section-motion="'+E(s.animation||'float')+'"><div class="w">'+secHead(s)+'<div class="stage-premium-grid">'+items.map(function(it,i){var ac=homeAccent(it.color,i),num=String(i+1).padStart(2,'0');return'<article class="stage-premium-card rv" data-motion="'+E(s.animation||'float')+'" style="--stage-accent:'+ac+';--d:'+(i*.12)+'s"><div class="stage-card-head"><span class="stage-icon-orbit">'+homeIconVisual(it.i||HOME_STAGE_ICONS[i%4],it.image,'stage-icon')+'</span><span class="stage-step-meta"><b>STAGE '+num+'</b><small>'+E(it.tag||tags[i%tags.length])+'</small></span></div><div class="stage-card-copy"><h3>'+E(it.t||ST[i]||'')+'</h3><p>'+E(it.p||'এই ধাপে কনসেপ্টটি নিজের মতো করে বুঝে নিন।')+'</p></div><div class="stage-card-footer"><span><i></i> LEARNING PATH</span><b>0'+(i+1)+' <small>/ 0'+items.length+'</small></b></div></article>'}).join('')+'</div></div></section>'},
+ ayatHadith:function(s){return window.CL_AH?window.CL_AH.render(s):''},
+ motivation:function(s){var q=dailyMotivation(),quoteLang=/[\u0980-\u09FF]/.test(q[0])?'bn':'en',quoteClass=quoteLang==='bn'?'motivation-quote-bn':'motivation-quote-en';return '<section class="motivation-section" aria-labelledby="motivationTitle"><div class="w"><div class="motivation-card"><div class="motivation-art" aria-hidden="true"><span class="motivation-ring ring-one"></span><span class="motivation-ring ring-two"></span><span class="motivation-art-core"><svg class="mv-ico mv-rocket" viewBox="0 0 64 64" width="38" height="38" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M32 6c9 7 13 17 11 30H21C19 23 23 13 32 6z"/><circle cx="32" cy="24" r="4.5"/><path d="M21 36l-8 8 3 6 8-4M43 36l8 8-3 6-8-4"/><path d="M27 42c0 6 2 11 5 15 3-4 5-9 5-15"/></svg></span><span class="motivation-art-float float-one">∑</span><span class="motivation-art-float float-two">π</span><span class="motivation-art-float float-three">✧</span></div><div class="motivation-content"><span class="motivation-pill"><i aria-hidden="true"><svg class="mv-ico mv-flame" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" focusable="false"><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 1-3 0-6 1-10z"/></svg></i> <span class="motivation-pill-label" lang="en">'+E(s.pill||'DAILY INSPIRATION')+'</span></span><h2 id="motivationTitle">'+E(s.h||'আজকের অনুপ্রেরণা')+'</h2><blockquote><span class="'+quoteClass+'" lang="'+quoteLang+'">“'+E(q[0])+'”</span></blockquote><p class="motivation-author" lang="en">— '+E(q[1])+'</p><div class="motivation-bottomline"><span class="motivation-status-dot"></span><span>একটি ভালো চিন্তা, একটি নতুন শুরু</span><span class="motivation-sparkline" aria-hidden="true">⌁ ✧ ⌁</span></div></div><div class="motivation-glow" aria-hidden="true"></div></div></div></section>'},
+ lab:function(s){var ls=LABS.filter(function(x){return x.on!==false&&x.on!=='0'&&!x.arcadeImported});return'<section class="home-lab"><div class="w"><div class="home-lab-head"><div class="lab-copy rv">'+(s.pill?'<span class="pill"><i></i> '+E(s.pill)+'</span>':'')+'<h2>'+hd(s.h)+'</h2><p>'+E(s.p)+'</p><div class="lab-tags">'+(s.items||[]).map(function(t){return'<span>'+E(t.t)+'</span>'}).join('')+'</div></div></div><div class="home-lab-carousel"><button class="btn home-lab-arrow" type="button" data-home-lab-shift="-1" aria-label="Previous simulation">←</button><div class="home-lab-track home-lab-grid" id="homeLabTrack">'+ls.map(function(l,i){return'<article class="card gm home-lab-card rv" style="--d:'+(Math.min(i*.003,.08))+'s;--icon-hue:'+iconHue(l.id)+'" '+(i?'hidden':'')+'><div class="home-lab-card-top"><span class="gico">'+E(simIcon(l))+'</span><span class="home-lab-sub">'+E(labSubject(l.sub))+'</span><span class="home-lab-count">'+String(i+1).padStart(2,'0')+' / '+String(ls.length).padStart(2,'0')+'</span></div><h3>'+E(simTitle(l))+'</h3>'+'<p>'+E(simDescription(l))+'</p><a class="btn pri home-sim-btn" href="#/lab/'+E(l.id)+'">⚛ সিমুলেশন চালান →</a></article>'}).join('')+'</div><button class="btn home-lab-arrow" type="button" data-home-lab-shift="1" aria-label="Next simulation">→</button></div><div class="home-lab-footer"><a class="btn" href="#/lab">সব সিমুলেশন দেখুন →</a></div></div></section>'},
+ arcade:function(s){var gs=GAMES.filter(function(g){return g.on!==false&&g.on!=='0'&&g.type!=='cannon'&&!/physics-formula-sprint/i.test(String(g.id||''))&&String(g.t||'').trim()!=='Physics Formula Sprint'}),hues=[198,262,152,28,330,48];return'<section class="arcade-s home-games"><div class="w">'+secHead(s)+(gs.length?'<div class="gdeck" aria-roledescription="carousel" aria-label="Games"><div class="gdeck-track" id="homeGameTrack" tabindex="0">'+gs.map(function(g,i){return'<a class="gdeck-card'+(i===((window.matchMedia&&window.matchMedia('(max-width: 600px)').matches)?0:Math.floor(gs.length/2))?' on':'')+'" style="--h:'+iconHue(g.id)+';--icon-hue:'+iconHue(g.id)+'" href="#/play/'+E(g.id)+'" data-gi="'+i+'" aria-label="'+E(gameTitle(g))+'"><span class="gdeck-ico" aria-hidden="true">'+E(gameIcon(g))+'</span><span class="gdeck-diff">'+E(g.diff||'')+'</span><h3>'+E(gameTitle(g))+'</h3><p>'+E(g.d)+'</p><span class="gdeck-foot"><b>+'+(+g.xp||0)+' XP</b><span class="gdeck-play">এখন খেলুন ▶</span></span></a>'}).join('')+'</div><div class="gdeck-nav"><button class="gdeck-arrow" type="button" data-gdeck="-1" aria-label="Previous game">←</button><div class="gdeck-prog" aria-hidden="true"><i id="gdeckBar"></i></div><span class="gdeck-count" id="gdeckCount">01 / '+String(gs.length).padStart(2,'0')+'</span><button class="gdeck-arrow" type="button" data-gdeck="1" aria-label="Next game">→</button></div></div>':'')+(s.btn?'<div class="c" style="margin-top:20px"><a class="btn pri" href="'+E(safeLink(s.link))+'">'+E(s.btn)+'</a></div>':'')+'</div></section>'},
+ purpose:function(s){return'<section class="pm-mid"><div class="w"><div class="pm-inner rv">'+(s.pill?'<span class="pill"><i></i>'+E(s.pill)+'</span>':'')+'<h2>'+hd(s.h)+'</h2>'+(s.p?'<p class="pm-lead">'+E(s.p)+'</p>':'')+(s.p2?'<p class="pm-sub">'+E(s.p2)+'</p>':'')+'<ul class="pm-list">'+(s.items||[]).map(function(i){return'<li>'+E(i.t)+'</li>'}).join('')+'</ul></div></div></section>'},
+ features:function(s){return'<section class="tight sec-features feature-premium-section" data-section-motion="'+E(s.animation||'float')+'"><div class="w">'+secHead(s)+'<div class="feature-premium-list">'+(s.items||[]).map(function(it,i){var ac=homeAccent(it.color,i),num=String(i+1).padStart(2,'0');return'<article class="feature-premium-card rv" data-motion="'+E(s.animation||'float')+'" style="--feature-accent:'+ac+';--feature-source-accent:'+ac+';--d:'+(i*.09)+'s"><span class="feature-card-number">'+num+'</span><span class="feature-icon-shell">'+homeIconVisual(it.i||'sparkles',it.image,'feature-icon')+'</span><div class="feature-card-copy"><span class="feature-card-tag">'+E(it.tag||('WHY IT MATTERS · '+num))+'</span><h3>'+E(it.t)+'</h3><p>'+E(it.p)+'</p></div></article>'}).join('')+'</div></div></section>'},
+ roadmap:function(s){var items=s.items||[];return'<section class="home-roadmap-section"><div class="w">'+secHead(s)+'<div class="road road-flow" aria-label="Golden Snitch learning flow">'+items.map(function(it,i){return'<article class="road-flow-step rv" style="--d:'+(i*.09)+'s"><div class="card road-flow-card"><span class="road-flow-number" aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><div class="road-flow-copy"><h3>'+E(it.t)+'</h3><p>'+E(it.p)+'</p></div></div></article>'+(i<items.length-1?'<div class="road-flow-arrow" aria-hidden="true"><span>↓</span></div>':'')}).join('')+'</div></div></section>'},
+subjects:function(s){return '';},
+ faq:function(s){return'<section class="tight"><div class="w">'+secHead(s)+'<div class="faq">'+(s.items||[]).map(function(it,i){return'<details class="rv" style="--d:'+(i*.05)+'s"><summary>'+E(it.q)+'</summary><p>'+E(it.a)+'</p></details>'}).join('')+'</div></div></section>'},
+ cta:function(s){if(s.id==='s-cta'||/^#\/chapters(?:$|[?])/.test(String(s.link||'')))return'';var showParagraph=s.id!=='s-cta'&&s.p;return'<section class="tight home-final-cta"><div class="w"><div class="cta rv"><h2>'+hd(s.h)+'</h2>'+(showParagraph?'<p>'+E(String(s.p)).replace(/\n/g,'<br>')+'</p>':'')+(s.btn?'<a class="btn pri big" href="'+E(safeLink(s.link))+'">'+E(s.btn)+'</a>':'')+'</div></div></section>'},
+ text:function(s){return'<section class="tight"><div class="w" style="max-width:780px">'+secHead(Object.assign({},s,{p:''}))+'<p class="bn bl rv" style="text-align:center">'+E(s.p)+'</p></div></section>'}
+};
+
+/* ------------------------------------------------------------ pages */
+var chF='all',chQ='',chS='all';
+var CH_STATUS=[['all','সব'],['available','চালু'],['progress','চলমান'],['done','সম্পন্ন'],['soon','শীঘ্রই আসছে']];
+function chTitle(c){return String(c.chapterTitle||c.chapter||c.t||'Chapter').trim()||'Chapter'}
+function chItems(sub,title){return CHL.filter(function(c){return c.s===sub&&chTitle(c)===title&&!(c.id==='qualitative-chemistry'&&CHL.some(function(x){return x.id==='qc-01'}))})}
+function chStat(items){var av=items.filter(function(c){return c.status==='available'}),done=av.reduce(function(a,c){return a+cnt(c.id)},0),max=av.length*4,full=av.filter(function(c){return cnt(c.id)>=4}).length;return{av:av.length,soon:items.length-av.length,done:done,max:max,full:full,pct:max?Math.round(done/max*100):0,next:av.filter(function(c){return cnt(c.id)<4})[0]||null,started:done>0}}
+function chGrid(){
+ var specs=[
+ {s:'chem',n:'ল্যাবরেটরির নিরাপদ ব্যবহার',a:['safe use of laboratory','laboratory safety','lab safety']},
+ {s:'chem',n:'গুণগত রসায়ন',a:['qualitative chemistry']},
+ {s:'chem',n:'মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন',a:['periodic properties and chemical bond of elements','periodic properties and chemical bonding','periodic properties','chemical bonding']},
+ {s:'chem',n:'রাসায়নিক পরিবর্তন',a:['chemical change','chemical changes','chemical reactions']},
+ {s:'chem',n:'কর্মমুখী রসায়ন',a:['vocational chemistry','applied chemistry']},
+ {s:'phy',n:'ভৌতজগৎ ও পরিমাপ',a:['physical world and measurement']},
+ {s:'phy',n:'ভেক্টর',a:['vectors']},
+ {s:'phy',n:'গতিবিদ্যা',a:['kinematics']},
+ {s:'phy',n:'নিউটনীয় বলবিদ্যা',a:['newtonian mechanics','dynamics','force and motion']},
+ {s:'phy',n:'কাজ, শক্তি ও ক্ষমতা',a:['work, energy and power','work energy and power']},
+ {s:'phy',n:'মহাকর্ষ ও অভিকর্ষ',a:['gravitation and gravity','gravitation']},
+ {s:'phy',n:'পদার্থের গাঠনিক ধর্ম',a:['structural properties of matter','properties of matter']},
+ {s:'phy',n:'পর্যাবৃত্ত গতি',a:['periodic motion']},
+ {s:'phy',n:'তরঙ্গ',a:['waves','wave']},
+ {s:'phy',n:'আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব',a:['ideal gas and kinetic theory of gases','ideal gas','kinetic theory of gases']},
+ {s:'math',n:'ম্যাট্রিক্স ও নির্ণায়ক',a:['matrices and determinants']},
+ {s:'math',n:'ভেক্টর',a:['vectors']},
+ {s:'math',n:'সরলরেখা',a:['straight lines','straight line']},
+ {s:'math',n:'বৃত্ত',a:['circles','circle']},
+ {s:'math',n:'বিন্যাস ও সমাবেশ',a:['permutation and combination','permutations and combinations']},
+ {s:'math',n:'ত্রিকোণমিতিক অনুপাত',a:['trigonometric ratios']},
+ {s:'math',n:'সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত',a:['trigonometric ratios of associated angles','associated angles']},
+ {s:'math',n:'ফাংশন ও ফাংশনের লেখচিত্র',a:['functions and graphs of functions','functions and graphs']},
+ {s:'math',n:'অন্তরীকরণ',a:['differentiation']},
+ {s:'math',n:'যোগজীকরণ',a:['integration']}
+ ];
+ var q=chQ.trim().toLowerCase(),groups={},any=false,shown=0;
+ Object.keys(L).forEach(function(k){if(k!=='chem'&&k!=='phy'&&k!=='math')return;L[k].forEach(function(c){if(c.id==='qualitative-chemistry'&&CHL.some(function(x){return x.id==='qc-01'}))return;var title=chTitle(c),key=k+'::'+title;if(!groups[key])groups[key]={s:k,title:title,items:[]};groups[key].items.push(c)})});
+ var mapped=[];specs.forEach(function(sp){var found=null;Object.keys(groups).some(function(key){var g=groups[key];if(g.s!==sp.s)return false;var low=g.title.toLowerCase();if(!sp.a.some(function(alias){return low===alias||low.indexOf(alias)>=0}))return false;found=g;return true});if(!found)found={s:sp.s,title:sp.a[0],displayName:sp.n,items:[]};else found=Object.assign({},found,{displayName:sp.n});if(!q||(sp.n+' '+found.title+' '+SUB[sp.s]).toLowerCase().indexOf(q)>=0||found.items.some(function(c){return String(c.t||'').toLowerCase().indexOf(q)>=0}))mapped.push(found)});
+ if(chF!=='all')mapped=mapped.filter(function(g){return g.s===chF});
+ var out=['phy','chem','math'].map(function(k){var arr=mapped.filter(function(g){return g.s===k});if(!arr.length)return '';return '<section class="chapter-subject-group" data-chapter-subject="'+E(k)+'"><header class="chapter-subject-heading"><span class="chapter-subject-dot"></span><div><h2>'+E(SUB[k]||k)+' — ১ম পত্র</h2><p>'+arr.length+'টি অধ্যায় · বিষয়ভিত্তিক তালিকা</p></div></header><div class="chapter-index-grid gA g3">'+arr.map(function(g,i){any=true;shown++;var st=chStat(g.items),href='#/chapter-list/'+encodeURIComponent(g.s+'|'+g.title),cta=st.av&&st.full===st.av?'আবার দেখুন →':(st.started&&st.next?'চালিয়ে যান →':'কনসেপ্টগুলো দেখুন →');return '<a class="card ch av chapter-index-card tilt rv" style="--d:'+(Math.min(i*.006,.1))+'s" href="'+E(href)+'"><h3>'+E(g.displayName||g.title)+'</h3><p>'+g.items.length+'টি কনসেপ্ট · '+st.av+'টি চালু'+(st.soon?' · '+st.soon+'টি শীঘ্রই':'')+'</p>'+(st.av?'<div class="bar chbar" title="'+st.pct+'%"><i style="width:'+st.pct+'%"></i></div><small class="mutt">'+st.full+'/'+st.av+' কনসেপ্ট সম্পন্ন · '+st.pct+'%</small>':'')+'<span class="go">'+cta+'</span></a>'}).join('')+'</div></section>'}).join('');
+ return '<p class="chapter-tip"><b>শেখার পথ:</b> ধারণা → সিমুলেশন → গেম → কুইজ। প্রতিটি অধ্যায় এই ক্রমে এগোলে সবচেয়ে ভালো মনে থাকে।</p><p class="chcount mutt" role="status">'+shown+'টি অধ্যায় পাওয়া গেছে'+(q?' · “'+E(chQ.trim())+'”':'')+'</p>'+(any?'<div class="chapter-subject-groups">'+out+'</div>':'<div class="card chempty"><p class="lead c" style="margin:20px auto">কোনো অধ্যায় পাওয়া যায়নি।</p><p class="c"><button class="btn" data-ch-reset>ফিল্টার মুছুন</button></p></div>');
+}
+
+/* ------------------------------------------------------------ Game Academy UI */
+var GA_LEVELS=(window.CL_GAME_ACADEMY&&window.CL_GAME_ACADEMY.levels)||[
+ {id:'concept',name:'Level 1 — Concept',icon:'💡',desc:'সহজ ধারণা, সূত্র ও শর্ত বুঝুন'},
+ {id:'board',name:'Level 2 — Board Challenge',icon:'📘',desc:'বোর্ড-ধাঁচের সমস্যা ও গ্রাফ'},
+ {id:'admission',name:'Level 3 — Admission Challenge',icon:'⚡',desc:'একাধিক ধারণার দ্রুত MCQ'},
+ {id:'boss',name:'Boss Level',icon:'👑',desc:'সময়বদ্ধ বহু-ধাপের চ্যালেঞ্জ'}
+];
+function gaMeta(g){var m=window.CL_GAME_ACADEMY&&window.CL_GAME_ACADEMY.meta?window.CL_GAME_ACADEMY.meta(g):null;return m||{subjectKey:g&&g.subjectKey||'mixed',chapterKeys:g&&g.chapterKeys||[],chapter:[]}}
+function gaSubjectName(k){return ({physics:'পদার্থবিজ্ঞান',chemistry:'রসায়ন',math:'উচ্চতর গণিত',mixed:'মিশ্র চ্যালেঞ্জ'})[k]||'মিশ্র চ্যালেঞ্জ'}
+function gaMistakeHash(s){var h=2166136261,t=String(s||'').toLowerCase().replace(/[\u200c\u200d]/g,'').replace(/[\s\u09e6-\u09ef]+/g,' ').replace(/[.,;:!?(){}\[\]"'’“”–—\-_/\\]/g,' ').trim();for(var i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
+function gaReadMistakeStore(){function valid(x){return !!(x&&x.version===2&&x.entries&&typeof x.entries==='object')}var local=null,fallback=null;try{local=JSON.parse(localStorage.getItem('cl_game_mistakes_v2')||'null')}catch(e){}try{fallback=JSON.parse(sessionStorage.getItem('cl_game_mistakes_v2_fallback')||'null')}catch(x){}if(valid(local)||valid(fallback)){var merged={version:2,entries:{}};[local,fallback].forEach(function(src){if(!valid(src))return;Object.keys(src.entries).forEach(function(k){var incoming=src.entries[k],current=merged.entries[k],it=Number(incoming&&incoming.updatedAt)||0,ct=Number(current&&current.updatedAt)||0;if(!current||it>ct||(it===ct&&(incoming.attempts||[]).length>(current.attempts||[]).length))merged.entries[k]=incoming})});return merged}var store={version:2,entries:{}};try{var legacy=JSON.parse(localStorage.getItem('cl_game_mistakes_v1')||'{}');Object.keys(legacy||{}).forEach(function(gameId){(Array.isArray(legacy[gameId])?legacy[gameId]:[]).forEach(function(x){if(!x||!x.q)return;var chapterId=String(gameId).replace(/^chapter-quiz-/,'');var qid='cq-'+chapterId+'-'+gaMistakeHash(x.q);var key=gameId+'|'+qid;store.entries[key]={key:key,quizId:gameId,questionId:qid,q:String(x.q),a:String(x.a||''),correctAnswer:String(x.a||''),yourAnswer:String(x.yourAnswer||''),selectedAnswer:String(x.yourAnswer||''),e:String(x.e||''),explanation:{core:String(x.e||'')},level:String(x.level||'concept'),difficulty:'',subject:'',paper:'',chapterId:chapterId,chapterTitle:'',subtopic:'',reviewStatus:'unreviewed',createdAt:Number(x.at)||Date.now(),updatedAt:Number(x.at)||Date.now(),wrongCount:1,attempts:[]};});});gaWriteMistakeStore(store)}catch(e){}return store}
+function gaWriteMistakeStore(store){try{localStorage.setItem('cl_game_mistakes_v2',JSON.stringify(store));try{sessionStorage.removeItem('cl_game_mistakes_v2_fallback')}catch(x){}window.CL_MISTAKE_STORAGE_MODE='localStorage';return true}catch(e){try{sessionStorage.setItem('cl_game_mistakes_v2_fallback',JSON.stringify(store));window.CL_MISTAKE_STORAGE_MODE='sessionStorage-fallback';return true}catch(x){window.CL_MISTAKE_STORAGE_MODE='unavailable';return false}}}
+function gaAllStoredMistakes(){var store=gaReadMistakeStore(),rows=Object.keys(store.entries||{}).map(function(k){return store.entries[k]});rows.sort(function(a,b){return(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0)});return rows}
+function gaStoredMistakes(id){var rows=gaAllStoredMistakes();return id?rows.filter(function(x){return x.quizId===id}):rows}
+function gaSaveMistakeRecord(id,x,level){if(!x||!x.q)return false;var store=gaReadMistakeStore(),meta=x.meta||{},qid=String(x.questionId||x.id||meta.id||('cq-'+String(x.chapterId||'general')+'-'+gaMistakeHash(x.q))),key=String(id)+'|'+qid,stamp=Number(x.timestamp)||Date.now(),attemptId=String(x.attemptId||('att-'+stamp+'-'+Math.random().toString(36).slice(2,8))),entry=store.entries[key]||{key:key,quizId:String(id),questionId:qid,createdAt:stamp,wrongCount:0,attempts:[],reviewStatus:'unreviewed'};
+ var selected=String(x.selectedAnswer||x.yourAnswer||''),correct=String(x.correctAnswer||x.a||''),attempt={attemptId:attemptId,selectedAnswer:selected,correctAnswer:correct,selectedOptionIndex:Number.isFinite(Number(x.selectedOptionIndex))?Number(x.selectedOptionIndex):null,correctOptionIndex:Number.isFinite(Number(x.correctOptionIndex))?Number(x.correctOptionIndex):null,timestamp:stamp,level:level||x.level||'concept'};
+ var existing=(entry.attempts||[]).findIndex(function(a){return a.attemptId===attemptId});if(existing>=0)entry.attempts[existing]=attempt;else{entry.attempts=entry.attempts||[];entry.attempts.unshift(attempt);entry.wrongCount=(Number(entry.wrongCount)||0)+1;}
+ entry.attempts=entry.attempts.slice(0,20);entry.reviewStatus='unreviewed';delete entry.reviewedAt;entry.q=String(x.q);entry.a=correct;entry.correctAnswer=correct;entry.yourAnswer=selected;entry.selectedAnswer=selected;entry.e=String(x.e||((x.explanation&&x.explanation.core)||''));entry.explanation=x.explanation||{core:entry.e};entry.contentOrigin=String(x.contentOrigin||meta.contentOrigin||'');entry.qualityStatus=String(x.qualityStatus||meta.qualityStatus||'');entry.qualityApproved=x.qualityApproved===true;entry.editorialReviewed=x.editorialReviewed===true;entry.explanationUpgradeStatusV100=String(x.explanationUpgradeStatusV100||'');entry.blueprintDraft=x.blueprintDraft===true;entry.media=Array.isArray(x.media)?x.media:[];entry.level=level||x.level||'concept';entry.difficulty=String(x.difficulty||meta.difficulty||'');entry.subject=String(x.subject||meta.subject||'');entry.paper=String(x.paper||meta.paper||'');entry.chapterId=String(x.chapterId||meta.chapterId||'');entry.chapterTitle=String(x.chapterTitle||meta.chapterTitle||'');entry.subtopic=String(x.subtopic||meta.subtopic||'');entry.questionType=String(x.questionType||meta.questionType||'');entry.updatedAt=stamp;entry.lastAttemptId=attemptId;entry.reviewStatus=entry.reviewStatus||'unreviewed';store.entries[key]=entry;
+ var keys=Object.keys(store.entries);if(keys.length>2000){keys.sort(function(a,b){return(Number(store.entries[a].updatedAt)||0)-(Number(store.entries[b].updatedAt)||0)});keys.slice(0,keys.length-2000).forEach(function(k){delete store.entries[k]})}
+ var ok=gaWriteMistakeStore(store);try{window.dispatchEvent(new CustomEvent('cl:mistake-saved',{detail:{quizId:id,questionId:qid,saved:ok}}))}catch(e){}return ok}
+function gaSaveMistakes(id,items,level){if(!Array.isArray(items))return;items.forEach(function(x){gaSaveMistakeRecord(id,x,level)})}
+function gaMarkMistakeReviewed(id,qid){var store=gaReadMistakeStore(),key=String(id)+'|'+String(qid),x=store.entries[key];if(!x)return false;x.reviewStatus='reviewed';x.reviewedAt=Date.now();x.updatedAt=Date.now();return gaWriteMistakeStore(store)}
+function gaClearStoredMistakes(id){var store=gaReadMistakeStore();Object.keys(store.entries||{}).forEach(function(k){if(!id||store.entries[k].quizId===id)delete store.entries[k]});gaWriteMistakeStore(store)}
+function gaNewAttemptId(){try{if(window.crypto&&crypto.randomUUID)return crypto.randomUUID()}catch(e){}return'att-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10)}
+function gaIsQuizGame(g){return !!g&&(g.chapterQuiz===true||['blitz','tf','scramble','balance','oddOne','stepOrder','elementSprint','trendDuel','flame'].indexOf(g.type)>=0);}
+function gaGameMode(g){return g&&g.type==='simExplorer'?'simulation':gaIsQuizGame(g)?'quiz':'games'}
+var gaChapterQuizCache=null;
+var gaHscEditorialBlueprintQueueV95=[];
+var gaHscQuestionBankOverrides=window.CL_HSC_QUESTION_BANK_OVERRIDES||Object.create(null);
+function gaChapterRules(){return [
+ {id:'phy1-01',r:/ভৌত জগতের প্রকৃতি|পদার্থবিজ্ঞানের পরিসর|বিস্ময়কর অবদান|পদার্থবিজ্ঞানের ধারণা|স্থান, সময় ও ভর|মৌলিক ও লব্ধ একক|পরিমাপের মূলনীতি|পর্যবেক্ষণ ও পরীক্ষণ|পদার্থবিজ্ঞানে অবদান|বিজ্ঞানীদের অবদান|আর্কিমিডিসের অবদান|গ্যালিলিওর অবদান|নিউটনের অবদান|ফ্যারাডের অবদান|রাদারফোর্ডের অবদান|আইনস্টাইনের অবদান|প্ল্যাঙ্কের অবদান|পরিমাপে ত্রুটি|যান্ত্রিক ত্রুটি|পর্যবেক্ষণমূলক ত্রুটি|এলোমেলো ত্রুটি|পুনরাবৃত্তিক পরিমাপ|শুদ্ধতর মান|স্ফেরোমিটার|দোলন পদ্ধতিতে ভর নির্ণয়|significant figures|least count|measurement error/i},
+ {id:'phy1-02',r:/ভেক্টর|vector|scalar|লব্ধি|উপাংশ|দিকসহ|resultant/i},
+ {id:'phy1-03',r:/গতিবিদ্যা|বেগ|দ্রুতি|ত্বরণ|সরণ|velocity|speed|acceleration|displacement|projectile|প্রক্ষেপ|motion|trajectory|পাল্লা/i},
+ {id:'phy1-04',r:/নিউটন|বল|force|mass|ভর|জড়তা|ভরবেগ|momentum|ঘর্ষণ|friction|টর্ক|ঘাত|impulse/i},
+ {id:'phy1-05',r:/কাজ|শক্তি|ক্ষমতা|work|energy|power|kinetic|potential|দক্ষতা/i},
+ {id:'phy1-06',r:/মহাকর্ষ|অভিকর্ষ|gravitation|gravity|orbital|orbit|কক্ষপথ|কক্ষীয়/i},
+ {id:'phy1-07',r:/পদার্থের গাঠনিক|স্থিতিস্থাপক|ইয়ং-এর গুণাঙ্ক|ইয়ং গুণাঙ্ক|পীড়ন|বিকৃতি|তরল|চাপ|ঘনত্ব|সান্দ্রতা|পৃষ্ঠটান|buoyancy|bernoulli|elasticity|thermal expansion|viscosity|pressure|density/i},
+ {id:'phy1-08',r:/পর্যাবৃত্ত|দোল|কম্পন|pendulum|oscillation|পর্যায়কাল|দোলনকাল/i},
+ {id:'phy1-09',r:/তরঙ্গ|wave|শব্দ|sound|doppler|wavelength|waveform|তরঙ্গদৈর্ঘ্য/i},
+ {id:'phy1-10',r:/গ্যাস|gas|boyle|charles|ideal gas|kinetic theory|pv\s*=|আদর্শ গ্যাস/i},
+ {id:'phy2-01',r:/তাপগতিবিদ্যা|thermodynamic|heat|তাপ|এনট্রপি|entropy|calorimetry|specific heat/i},
+ {id:'phy2-02',r:/তড়িৎ|তড়িৎ|বিদ্যুৎ|আধান|charge|coulomb|electric field|capacitor|capacitance|বিভব/i},
+ {id:'phy2-03',r:/ওহম|ohm|current|প্রবাহ|রোধ|resistance|voltage|ভোল্টেজ|circuit|তড়িৎ প্রবাহ/i},
+ {id:'phy2-04',r:/চৌম্বক|magnetic|magnetism|magnet|lorentz/i},
+ {id:'phy2-05',r:/আবেশ|induction|ফ্যারাডে|faraday|লেন্জ|lenz|পরিবর্তী প্রবাহ|alternating current|\bac\b/i},
+ {id:'phy2-06',r:/জ্যামিতিক আলোক|লেন্স|lens|দর্পণ|mirror|প্রতিফলন|প্রতিসরণ|refraction|ray optics|focal/i},
+ {id:'phy2-07',r:/ভৌত আলোক|interference|diffraction|polarization|young|double.?slit|fringe/i},
+ {id:'phy2-08',r:/আধুনিক পদার্থ|photoelectric|photon|quantum|de broglie|relativity|ফোটন|কোয়ান্টাম/i},
+ {id:'phy2-09',r:/পরমাণু|নিউক্লীয়|nuclear|radioactive|half.?life|rutherford|bohr/i},
+ {id:'phy2-10',r:/সেমিকন্ডাক্টর|semiconductor|diode|transistor|logic gate|and gate|বুলিয়ান|boolean/i},
+ {id:'phy2-11',r:/জ্যোতির্বিজ্ঞান|astronomy|star|galaxy|আলোকবর্ষ|cosmic|solar system|planet/i},
+ {id:'chem1-01',r:/পরীক্ষাগার|নিরাপদ|ব্যুরেট|পিপেট|laboratory|\blab\b|apparatus|safety|least count|vernier/i},
+ {id:'chem1-02',r:/আয়ন|আয়ন|ion|শিখা|flame|গুণগত|cation|anion|qualitative|precipitate|ক্যাটায়ন|অ্যানায়ন/i},
+ {id:'chem1-03',r:/পর্যায়বৃত্ত|periodic|electron configuration|ইলেকট্রন বিন্যাস|মৌল|element|atomic number|পারমাণবিক সংখ্যা|electronegativity|ionization energy|বন্ধন|bond|যোজ্যতা/i},
+ {id:'chem1-04',r:/রাসায়নিক|রাসায়নিক|chemical|reaction|বিক্রিয়া|বিক্রিয়া|enthalpy|এনথালপি|সাম্য|equilibrium|balance|অ্যাসিড|ক্ষার|acid|base|তাপোৎপাদী|অনুঘটক/i},
+ {id:'chem1-05',r:/কর্মমুখী|applied|fertilizer|সার|urea|polymer|industry|শিল্প|food|খাদ্য/i},
+ {id:'chem2-01',r:/পরিবেশ|environment|pollution|দূষণ|acid rain|greenhouse|গ্রিনহাউস|ozone/i},
+ {id:'chem2-02',r:/জৈব|organic|hydrocarbon|alkane|alkene|alkyne|ইথিন|ইথানল|কার্যকরী মূলক|functional group|ester|alcohol/i},
+ {id:'chem2-03',r:/মোল|\bmol\b|mole|molarity|মোলার|stoichiometry|আভোগাড্রো|avogadro|concentration|পরিমাণগত|molar/i},
+ {id:'chem2-04',r:/electrochem|তড়িৎ রাসায়নিক|তড়িৎ রাসায়নিক|গ্যালভানিক|galvanic|electrolysis|জারণ|oxidation|reduction|electrode/i},
+ {id:'chem2-05',r:/অর্থনৈতিক|industrial|পলিমার|polymer|কাঁচ|সিমেন্ট|applied chemistry|ব্যবহারিক/i},
+ {id:'math1-01',r:/matrix|ম্যাট্রিক্স|determinant|নির্ণায়ক|নির্ণায়ক/i},
+ {id:'math1-02',r:/vector|ভেক্টর/i},
+ {id:'math1-03',r:/straight line|সরলরেখা|slope|ঢাল|intercept|অক্ষছেদ|সমান্তরাল রেখা/i},
+ {id:'math1-04',r:/circle|বৃত্ত|ব্যাসার্ধ|tangent|স্পর্শক/i},
+ {id:'math1-05',r:/permutation|combination|বিন্যাস|সমাবেশ|factorial|npr|ncr/i},
+ {id:'math1-07',r:/associated angle|compound angle|যোগজ কোণ|সংযুক্ত কোণ|sin\s*\(\s*90|cos\s*\(\s*90/i},
+ {id:'math1-06',r:/trigonometric|ত্রিকোণমিতিক|\bsin\b|\bcos\b|\btan\b|sine|cosine/i},
+ {id:'math1-08',r:/function|ফাংশন|graph|লেখচিত্র|domain|range/i},
+ {id:'math1-09',r:/differentiation|derivative|অন্তরীকরণ|অন্তরজ|dy\s*\/\s*dx|limit|সীমামান/i},
+ {id:'math1-10',r:/integration|integral|যোগজীকরণ|সমাকলন|∫/i},
+ {id:'math2-01',r:/inequality|অসমতা|অসমীকরণ|greater than|less than/i},
+ {id:'math2-02',r:/complex number|জটিল সংখ্যা|আর্গান্ড|কাল্পনিক|অনুবন্ধী|\bi\s*\^?²/i},
+ {id:'math2-03',r:/polynomial|বহুপদী|উৎপাদক|quadratic equation|দ্বিঘাত/i},
+ {id:'math2-04',r:/binomial|দ্বিপদী|বিস্তৃতি|প্যাসকেল|expansion/i},
+ {id:'math2-05',r:/conic|কনিক|পরাবৃত্ত|উপবৃত্ত|অধিবৃত্ত|ellipse|parabola|hyperbola/i},
+ {id:'math2-06',r:/inverse trigonometric|বিপরীত ত্রিকোণমিতিক|ত্রিকোণমিতিক সমীকরণ|principal angle/i},
+ {id:'math2-07',r:/statics|স্থিতিবিদ্যা|সাম্যাবস্থা|equilibrium|resultant force|লামির/i},
+ {id:'math2-08',r:/particle motion|কণা গতি|আপেক্ষিক বেগ|uniform velocity|ধ্রুব বেগ|উল্লম্ব গতি/i},
+ {id:'math2-09',r:/linear programming|যোগাশ্রয়ী প্রোগ্রাম|রৈখিক প্রোগ্রামিং|feasible region/i},
+ {id:'math2-10',r:/probability|সম্ভাবনা|সম্ভাব্যতা|random|dice|মুদ্রা/i}
+]}
+function gaGuessChapter(text,subjectHint){var s=String(text||'').toLowerCase(),hint=String(subjectHint||'').toLowerCase();var groups={physics:/physics|phy|পদার্থ/,chemistry:/chem|রসায়ন|রসায়ন/,math:/math|গণিত/};var wanted=hint==='physics'?'physics':hint==='chemistry'?'chemistry':hint==='math'?'math':'';var rules=gaChapterRules();for(var i=0;i<rules.length;i++){var id=rules[i].id,sub=id.indexOf('phy')===0?'physics':id.indexOf('chem')===0?'chemistry':'math';if(wanted&&sub!==wanted)continue;if(rules[i].r.test(s))return id}return''}
+function gaLegacyChapterId(c){if(!c)return'';var id=String(c.id||'').toLowerCase(),title=String(c.chapterTitle||c.chapter||'').toLowerCase(),t=String(c.t||c.title||'').toLowerCase(),probe=id+' '+title+' '+t;if(c.s==='chem'&&/qualitative chemistry/.test(title))return'chem1-02';if(c.s==='phy'&&id==='dynamics')return'phy1-04';if(c.s==='phy'&&/periodic motion|oscillation|দোলন|পর্যাবৃত্ত/.test(probe))return'phy1-08';if(c.s==='phy'&&/ideal gas|kinetic theory|আদর্শ গ্যাস|গ্যাসের গতিতত্ত্ব/.test(probe))return'phy1-10';var guessed=gaGuessChapter(probe,c.s==='phy'?'physics':c.s==='chem'?'chemistry':c.s==='math'?'math':'');return guessed}
+function gaMakeMCQ(question,options,answer,explain,tier,topic){var q=String(question||'').trim(),opts=Array.isArray(options)?options.map(function(x){return String(x==null?'':x).trim()}).filter(Boolean):[];if(!q||opts.length<2)return null;var a=Number(answer);if(!isFinite(a)||a<0||a>=opts.length)return null;var correct=opts[a],unique=[],correctIndex=-1;opts.forEach(function(x){if(unique.indexOf(x)<0){unique.push(x);if(x===correct)correctIndex=unique.length-1}});if(unique.length<2||correctIndex<0)return null;if(unique.length>4){var reduced=unique.slice(0,4);if(reduced.indexOf(correct)<0)reduced[3]=correct;unique=reduced;correctIndex=unique.indexOf(correct)}return{tier:Math.max(1,Math.min(4,Number(tier)||1)),q:q,o:unique,a:correctIndex,e:String(explain||'').trim(),topic:String(topic||'').trim()}}
+function gaFormulaAtoms(formula){var s=String(formula||'').replace(/[₀-₉]/g,function(x){return'₀₁₂₃₄₅₆₇₈₉'.indexOf(x)}),i=0;function number(){var z='';while(i<s.length&&/[0-9]/.test(s.charAt(i)))z+=s.charAt(i++);return z?Number(z):1}function group(){var out={};while(i<s.length){var ch=s.charAt(i);if(ch==='('){i++;var inside=group();if(s.charAt(i)===')')i++;var m=number();Object.keys(inside).forEach(function(k){out[k]=(out[k]||0)+inside[k]*m})}else if(ch===')'){return out}else if(/[A-Z]/.test(ch)){var el=ch;i++;while(i<s.length&&/[a-z]/.test(s.charAt(i)))el+=s.charAt(i++);var n=number();out[el]=(out[el]||0)+n}else if(/[0-9]/.test(ch)){i++}else{i++}}return out}return group()}
+function gaBalanceEquation(line){var parts=String(line||'').replace(/->|=>|→|⟶|=/,'→').split('→');if(parts.length!==2)return null;function side(s){return s.split('+').map(function(x){return x.trim().replace(/^\d+\s*/,'')}).filter(Boolean)}var L=side(parts[0]),R=side(parts[1]);if(!L.length||!R.length||L.length+R.length>6)return null;var formulas=L.concat(R),atoms=formulas.map(gaFormulaAtoms),elements={};atoms.forEach(function(a){Object.keys(a).forEach(function(k){elements[k]=1})});var keys=Object.keys(elements);if(!keys.length)return null;var best=null,bestSum=1e9,vec=new Array(formulas.length);function test(){var left={},right={};for(var j=0;j<L.length;j++)Object.keys(atoms[j]).forEach(function(k){left[k]=(left[k]||0)+atoms[j][k]*vec[j]});for(var j=L.length;j<formulas.length;j++)Object.keys(atoms[j]).forEach(function(k){right[k]=(right[k]||0)+atoms[j][k]*vec[j]});for(var k=0;k<keys.length;k++)if((left[keys[k]]||0)!==(right[keys[k]]||0))return;var gcd=function(a,b){return b?gcd(b,a%b):a};var g=vec.reduce(gcd,0);if(g!==1)return;var sum=vec.reduce(function(a,b){return a+b},0);if(sum<bestSum){bestSum=sum;best=vec.slice()}}function walk(n,sum){if(sum>=bestSum)return;if(n===vec.length){test();return}for(var x=1;x<=8;x++){vec[n]=x;walk(n+1,sum+x)}}walk(0,0);if(!best)return null;function format(v){var left=L.map(function(f,i){return(v[i]===1?'':v[i]+' ')+f}).join(' + '),right=R.map(function(f,i){var n=v[L.length+i];return(n===1?'':n+' ')+f}).join(' + ');return left+' → '+right}var variants=[best.slice()];for(var i=0;i<best.length&&variants.length<4;i++){var a=best.slice();a[i]=a[i]===1?2:a[i]-1;variants.push(a)}var twice=best.map(function(x){return x*2});if(variants.length<4)variants.push(twice);var strings=[],correct=format(best);strings.push(correct);variants.slice(1).forEach(function(v){var x=format(v);if(strings.indexOf(x)<0)strings.push(x)});for(var j=1;strings.length<4&&j<4;j++){var a=best.slice();a[(j-1)%a.length]+=j+1;var x=format(a);if(strings.indexOf(x)<0)strings.push(x)}return{correct:correct,options:strings,answer:0,explain:'সুষম সমীকরণ: '+correct+'। উভয় পাশে প্রতিটি মৌলের পরমাণু সংখ্যা সমান এবং সহগগুলো ক্ষুদ্রতম পূর্ণসংখ্যায় লেখা হয়েছে।'}}
+var gaTrendQuestions=[
+ {q:'একই পর্যায়ে Na ও Cl-এর মধ্যে কার পারমাণবিক আকার বড়?',o:['Na','Cl','সমান','তথ্য যথেষ্ট নয়'],a:0,e:'একই পর্যায়ে সাধারণত বাম থেকে ডানে কার্যকর নিউক্লিয়ার চার্জ বাড়ে, তাই পারমাণবিক আকার কমে।'},
+ {q:'একই গ্রুপে Li ও K-এর মধ্যে কার পারমাণবিক আকার বড়?',o:['Li','K','সমান','দুটিই শূন্য'],a:1,e:'গ্রুপে নিচে নামলে নতুন শক্তিস্তর যুক্ত হয় এবং পারমাণবিক আকার বাড়ে।'},
+ {q:'Be ও B-এর মধ্যে কার প্রথম আয়নীকরণ শক্তি বেশি?',o:['Be','B','সমান','কোনোটির নয়'],a:0,e:'Be-এর 2s উপস্তর পূর্ণ; B থেকে 2p ইলেকট্রন সরানো তুলনামূলক সহজ।'},
+ {q:'N ও O-এর মধ্যে কার প্রথম আয়নীকরণ শক্তি বেশি?',o:['N','O','সমান','সবসময় O'],a:0,e:'N-এর অর্ধপূর্ণ 2p³ বিন্যাস স্থিতিশীল; O-তে জোড়া ইলেকট্রনের বিকর্ষণ থাকে।'},
+ {q:'একই পর্যায়ে সাধারণত ধাতব ধর্ম কোন দিকে বাড়ে?',o:['ডান দিকে','বাম দিকে','শুধু মাঝখানে','পরিবর্তন হয় না'],a:1,e:'পর্যায়ে বামদিকে ইলেকট্রন ত্যাগ করা তুলনামূলক সহজ, তাই ধাতব ধর্ম সাধারণত বেশি।'},
+ {q:'একই গ্রুপে সাধারণত তড়িৎঋণাত্মকতা নিচে নামলে কী হয়?',o:['বাড়ে','কমে','সবসময় সমান','শূন্য হয়'],a:1,e:'পরমাণুর আকার ও শিল্ডিং বাড়ায় বন্ধন-ইলেকট্রনের ওপর আকর্ষণ সাধারণত কমে।'},
+ {q:'গলনাঙ্কের জন্য কোন বক্তব্যটি ঠিক?',o:['সব মৌলে ডানদিকে বাড়ে','সব মৌলে নিচে বাড়ে','বন্ধন ও গঠনের ওপর নির্ভর করে','সব মৌলে সমান'],a:2,e:'গলনাঙ্কের একটিমাত্র সর্বজনীন প্রবণতা নেই; গঠন ও বন্ধনের ধরন গুরুত্বপূর্ণ।'},
+ {q:'একটি পরমাণু ইলেকট্রন হারালে কী তৈরি হয়?',o:['ধনায়ন','ঋণায়ন','নিউট্রন','সমস্থানিক'],a:0,e:'ইলেকট্রন হারালে প্রোটনের সংখ্যা ইলেকট্রনের চেয়ে বেশি হয়, ফলে ধনায়ন তৈরি হয়।'}
+];
+function gaElementQuestions(){var items=[['H','Hydrogen',1],['He','Helium',2],['Li','Lithium',3],['Be','Beryllium',4],['B','Boron',5],['C','Carbon',6],['N','Nitrogen',7],['O','Oxygen',8],['F','Fluorine',9],['Ne','Neon',10],['Na','Sodium',11],['Mg','Magnesium',12],['Al','Aluminium',13],['Si','Silicon',14],['P','Phosphorus',15],['S','Sulfur',16],['Cl','Chlorine',17],['Ar','Argon',18],['K','Potassium',19],['Ca','Calcium',20]],out=[];items.forEach(function(x,i){var d=[items[(i+4)%items.length],items[(i+9)%items.length],items[(i+13)%items.length]],o=[x[0]+' — '+x[1]].concat(d.map(function(y){return y[0]+' — '+y[1]}));out.push(gaMakeMCQ('পারমাণবিক সংখ্যা '+x[2]+' কোন মৌলের?',o,0,x[0]+' ('+x[1]+')-এর পারমাণবিক সংখ্যা '+x[2]+'.',i<8?1:2,'মৌলের পরিচয়'))});return out}
+function gaSourceQuestionRows(g){var d=g.data||{},rows=[];function add(q,opts,a,e,t,topic,sourceRow){var x=gaMakeMCQ(q,opts,a,e,t,topic||g.t);if(x){var owner=sourceRow&&typeof sourceRow==='object'?sourceRow:{},meta=owner.meta||{};rows.push({q:x,text:[q,e,opts.join(' ')].join(' '),tier:x.tier,chapterId:String(owner.chapterId||owner.chapter_id||meta.chapterId||owner.syllabusChapterId||'')})}}
+ if(g.type==='blitz'){(d.q||[]).forEach(function(x){if(x)add(x.q,x.o,x.a,x.e,x.tier,x.topic||g.t,x)})}
+ else if(g.type==='tf'){(d.items||[]).forEach(function(x){if(x&&x.s){var yes=x.t===true||String(x.t).toLowerCase()==='true'||String(x.t)==='1';add('নিচের বক্তব্যটি সঠিক কি? '+x.s,['সত্য','মিথ্যা'],yes?0:1,x.e||'বক্তব্যটির বৈজ্ঞানিক নিয়ম ও সংজ্ঞা মিলিয়ে দেখুন।',x.tier,x.topic||g.t,x)}})}
+ else if(g.type==='oddOne'){(d.sets||[]).forEach(function(x){if(x&&Array.isArray(x.i))add(x.q||'নিচের কোনটি অন্যগুলোর থেকে আলাদা?',x.i,+x.odd,x.why||'বিকল্পগুলোর বৈশিষ্ট্য তুলনা করে ব্যতিক্রমটি শনাক্ত করুন।',x.tier,x.topic||g.t,x)})}
+ else if(g.type==='stepOrder'){(d.puzzles||[]).forEach(function(x){if(!x||!Array.isArray(x.steps)||x.steps.length<3)return;var seq=x.steps.slice(),wrong=[seq.slice().reverse(),seq.slice()];if(seq.length>2){var swap=seq.slice();var tmp=swap[0];swap[0]=swap[1];swap[1]=tmp;wrong.push(swap);wrong.push(seq.slice(1).concat(seq[0]))}var correct=seq.join(' → '),opts=[correct];wrong.forEach(function(a){var v=a.join(' → ');if(opts.indexOf(v)<0&&opts.length<4)opts.push(v)});while(opts.length<4)opts.push('সঠিক ধাপগুলোর ক্রম নয় · বিকল্প '+opts.length);add(x.t||'ধাপগুলোর সঠিক ক্রম কোনটি?',opts,0,x.why||'প্রতিটি ধাপের কারণ ও পূর্বশর্ত বিবেচনা করে সঠিক ক্রমটি বেছে নিন।',x.tier,x.topic||g.t,x)})}
+ else if(g.type==='scramble'){var words=d.words||[];words.forEach(function(x,i){if(!x||!x.w)return;var correct=String(x.w).trim(),pool=words.filter(function(y){return y&&y.w&&String(y.w).trim()!==correct}).map(function(y){return String(y.w).trim()});var opts=[correct];for(var j=0;j<pool.length&&opts.length<4;j++){var cand=pool[(i*3+j*5)%pool.length];if(opts.indexOf(cand)<0)opts.push(cand)}if(opts.length>=2)add('ইঙ্গিত: '+(x.h||'সঠিক পরিভাষাটি শনাক্ত করুন')+' — কোন শব্দটি সঠিক? ',opts,0,'ইঙ্গিতের সংজ্ঞা ও শব্দের বানান মিলিয়ে সঠিক পরিভাষাটি শনাক্ত করুন।',x.tier,'শব্দভান্ডার',x)})}
+ else if(g.type==='balance'){var eqs=d.eqs||[];eqs.forEach(function(line){var bal=gaBalanceEquation(line);if(bal)add('নিচের রাসায়নিক সমীকরণটি সুষম করতে কোন সমীকরণটি সঠিক?\n'+line,bal.options,bal.answer,bal.explain,2,'রাসায়নিক সমীকরণ')})}
+ else if(g.type==='flame'){var items=d.items||[];items.forEach(function(x,i){if(!x||!x.n||!x.l)return;var opts=[x.n];for(var j=1;j<items.length&&opts.length<4;j++){var cand=items[(i+j)%items.length];if(opts.indexOf(cand.n)<0)opts.push(cand.n)}add('“'+x.l+'” শিখার রং কোন আয়ন দেয়?',opts,0,x.n+' এই বৈশিষ্ট্যপূর্ণ শিখার রং দেয়।',2,'শিখা পরীক্ষা')})}
+ return rows}
+function gaGuessQuestionChapter(text,subjectHint){
+ var hint=String(subjectHint||'').toLowerCase(),value=String(text||'').toLowerCase(),rules=gaChapterRules(),byId={};rules.forEach(function(x){byId[x.id]=x.r});
+ if(hint==='physics'){
+  /* Resolve second-paper concepts first so a shared word such as energy, force or wave
+     cannot pull an electricity/optics/nuclear question into a first-paper chapter. */
+  if(/হাবলের সূত্র|গ্যালাক্সি|আলোকবর্ষ|মহাবিশ্বের প্রসারণ|রেডিও টেলিস্কোপ|জ্যোতির্বিজ্ঞান|astronomy/.test(value))return'phy2-11';
+  if(/ফটোতড়িৎ|ফটোইলেকট্রন|ফোটন|ডি ব্রগলি|দে ব্রগলি|কম্পটন|অনিশ্চয়তা নীতি|আপেক্ষিকতা|লরেন্টজ|মাইকেলসন|আধুনিক পদার্থ|প্ল্যাঙ্কের কৃষ্ণবস্তু|এক্স-রে/.test(value))return'phy2-08';
+  if(/সমবর্তন|ব্যতিচার|অপবর্তন|দ্বি-চিড়|দ্বিচিড়|হাইগেনস|তরঙ্গমুখ|তাড়িতচৌম্বকীয় বর্ণালি|তাড়িতচৌম্বকীয় তরঙ্গ/.test(value))return'phy2-07';
+  if(/জ্যামিতিক আলোক|লেন্স|দর্পণ|প্রিজম|প্রতিসরণাঙ্ক|প্রতিফলনের সূত্র|প্রতিসরণের সূত্র|মাইক্রোস্কোপ|টেলিস্কোপ|ডায়োপ্টার|ফোকাস দূরত্ব|স্নেলের সূত্র/.test(value))return'phy2-06';
+  if(/পরিবর্তী প্রবাহ|রোধী ac|(?:^|[^a-z])ac(?:$|[^a-z])|আবিষ্ট তড়িচ্চালক|তাড়িতচৌম্বকীয় আবেশ|ফ্যারাডের সূত্র|লেন্জের সূত্র|চৌম্বক ফ্লাক্স|স্বকীয় আবেশ|পারস্পরিক আবেশ/i.test(value))return'phy2-05';
+  if(/চৌম্বক|চুম্বক|magnetic|ওয়েরস্টেড|বায়ো-স্যাভার্ট|অ্যাম্পিয়ারের সূত্র|চৌম্বক বল/.test(value))return'phy2-04';
+  if(/সেমিকন্ডাক্টর|অর্ধপরিবাহী|ডায়োড|ডায়োড|ট্রানজিস্টর|রেক্টিফায়ার|রেক্টিফায়ার|লজিক গেট|বাইনারি অপারেশন/.test(value))return'phy2-10';
+  if(/নিউক্লিয়|নিউক্লীয়|তেজস্ক্রিয়|তেজস্ক্রিয়|অর্ধজীবন|রাদারফোর্ডের পরমাণু|বোরের পরমাণু|ভরত্রুটি|বন্ধন শক্তি|ফিশন|ফিউশন/.test(value))return'phy2-09';
+  if(/স্থির তড়িৎ|স্থির তড়িৎ|কুলম্ব|তড়িৎ ক্ষেত্র|তড়িৎ ক্ষেত্র|তড়িৎ বিভব|তড়িৎ বিভব|তড়িৎ দ্বিমেরু|ধারকত্ব|গাউসের সূত্র|আধানের কোয়ান্টায়ন|আধানের কোয়ান্টায়ন/.test(value))return'phy2-02';
+  if(/চল তড়িৎ|চল তড়িৎ|ওহমের সূত্র|কার্শফ|কার্শহফ|রোধের ওপর তাপমাত্রা|জুলের তাপীয়|জুলের তাপীয়|অভ্যন্তরীণ রোধ|পটেনশিওমিটার|মিটার ব্রিজ|শান্ট/.test(value))return'phy2-03';
+  if(/তাপগতিবিদ্যা|এন্ট্রপি|এনট্রপি|কার্নো চক্র|তাপীয় ইঞ্জিন|তাপীয় ইঞ্জিন|রেফ্রিজারেটর|অভ্যন্তরীণ শক্তি|প্রত্যাবর্তী প্রক্রিয়া|অপ্রত্যাবর্তী প্রক্রিয়া/.test(value))return'phy2-01';
+  if(/আদর্শ গ্যাস|গ্যাসের অণু|গ্যাসের গতিতত্ত্ব|বয়েলের সূত্র|বয়েলের সূত্র|চার্লসের সূত্র|মূলগড় বর্গবেগ|মূলগড় বর্গবেগ|গড় মুক্তপথ|গড় মুক্তপথ|শিশিরাঙ্ক|আপেক্ষিক আর্দ্রতা|গ্যাসের মোলার/.test(value))return'phy1-10';
+  if(/si একক|এসআই একক|মাত্রা সমীকরণ|মাত্রার সূত্র|লঘিষ্ঠ গণনা|least count|পরিমাপের ত্রুটি|স্ফেরোমিটার|মৌলিক একক|লব্ধ একক|ভৌত জগৎ|ভৌত জগত|পদার্থবিজ্ঞানের পরিসর|পরিমাপের মূলনীতি/i.test(value))return'phy1-01';
+  if(/স্ফেরোমিটার|যান্ত্রিক ত্রুটি|পর্যবেক্ষণমূলক ত্রুটি|এলোমেলো ত্রুটি|শুদ্ধতর মান|মৌলিক একক|লব্ধ একক|পরিমাপের মূলনীতি|measurement error|least count|significant figures|পদার্থবিজ্ঞানের পরিসর|ভৌত জগত|আর্কিমিডিস|গ্যালিলিওর অবদান|নিউটনের অবদান|ফ্যারাডের অবদান|রাদারফোর্ডের অবদান|আইনস্টাইনের অবদান|প্ল্যাঙ্কের অবদান/.test(value))return'phy1-01';
+  if(/ভেক্টর|vector|স্কেলার গুণন|ভেক্টর গুণন|গ্রেডিয়েন্ট|ডাইভারজেন্স|কার্ল/.test(value))return'phy1-02';
+  if(/প্রক্ষেপক|প্রাসের গতি|বেগ-সময়|অবস্থান-সময়|সরণ|দ্রুতি|ত্বরণ|মন্দন|পড়ন্ত বস্তু|পতনশীল বস্তু|বৃত্তাকার গতি|কৌণিক বেগ|centripetal acceleration|projectile/.test(value))return'phy1-03';
+  if(/নিউটনের (প্রথম|দ্বিতীয়|তৃতীয়)|ক্রিয়া ও প্রতিক্রিয়া|ভরবেগ|momentum|টর্ক|জড়তার ভ্রামক|সংঘর্ষ|কেন্দ্রমুখী বল|কেন্দ্রবিমুখী বল|রাস্তার ব্যাংকিং|ঘূর্ণন বল|ঘর্ষণ সহগ|ঘর্ষণ বল/.test(value))return'phy1-04';
+  if(/কাজ-শক্তি|কাজের পরিমাণ|কাজের সূত্র|বল ও সরণের মধ্যবর্তী কোণ|গতিশক্তি|স্থিতিশক্তি|ক্ষমতা|কর্মদক্ষতা|কাজ-শক্তি উপপাদ্য|শক্তির নিত্যতা|সংরক্ষণশীল বল|অসংরক্ষণশীল বল|power|kinetic energy|potential energy/.test(value))return'phy1-05';
+  if(/মহাকর্ষ|অভিকর্ষ|মুক্তিবেগ|কেপলার|ওজনহীনতা|মহাকর্ষীয় বিভব|gravitational|escape velocity/.test(value))return'phy1-06';
+  if(/স্থিতিস্থাপক|ইয়ং-এর গুণাঙ্ক|ইয়ং গুণাঙ্ক|পীড়ন|বিকৃতি|সান্দ্রতা|পৃষ্ঠটান|কৈশিকতা|স্টোকস|প্রান্তিক বেগ|elasticity|viscosity|surface tension/.test(value))return'phy1-07';
+  if(/বিট কম্পাঙ্ক|বিটের কম্পাঙ্ক|বিট তীব্রতা|beat frequency/.test(value))return'phy1-09';
+  if(/পর্যাবৃত্ত|দোলন|সরল ছন্দিত|সরল দোলক|স্প্রিংয়ের দোলন|কম্পাঙ্ক|দশা|amplitude|oscillation|pendulum/.test(value))return'phy1-08';
+  if(/তরঙ্গ|শব্দ|বিট|অনুনাদ|মেলডি|হারমোনিক|wavelength|frequency|sound|wave/.test(value))return'phy1-09';
+  if(/আদর্শ গ্যাস|বয়েলের সূত্র|চার্লসের সূত্র|গ্যাসের গতিতত্ত্ব|মূলগড় বর্গবেগ|গড় মুক্তপথ|শিশিরাঙ্ক|আপেক্ষিক আর্দ্রতা|ideal gas|kinetic theory/.test(value))return'phy1-10';
+ }
+ var priorities={
+  physics:['phy2-10','phy2-11','phy2-09','phy2-08','phy2-07','phy2-06','phy2-05','phy2-04','phy2-03','phy2-02','phy2-01','phy1-10','phy1-09','phy1-08','phy1-07','phy1-06','phy1-05','phy1-04','phy1-03','phy1-02','phy1-01'],
+  chemistry:['chem2-05','chem2-04','chem2-03','chem2-02','chem2-01','chem1-05','chem1-04','chem1-03','chem1-02','chem1-01'],
+  math:['math2-10','math2-09','math2-08','math2-07','math2-06','math2-05','math2-04','math2-03','math2-02','math2-01','math1-10','math1-09','math1-08','math1-07','math1-06','math1-05','math1-04','math1-03','math1-02','math1-01']
+ },order=priorities[hint]||(hint==='mixed'?priorities.physics.concat(priorities.chemistry,priorities.math):[]);var value=String(text||'').toLowerCase();
+ for(var i=0;i<order.length;i++)if(byId[order[i]]&&byId[order[i]].test(value))return order[i];
+ return '';
+}
+function gaQuestionTargetId(g,row){
+ var keys=Array.isArray(g.chapterKeys)?g.chapterKeys:[],subject=g.subjectKey||'mixed',sourceQ=row&&row.q&&typeof row.q==='object'?row.q:{};
+ /* An explicitly assigned chapter is authoritative. Reject it when it conflicts with
+    this game's declared chapter set or subject rather than guessing a new destination. */
+ if(subject==='mixed'&&keys.length===0)return '';
+ var declared=String((row&&row.chapterId)||(row&&row.chapter_id)||sourceQ.chapterId||sourceQ.chapter_id||(sourceQ.meta&&sourceQ.meta.chapterId)||sourceQ.syllabusChapterId||'').trim();
+ if(declared){
+  if(keys.length&&keys.indexOf(declared)<0)return '';
+  var owner=gaGetChapters().filter(function(ch){return ch.id===declared})[0];
+  if(!owner)return '';
+  if(subject!=='mixed'&&owner.subjectKey&&owner.subjectKey!==subject)return '';
+  return declared;
+ }
+ /* A one-chapter game remains authoritative when the source row has no explicit ID. */
+ /* Classify from the stem only; distractors and explanations can mention other chapters. */
+ var core=sourceQ&&sourceQ.q?String(sourceQ.q):String(row&&row.text||''),guess=gaGuessQuestionChapter(core,subject);
+ if(keys.length===1)return guess&&guess!==keys[0]?'':keys[0];
+ if(keys.length>1){
+  if(g.id==='math-concept-scramble'){
+   var h=String(row&&row.text||core).toLowerCase();
+   if(/matrix|ম্যাট্রিক্স|determinant|নির্ণায়ক/.test(h))return'math1-01';
+   if(/vector|ভেক্টর/.test(h))return'math1-02';
+   if(/permutation|combination|বিন্যাস|সমাবেশ/.test(h))return'math1-05';
+   if(/complex|জটিল সংখ্যা/.test(h))return'math2-02';
+  }
+  return guess&&keys.indexOf(guess)>=0?guess:'';
+ }
+ return guess;
+}
+function gaBuildChapterQuizzes(){if(gaChapterQuizCache)return gaChapterQuizCache;var chapters=gaGetChapters(),banks={},seen={},seenTokens={};chapters.forEach(function(ch){banks[ch.id]=[];seen[ch.id]=Object.create(null);seenTokens[ch.id]=[]});
+ function clCleanQuizQuestion(raw){if(!raw||typeof raw!=='object')return raw;var q=Object.assign({},raw),stem=String(q.q||'');
+  var replacements=[
+   [/ইন্টার\s*অ্যাক্টিভ\s*ভেক্টর\s*পরীক্ষায়\s*x-উপাংশ\s*3\s*একক\s*এবং\s*y-উপাংশ\s*4\s*একক\s*সেট\s*করলে\s*লব্ধি\s*ভেক্টরের\s*মান\s*কত\s*দেখাবে\?/i,'পরস্পর লম্ব দুটি ভেক্টরের x-উপাংশ 3 একক এবং y-উপাংশ 4 একক। লব্ধি ভেক্টরের মান কত?'],
+   [/সিমুলেশনে\s*প্রাথমিক\s*বেগ\s*20\s*m\/s,?\s*নিক্ষেপণ\s*কোণ\s*30°?\s*এবং\s*g\s*=\s*10\s*m\/s²?\s*নির্ধারণ\s*করা\s*হলো।?/i,'একটি প্রক্ষেপক 20 m/s আদিবেগে 30° কোণে নিক্ষিপ্ত হলো। g=10 m/s² এবং বায়ুর বাধা উপেক্ষা করলে, একই উচ্চতায় পতনের ক্ষেত্রে পাল্লা কত?'],
+   [/তরঙ্গ\s*সিমুলেশনে\s*কম্পাঙ্ক\s*2\s*Hz\s*সেট\s*করা\s*হলে/i,'একটি তরঙ্গের কম্পাঙ্ক 2 Hz হলে'],
+   [/pH\s*স্কেল\s*সিমুলেশনে\s*একটি\s*জলীয়\s*দ্রবণের/i,'একটি জলীয় দ্রবণের'],
+   [/সরলরেখার\s*সিমুলেশনে/i,'সরলরেখার সমীকরণে'],
+   [/দ্বিঘাত\s*গ্রাফ\s*সিমুলেশনে/i,'দ্বিঘাত ফাংশনে'],
+   [/Circuit\s*Explorer-এ\s*V=12\s*V\s*ও\s*R=4\s*Ω\s*সেট\s*করলে/i,'V=12 V ও R=4 Ω হলে'],
+   [/Concentration\s*Equilibrium\s*Explorer-এ\s*এই\s*মান\s*বসালে/i,'এই সাম্যঘনমাত্রাগুলো থেকে'],
+   [/Tangent\s*Explorer-এ\s*a=3,\s*b=−2\s*এবং\s*x₀=2\s*সেট\s*করে\s*f′\(x\)=2ax\+b\s*সূত্রটি\s*যাচাই\s*করো\./i,'f′(x)=2ax+b সূত্র ব্যবহার করে'],
+   [/সিমুলেশনে\s*দুই\s*ভেক্টরের\s*উপাংশ\s*বদলালে[^।]*।?/i,'উপাংশ দুটি পরস্পর লম্ব হওয়ায় পিথাগোরাসের উপপাদ্য প্রয়োগ করা যায়।'],
+   [/সিমুলেশনে\s*[^।]*।?/i,'প্রদত্ত তথ্য থেকে প্রযোজ্য সূত্র প্রয়োগ করো।']
+  ];
+  replacements.forEach(function(pair){stem=stem.replace(pair[0],pair[1])});q.q=stem;
+  if(Array.isArray(q.o)&&q.o.length===2&&/^(সত্য|মিথ্যা)$/.test(String(q.o[0]).trim())&&/^(সত্য|মিথ্যা)$/.test(String(q.o[1]).trim()))q.questionType='trueFalse';
+  if(q.questionType==='simulation')q.questionType=/গ্রাফ|লেখচিত্র|বক্ররেখা|স্পর্শক/.test(stem)?'graph':(/কত|নির্ণয়|হিসাব|মান কত/.test(stem)?'mathematical':'conceptual');
+  delete q.simulationChallenge;delete q.simConfig;
+  q.media=Array.isArray(q.media)?q.media.filter(function(m){return m&&['image','diagram'].indexOf(String(m.type||'').toLowerCase())>=0}):[];
+  if(q.explanation&&Array.isArray(q.explanation.media))q.explanation.media=q.explanation.media.filter(function(m){return m&&m.type!=='simulation'});
+  return q;
+ }
+ var clTokCache=new Map();function clTokenSet(stem){var k=String(stem||''),c=clTokCache.get(k);if(c)return c;c=clTokenSetRaw(k);if(clTokCache.size>40000)clTokCache.clear();clTokCache.set(k,c);return c}
+ function clTokenSetRaw(stem){return Array.from(new Set(String(stem||'').toLowerCase().replace(/[০-৯]/g,function(c){return '০১২৩৪৫৬৭৮৯'.indexOf(c)}).replace(/[^\p{L}\p{N}]+/gu,' ').split(/\s+/).filter(function(t){return t.length>1})));}
+ function clSimilarity(a,b){var A=clTokenSet(a),B=clTokenSet(b);if(Math.min(A.length,B.length)<8)return 0;var set=Object.create(null),same=0;A.forEach(function(t){set[t]=1});B.forEach(function(t){if(set[t])same++});return same/(A.length+B.length-same)}
+ function clCanonicalStem(stem){return String(stem||'').toLowerCase().replace(/^[\s“”\"'‘’]*(?:নিচের|নিম্নের)\s+কোন\s+(?:বক্তব্যটি|উত্তরটি|বিকল্পটি)\s+সঠিক[?ঃ:]?\s*/,'').replace(/^[\s“”\"'‘’]*(?:কোন\s+বক্তব্যটি\s+সঠিক|সঠিক\s+বক্তব্যটি\s+কোনটি)[?ঃ:]?\s*/,'').replace(/\s+/g,' ').trim()}
+ function add(chid,q){if(!banks[chid]||!q)return;var declared=String(q.chapterId||q.chapter_id||(q.meta&&q.meta.chapterId)||'');if(declared&&declared!==chid)return;var owner=chapters.filter(function(ch){return ch.id===chid})[0],qSubject=String(q.subjectKey||'').toLowerCase();if(owner&&qSubject&&owner.subjectKey&&qSubject!==owner.subjectKey)return;q=clCleanQuizQuestion(q);var key=clCanonicalStem(q.q);if(!key||seen[chid][key])return;var prior=seenTokens[chid];for(var i=0;i<prior.length;i++){if(clSimilarity(key,prior[i])>=((q.expansionMetadata&&q.expansionMetadata.generatedFromEditorialBlueprint===true)?0.97:0.88))return;}seen[chid][key]=1;prior.push(key);banks[chid].push(q)}
+ gaAllGames().filter(gaIsQuizGame).forEach(function(g){if(g.chapterQuiz)return;var rows=gaSourceQuestionRows(g);rows.forEach(function(row){var id=gaQuestionTargetId(g,row);if(id)add(id,row.q)})});
+ (CHL||[]).forEach(function(c){var id=gaLegacyChapterId(c);if(!id||!banks[id])return;var owner=chapters.filter(function(ch){return ch.id===id})[0],subject=owner&&owner.subjectKey|| (c.s==='phy'?'physics':c.s==='chem'?'chemistry':c.s==='math'?'math':'mixed');(c.q||[]).forEach(function(q){var target=gaQuestionTargetId({id:'legacy-'+id,chapterKeys:[id],subjectKey:subject},{q:q,chapterId:q.chapterId||q.chapter_id||(q.meta&&q.meta.chapterId)||''});if(target!==id)return;var x=gaMakeMCQ(q.q,q.o,q.a,q.e,1,c.t||'Concept practice');if(x)add(id,x)})});
+ /* Built-in game banks that are generated by their engines rather than stored in CMS data. */
+ gaElementQuestions().forEach(function(q){add('chem1-03',q)});gaTrendQuestions.forEach(function(q){add('chem1-03',gaMakeMCQ(q.q,q.o,q.a,q.e,2,'পর্যায়বৃত্ত ধর্ম'))});
+ /* Replace the previously polluted Physics Ch. 1 pool with a hand-authored bank aligned to its 12 exact syllabus topics. */
+ if(Array.isArray(window.CL_PHY1_01_QUIZ_BANK_V79)&&window.CL_PHY1_01_QUIZ_BANK_V79.length>=50){banks['phy1-01']=[];seen['phy1-01']=Object.create(null);seenTokens['phy1-01']=[];window.CL_PHY1_01_QUIZ_BANK_V79.forEach(function(q){add('phy1-01',q)})}
+ /* v92: quality-first bank. Do not pad chapter banks with generated template questions. */
+ var source=window.CL_HSC_SYLLABUS_QUIZ_V79||{};
+ /* v92 quality-first policy: do not manufacture template questions to hit a quota.
+    Only retained native/curated items and individually authored drafts enter the learner bank. */
+ /* Add separately authored, concept-focused Qualitative Chemistry questions after the syllabus bank. */
+ if(Array.isArray(window.CL_QUAL_CHEMISTRY_DEEP_QUESTIONS_V82))window.CL_QUAL_CHEMISTRY_DEEP_QUESTIONS_V82.forEach(function(q){add('chem1-02',q)});
+ /* Replace the generic topic-title quiz for Physics 1st Paper, Chapter 2 with a curated HSC conceptual bank. */
+ if(Array.isArray(window.CL_PHY1_02_CONCEPT_BANK_V85)&&window.CL_PHY1_02_CONCEPT_BANK_V85.length>80){
+  banks['phy1-02']=[];
+  seen['phy1-02']=Object.create(null);
+  seenTokens['phy1-02']=[];
+  window.CL_PHY1_02_CONCEPT_BANK_V85.forEach(function(q){add('phy1-02',q)});
+  /* Keep the authored core, then add exact-topic supplements so all 13 syllabus
+     headings—including vector calculus and component methods—have tagged practice. */
+  /* Keep the curated vector bank as-is; no auto-generated topic-title padding. */
+ }
+ /* v87: question-linked simulation challenges. The controls initialise with the exact
+    values in each stem so learners can alter parameters and inspect the model. */
+ /* v92: question bank deliberately contains no interactive simulation challenges. */
+ /* v89: add individually written chapter supplements after the retained native/curated banks.
+    Every item remains editorially unapproved until a qualified reviewer signs it off. */
+ var authoredV89=window.CL_AUTHORED_HSC_QUESTIONS_V89&&Array.isArray(window.CL_AUTHORED_HSC_QUESTIONS_V89.questions)?window.CL_AUTHORED_HSC_QUESTIONS_V89.questions:[];
+ authoredV89.forEach(function(raw){if(!raw||!raw.q||!banks[raw.chapterId])return;var chMeta=source[raw.chapterId]||{},topics=Array.isArray(chMeta.topics)?chMeta.topics:[],topic=topics[Number(raw.topicIndex)]||'';var q=Object.assign({},raw,{id:raw.id,questionId:raw.questionId||raw.id,topic:topic,syllabusTopic:topic,authoredHscConcept:true,syllabusGenerated:false,contentOrigin:'individually-authored-supplement',qualityApproved:false,editorialReviewed:false,qualityStatus:'draft-unreviewed'});if(!q.explanation||typeof q.explanation!=='object')q.explanation={core:q.e||''};if(!Array.isArray(q.explanation.references))q.explanation.references=[];add(raw.chapterId,q);});
+ /* v95: independently authored supplements are real question drafts, not syllabus templates. */
+ var authoredV95=window.CL_AUTHORED_HSC_QUESTIONS_V95&&Array.isArray(window.CL_AUTHORED_HSC_QUESTIONS_V95.questions)?window.CL_AUTHORED_HSC_QUESTIONS_V95.questions:[];
+ authoredV95.forEach(function(raw){if(!raw||!raw.q||!banks[raw.chapterId])return;var chMeta=source[raw.chapterId]||{},topics=Array.isArray(chMeta.topics)?chMeta.topics:[],topic=topics[Number(raw.topicIndex)]||'';var q=Object.assign({},raw,{id:raw.id,questionId:raw.questionId||raw.id,topic:topic,subtopic:topic,syllabusTopic:topic,authoredHscConcept:true,syllabusGenerated:false,contentOrigin:'individually-authored-v95',qualityApproved:false,editorialReviewed:false,qualityStatus:'draft-unreviewed'});add(raw.chapterId,q);});
+ /* v97: independently authored follow-on batch; all additions remain draft-unreviewed. */
+ var authoredV97=window.CL_AUTHORED_HSC_QUESTIONS_V97&&Array.isArray(window.CL_AUTHORED_HSC_QUESTIONS_V97.questions)?window.CL_AUTHORED_HSC_QUESTIONS_V97.questions:[];
+ authoredV97.forEach(function(raw){if(!raw||!raw.q||!banks[raw.chapterId])return;var chMeta=source[raw.chapterId]||{},topics=Array.isArray(chMeta.topics)?chMeta.topics:[],topic=topics[Number(raw.topicIndex)]||'';var q=Object.assign({},raw,{id:raw.id,questionId:raw.questionId||raw.id,topic:topic,subtopic:topic,syllabusTopic:topic,authoredHscConcept:true,syllabusGenerated:false,contentOrigin:'individually-authored-v97',qualityApproved:false,editorialReviewed:false,qualityStatus:'draft-unreviewed'});add(raw.chapterId,q);});
+ /* v98: a second individually-authored, higher-order Qualitative Chemistry batch. */
+ var authoredV98=window.CL_AUTHORED_HSC_QUESTIONS_V98&&Array.isArray(window.CL_AUTHORED_HSC_QUESTIONS_V98.questions)?window.CL_AUTHORED_HSC_QUESTIONS_V98.questions:[];
+ authoredV98.forEach(function(raw){if(!raw||!raw.q||!banks[raw.chapterId])return;var chMeta=source[raw.chapterId]||{},topics=Array.isArray(chMeta.topics)?chMeta.topics:[],topic=topics[Number(raw.topicIndex)]||'';var q=Object.assign({},raw,{id:raw.id,questionId:raw.questionId||raw.id,topic:topic,subtopic:topic,syllabusTopic:topic,authoredHscConcept:true,syllabusGenerated:false,contentOrigin:'individually-authored-v98',qualityApproved:false,editorialReviewed:false,qualityStatus:'draft-unreviewed'});add(raw.chapterId,q);});
+ /* v99: 59 individually authored drafts across all 49 non-focus chapters; selected tier gaps are also filled. */
+ var authoredV99=window.CL_AUTHORED_HSC_QUESTIONS_V99&&Array.isArray(window.CL_AUTHORED_HSC_QUESTIONS_V99.questions)?window.CL_AUTHORED_HSC_QUESTIONS_V99.questions:[];
+ authoredV99.forEach(function(raw){if(!raw||!raw.q||!banks[raw.chapterId])return;var chMeta=source[raw.chapterId]||{},topics=Array.isArray(chMeta.topics)?chMeta.topics:[],topic=topics[Number(raw.topicIndex)]||'';var q=Object.assign({},raw,{id:raw.id,questionId:raw.questionId||raw.id,topic:topic,subtopic:topic,syllabusTopic:topic,authoredHscConcept:true,syllabusGenerated:false,contentOrigin:'individually-authored-v99-first-expansion-tranche',qualityApproved:false,editorialReviewed:false,qualityStatus:'draft-unreviewed'});add(raw.chapterId,q);});
+ /* v100: publish the 80/110-target syllabus expansion drafts into every chapter's main
+    learner quiz. Keep a duplicate Admin review copy for correction and approval workflow;
+    the public quiz copy remains clearly marked draft-unreviewed until specialist review. */
+ gaHscEditorialBlueprintQueueV95=[];
+ if(window.CL_HSC_CHAPTER_EXPANSION_V94){chapters.forEach(function(ch){
+  var additions=window.CL_HSC_CHAPTER_EXPANSION_V94.expandChapter(ch,banks[ch.id]||[],source[ch.id]||{});
+  additions.forEach(function(raw){
+   if(!raw)return;
+   var topic=String(raw.syllabusTopic||raw.subtopic||raw.topic||''),id=String(raw.id||raw.questionId||'');
+   var promoted=Object.assign({},raw,{id:id,questionId:String(raw.questionId||id),chapterId:ch.id,topic:topic,subtopic:topic,syllabusTopic:topic,
+    blueprintDraft:true,learnerVisible:true,authoredHscConcept:false,syllabusGenerated:false,
+    contentOrigin:'syllabus-mapped-expansion-draft-v100',qualityStatus:'draft-unreviewed',qualityApproved:false,
+    editorialReviewed:false,editorialApproved:false,mediaVerified:false,
+    editorialNote:'Learner-visible expansion draft; subject-specialist, exact-answer, distractor and syllabus review pending.'});
+   add(ch.id,promoted);
+   gaHscEditorialBlueprintQueueV95.push(Object.assign({},promoted,{blueprintDraft:true,learnerVisible:true,qualityStatus:'draft-unreviewed'}));
+  });
+ });}
+ /* Admin-published rewrites are applied after the blueprint queue is assembled. A
+    replacement can now target a queued blueprint ID; previously this block ran before
+    expansion and silently appended instead of replacing. */
+ Object.keys(gaHscQuestionBankOverrides||{}).forEach(function(chid){
+  if(!banks[chid])return;var rows=Array.isArray(gaHscQuestionBankOverrides[chid])?gaHscQuestionBankOverrides[chid]:[];
+  rows.forEach(function(raw){if(!raw||!raw.q)return;var id=String(raw.id||raw.questionId||('admin-'+chid+'-'+Math.random().toString(36).slice(2,9)));var q=Object.assign({},raw,{id:id,questionId:id,syllabusTopic:raw.topic||raw.syllabusTopic||'',authoredHscConcept:true,contentOrigin:'admin-authored',qualityApproved:raw.qualityApproved===true,editorialReviewed:raw.editorialReviewed===true,qualityStatus:raw.qualityStatus||'draft-unreviewed'});
+   var replace=String(raw.replaceId||'');var at=replace?banks[chid].findIndex(function(x){return String(x.questionId||x.id)===replace;}):-1;
+   var blueprintAt=replace?gaHscEditorialBlueprintQueueV95.findIndex(function(x){return x.chapterId===chid&&String(x.questionId||x.id)===replace;}):-1;
+   if(at>=0){banks[chid][at]=q;}else if(blueprintAt>=0){if(q.qualityApproved===true&&q.editorialReviewed===true&&q.qualityStatus==='reviewed-approved')add(chid,q);}else add(chid,q);
+  });
+ });
+ /* v86: decorate every chapter bank with a stable, reusable schema while keeping legacy keys intact. */
+ if(window.CL_QUIZ_ENRICHMENT_V86){chapters.forEach(function(ch){banks[ch.id]=window.CL_QUIZ_ENRICHMENT_V86.enrichBank(ch,banks[ch.id]||[],source[ch.id]||{});});}
+ /* Preserve question-specific v99 SVGs through the shared v86 enrichment pass. The
+    enrichment layer rebuilds chapter media from its reusable pool, so restore only the
+    explicitly authored v99 question-support assets by stable question ID. */
+ var v99MediaByQuestionId=Object.create(null);(window.CL_AUTHORED_HSC_QUESTIONS_V99&&window.CL_AUTHORED_HSC_QUESTIONS_V99.questions||[]).forEach(function(raw){if(raw&&raw.id&&Array.isArray(raw.media)&&raw.media.some(function(m){return m&&m.questionSupport===true;}))v99MediaByQuestionId[String(raw.id)]=raw.media;});
+ chapters.forEach(function(ch){(banks[ch.id]||[]).forEach(function(q){var id=String(q.questionId||q.id||'');if(v99MediaByQuestionId[id]){q.media=v99MediaByQuestionId[id];if(q.explanation&&Array.isArray(q.explanation.media)&&q.explanation.media.some(function(m){return v99MediaByQuestionId[id].some(function(v){return v.id===m.id;});}))q.explanation.media=[];}});});
+ /* v99 editorial pass: update weak/duplicated focus-chapter items in place, then retire
+    only the seven confirmed shallow copies. Retired IDs are archived in the v99 audit register. */
+ var authoredV99Editorial=window.CL_AUTHORED_HSC_QUESTIONS_V99||{};
+ (Array.isArray(authoredV99Editorial.rewrites)?authoredV99Editorial.rewrites:[]).forEach(function(raw){
+  if(!raw||!banks[raw.chapterId])return;var id=String(raw.questionId||raw.id||''),at=banks[raw.chapterId].findIndex(function(x){return String(x.questionId||x.id)===id;});
+  /* A stable-ID source can disappear when chapter isolation rejects an old untagged or
+     misrouted record. Keep its manual rewrite only when the rewritten stem independently
+     classifies to that same syllabus chapter. */
+  if(at<0){var ownerMeta=chapters.filter(function(ch){return ch.id===raw.chapterId})[0],verifiedChapter=gaGuessQuestionChapter(raw.q,ownerMeta&&ownerMeta.subjectKey||'');if(verifiedChapter===raw.chapterId){var orphan=Object.assign({},raw,{id:id,questionId:id,chapterId:raw.chapterId,authoredHscConcept:true,syllabusGenerated:false,contentOrigin:'editorially-rewritten-v99-draft',qualityStatus:'draft-unreviewed',qualityApproved:false,editorialReviewed:false,editorialApproved:false,mediaVerified:false});add(raw.chapterId,orphan);}return;}
+  var old=banks[raw.chapterId][at],topics=Array.isArray((source[raw.chapterId]||{}).topics)?source[raw.chapterId].topics:[],topic=topics[Number(raw.topicIndex)]||raw.topic||old.topic||'';
+  var next=Object.assign({},old,raw,{id:String(old.id||id),questionId:id,chapterId:raw.chapterId,topic:topic,subtopic:topic,syllabusTopic:topic,authoredHscConcept:true,syllabusGenerated:false,contentOrigin:'editorially-rewritten-v99-draft',qualityStatus:'draft-unreviewed',qualityApproved:false,editorialReviewed:false,editorialApproved:false,mediaVerified:false});
+  next.explanation=Object.assign({},old.explanation||{},raw.explanation||{});next.explanation.references=[];next.explanation.referenceStatus=raw.explanation&&raw.explanation.referenceStatus||'Pending exact-claim source check and subject-specialist review; no unverified external URL retained.';
+  next.learningResources=[];banks[raw.chapterId][at]=clCleanQuizQuestion(next);
+ });
+ var v99RetiredIds=Object.create(null);(Array.isArray(authoredV99Editorial.retirements)?authoredV99Editorial.retirements:[]).forEach(function(r){if(r&&r.chapterId&&r.questionId)v99RetiredIds[r.chapterId+'::'+r.questionId]=true;});
+ Object.keys(v99RetiredIds).forEach(function(key){var parts=key.split('::'),chid=parts[0],id=parts.slice(1).join('::');if(banks[chid])banks[chid]=banks[chid].filter(function(q){return String(q.questionId||q.id)!==id;});});
+ /* v100: remove broad generic question-panel sketches and build a separate concept map
+    inside every explanation. This also covers questions whose stems are text-only. */
+ if(window.CL_QUIZ_MEDIA_QUALITY_V100){chapters.forEach(function(ch){banks[ch.id]=window.CL_QUIZ_MEDIA_QUALITY_V100.applyBank(banks[ch.id]||[],ch.title);});}
+ var iconByChapter={
+ 'phy1-01':'🔬','phy1-02':'🧭','phy1-03':'🏃','phy1-04':'⚒️','phy1-05':'🔋','phy1-06':'🌍','phy1-07':'🧱','phy1-08':'⏱️','phy1-09':'🌊','phy1-10':'🫧',
+ 'phy2-01':'🌡️','phy2-02':'⚡','phy2-03':'🔌','phy2-04':'🧲','phy2-05':'🌀','phy2-06':'🔍','phy2-07':'🌈','phy2-08':'💡','phy2-09':'⚛️','phy2-10':'💻','phy2-11':'🔭',
+ 'chem1-01':'🥽','chem1-02':'🧪','chem1-03':'🧬','chem1-04':'⚗️','chem1-05':'🏭','chem2-01':'🌿','chem2-02':'🧴','chem2-03':'🧫','chem2-04':'🧯','chem2-05':'🛢️',
+ 'math1-01':'🔢','math1-02':'➗','math1-03':'📏','math1-04':'⭕','math1-05':'🧩','math1-06':'📐','math1-07':'🔺','math1-08':'📈','math1-09':'∂','math1-10':'∫',
+ 'math2-01':'🔣','math2-02':'📊','math2-03':'ℂ','math2-04':'🧮','math2-05':'🧾','math2-06':'🥚','math2-07':'🔁','math2-08':'⚙️','math2-09':'🚀','math2-10':'🎲'
+ };
+ gaChapterQuizCache=chapters.map(function(ch){var qs=banks[ch.id]||[],meta=source[ch.id]||{};return{id:'chapter-quiz-'+ch.id,type:'blitz',chapterQuiz:true,chapterId:ch.id,subjectKey:ch.subjectKey,chapterKeys:[ch.id],icon:iconByChapter[ch.id]||'📘',t:ch.title,d:ch.title+' অধ্যায়ের '+qs.length+'টি বিষয়ভিত্তিক ও ধারণা-অনুশীলনের প্রশ্ন।',diff:'Mixed',xp:90,data:{time:0,rounds:qs.length,useChapters:'0',q:qs}}});
+ window.CL_CHAPTER_QUIZ_AUDIT_V94=gaChapterQuizCache.map(function(g){var q=(g.data&&g.data.q)||[],meta=source[g.chapterId]||{},exp=q.filter(function(x){return x&&x.expansionMetadata&&x.expansionMetadata.generatedFromEditorialBlueprint===true}).length,auth=q.filter(function(x){return x&&x.authoredHscConcept===true}).length,media=q.filter(function(x){return(Array.isArray(x.media)?x.media:[]).some(function(m){return m&&m.questionSupport===true&&['image','diagram'].indexOf(String(m.type||'').toLowerCase())>=0})}).length;return{chapterId:g.chapterId,title:g.t,syllabusTopics:(meta.topics||[]).length,questionCount:q.length,authoredDrafts:auth,blueprintDrafts:exp,questionVisualCandidates:media,questionVisualPct:q.length?Math.round(media/q.length*1000)/10:0,minimumTarget:window.CL_HSC_QUESTION_TARGETS_V94?window.CL_HSC_QUESTION_TARGETS_V94.resolve(g.chapterId,q.length).minimumTarget:75}});
+ window.CL_CHAPTER_QUIZ_AUDIT_V95=gaChapterQuizCache.map(function(g){var qs=(g.data&&g.data.q)||[],queue=gaHscEditorialBlueprintQueueV95.filter(function(x){return x.chapterId===g.chapterId;});return{chapterId:g.chapterId,title:g.t,learnerPlayableQuestions:qs.length,unreviewedBlueprintQueue:queue.length,authoredV95Drafts:qs.filter(function(q){return q.contentOrigin==='individually-authored-v95'}).length,learnerBankStatus:'expanded to chapter target; syllabus-mapped and authored drafts are learner-visible pending specialist review'}});
+ if(window.CL_QUIZ_ENRICHMENT_V86){window.CL_CHAPTER_QUIZ_AUDIT_V86=window.CL_QUIZ_ENRICHMENT_V86.buildAudit(gaChapterQuizCache,source);window.CL_EXPORT_CHAPTER_QUIZ_AUDIT_V86=function(){var rows=window.CL_CHAPTER_QUIZ_AUDIT_V86||[],blob=new Blob([JSON.stringify({generatedAt:new Date().toISOString(),chapters:rows},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='golden-snitch-chapter-quiz-audit-v86.json';a.click();setTimeout(function(){URL.revokeObjectURL(url)},1000);};}
+ return gaChapterQuizCache}
+function gaChapterQuizById(id){return gaBuildChapterQuizzes().filter(function(g){return g.id===id})[0]||null}
+function gaQuizStubs(){return gaGetChapters().map(function(ch){return{id:'chapter-quiz-'+ch.id,chapterQuiz:true,chapterId:ch.id,subjectKey:ch.subjectKey,chapterKeys:[ch.id],t:ch.title,d:ch.title}})}
+function gaVisibleGames(mode,light){var games=gaAllGames().filter(function(g){return !gaIsQuizGame(g)});if(mode==='games')return games;var quizzes=(light&&!gaChapterQuizCache)?gaQuizStubs():gaBuildChapterQuizzes();if(mode==='quiz')return quizzes;return games.concat(quizzes)}
+function gaModeCount(mode){return gaVisibleGames(mode,true).length}
+function gaCatalogCount(mode,subject,query,kindF){return gaVisibleGames(mode,true).filter(function(g){var m=gaMeta(g);return(subject==='all'||m.subjectKey===subject)&&gaMatchQuery(g,query)&&(mode!=='games'||!kindF||kindF==='all'||!window.CL_ARCADE_PREVIEW||window.CL_ARCADE_PREVIEW.group(g)===kindF)}).length}
+function gaGameGuide(g){
+ var guide={
+  'periodic-quest':{kind:'ELEMENT PLACEMENT',how:'মৌলগুলোর কার্ড সঠিক পর্যায় ও গ্রুপে বসাও। প্রতিটি সঠিক অবস্থানের পর ছোট ব্যাখ্যা দেখো।',learn:'পারমাণবিক সংখ্যা, পর্যায়, গ্রুপ ও পর্যায়বৃত্ত ধর্মের প্রবণতা।',why:'পর্যায় সারণির গঠন মুখস্থ না করে অবস্থানের যুক্তি বুঝতে।'},
+  'mass-atlas':{kind:'SORT & DISCOVER',how:'পর্যায় সারণি থেকে মৌল খুঁজে বের করো এবং পারমাণবিক ভরের মান পড়ো ও তুলনা করো।',learn:'মৌলের প্রতীক, নাম ও আপেক্ষিক পারমাণবিক ভর।',why:'মৌলগুলোর ভর ও পর্যায় সারণির তথ্য দ্রুত চিনতে।'},
+  'logic-circuit-scramble':{kind:'LOGIC PUZZLE',how:'ইনপুট সুইচ পাল্টে লজিক গেটের সমন্বয় ঠিক করো, যেন সার্কিটের আউটপুট টার্গেটের সঙ্গে মেলে।',learn:'AND, OR, XOR, NAND, NOR, NOT ও XNOR-এর truth table।',why:'বুলিয়ান লজিককে বাস্তব সার্কিটের মতো করে বুঝতে।'},
+  'formula-pair-cosmos':{kind:'MEMORY MATCH',how:'কার্ড উল্টে সূত্র ও তার নাম/অর্থের সঠিক জুটি খুঁজে বের করো। যত কম চাল, তত ভালো স্কোর।',learn:'Physics, Chemistry ও Math-এর দরকারি সূত্র এবং তাদের প্রয়োগ।',why:'সূত্র দেখেই কোন ধারণা বোঝায় তা মনে করতে।'},
+  'molecular-shape-challenge':{kind:'MOLECULE MATCH',how:'অণুর সূত্র ও তার জ্যামিতিক আকৃতির কার্ড মিলিয়ে জুটি সম্পূর্ণ করো।',learn:'VSEPR মডেল, lone pair এবং molecular geometry।',why:'অণুর আকৃতি ও বন্ধন কোণের সম্পর্ক মনে রাখতে।'},
+  'atomic-identity-match':{kind:'ELEMENT MEMORY',how:'মৌলের প্রতীক/নাম-সহ কার্ডের সঙ্গে সঠিক পারমাণবিক সংখ্যার কার্ড মেলাও।',learn:'প্রথম ২০টি মৌলের প্রতীক, নাম ও পারমাণবিক সংখ্যা।',why:'পর্যায় সারণি পড়ার মৌলিক পরিচয় দ্রুত ঝালিয়ে নিতে।'},
+  'physics-law-match':{kind:'FORMULA MEMORY',how:'একটি সূত্রের কার্ডের সঙ্গে সঠিক সূত্র/নীতির নাম মিলিয়ে নাও।',learn:'বল, ভরবেগ, কাজ, শক্তি, দোলন ও তড়িৎ ক্ষমতার সম্পর্ক।',why:'সমস্যা দেখলে কোন সূত্রটি প্রাসঙ্গিক তা মনে করতে।'},
+  'chemistry-bond-match':{kind:'MOLECULE MEMORY',how:'অণুর সূত্রের সঙ্গে তার আকৃতি ও আনুমানিক বন্ধন কোণের কার্ড মিলাও।',learn:'Linear, trigonal planar, tetrahedral, pyramidal ও bent আকৃতি।',why:'VSEPR অনুযায়ী ইলেকট্রন জোড় কীভাবে আকৃতি নির্ধারণ করে বুঝতে।'},
+  'math-identity-match':{kind:'MATH MEMORY',how:'গাণিতিক রাশি/সূত্রের সঙ্গে সঠিক ধারণা বা পরিচিতি মিলিয়ে জুটি তৈরি করো।',learn:'ঢাল, determinant, derivative, integral, probability ও vector।',why:'সূত্রের প্রতীক ও গাণিতিক ধারণার যোগসূত্র মনে রাখতে।'},
+  'si-unit-pairs':{kind:'UNIT MATCH',how:'ভৌত রাশির কার্ডের সঙ্গে তার SI এককের কার্ড মিলাও।',learn:'বল, শক্তি, চাপ, ক্ষমতা, আধান ও কম্পাঙ্কের SI একক।',why:'গণনার আগে রাশি ও একক দ্রুত শনাক্ত করতে।'}
+ };
+ if(guide[g.id])return guide[g.id];
+ if(g.type==='simExplorer')return{kind:'INTERACTIVE LAB',how:'স্লাইডার বা কন্ট্রোল বদলে মডেলটি চালাও, তারপর গ্রাফ ও ফলাফলের পরিবর্তন লক্ষ্য করো।',learn:g.d||'একটি বৈজ্ঞানিক বা গাণিতিক সম্পর্ক।',why:'নিজে মান বদলে কারণ ও ফলাফলের সম্পর্ক দেখতে।'};
+ if(g.type==='arcadeQuest')return{kind:'ARCADE QUEST · '+String((g.data||{}).mode||'PUZZLE').toUpperCase(),how:'চারটি ভিন্ন মিশনে ক্লু, সূত্র, প্যাটার্ন বা মান নিয়ে নিজে কাজ করো।',learn:g.d||'ধারণাভিত্তিক শেখা ও প্রয়োগ।',why:'সঠিক সিদ্ধান্ত নিয়ে প্রতিটি ধাপ পার হতে।'};
+ if(gaIsQuizGame(g))return{kind:'QUIZ CHALLENGE',how:'প্রশ্নের উত্তর দাও, ব্যাখ্যা দেখো এবং প্রয়োজন হলে Concept থেকে Boss Level পর্যন্ত এগিয়ে যাও।',learn:g.d||'অধ্যায়ভিত্তিক ধারণা ও সমস্যা সমাধান।',why:'নিজের বোঝাপড়া যাচাই করে দুর্বল জায়গা খুঁজে পেতে।'};
+ var generic={
+  periodic:'মৌলকে পর্যায় সারণির সঠিক ঘরে বসাও।',massAtlas:'পর্যায় সারণির তথ্য খুঁজে তুলনা করো।',logicCircuit:'ইনপুট ও লজিক গেট বদলে সঠিক আউটপুট তৈরি করো।',memory:'কার্ড উল্টে ধারণা ও সংজ্ঞার জুটি খুঁজে বের করো।',slope:'ঢাল ও intercept বদলে রেখাটিকে নির্দিষ্ট বিন্দুগুলোর সঙ্গে মেলাও।',
+ };
+ return{kind:g.type==='memory'?'MEMORY MATCH':'INTERACTIVE GAME',how:generic[g.type]||'চ্যালেঞ্জটি নিজে সমাধান করো; প্রতিটি রাউন্ডে নতুন তথ্য ও ব্যাখ্যা দেখো।',learn:g.d||'ধারণাভিত্তিক অনুশীলন।',why:'শুধু উত্তর নয়, প্রয়োগের মাধ্যমে ধারণা মনে রাখতে।'};
+}
+function gaPremiumCard(g,idx){
+ var P=window.CL_ARCADE_PREVIEW,rec=(GS().games||{})[g.id]||{plays:0,best:0},m=P.meta(g),k=P.kind(g),mm=gaMeta(g),ch=(mm.chapter||[])[0]||{},hue=iconHue(g.id);
+ var diff=String(g.diff||'Medium'),lvl={Easy:1,Medium:2,Hard:3}[diff]||2,diffBn={Easy:'সহজ',Medium:'মাঝারি',Hard:'কঠিন'}[diff]||'মাঝারি';
+ var pips=[1,2,3].map(function(n){return '<i'+(n<=lvl?' class="on"':'')+'></i>'}).join('');
+ var sk=mm.subjectKey||g.subjectKey||'mixed',subj={physics:'পদার্থ',chemistry:'রসায়ন',math:'উচ্চতর গণিত',mixed:'মিশ্র'}[sk]||'মিশ্র';
+ var href='#/play/'+E(g.id),title=gameTitle(g);
+ return '<article class="pcard" data-kind="'+E(k)+'" data-subject="'+E(sk)+'" style="--h:'+hue+';--n:'+((+idx||0)%12)+'">'+
+  '<div class="pcard-stage">'+P.stage(g)+'<span class="pcard-xp">+'+(+g.xp||0)+' XP</span></div>'+
+  '<div class="pcard-body"><div class="pcard-tags"><span class="pcard-mode">'+E(m.tag)+'</span><span class="pcard-diff" title="কঠিনতা: '+E(diffBn)+'"><span class="pcard-pips" aria-hidden="true">'+pips+'</span>'+E(diffBn)+'</span></div>'+
+  '<h3>'+E(title)+'</h3>'+
+  '<p class="pcard-desc">'+E(g.d||'অধ্যায়ভিত্তিক ইন্টারঅ্যাকটিভ গেম।')+'</p>'+
+  '<div class="pcard-top"><span class="pcard-subj">'+E(subj)+'</span>'+(ch.title?'<span class="pcard-ch">'+E(ch.title)+'</span>':'')+'<span class="pcard-stat">◷ '+(rec.plays||0)+' · ★ '+(+rec.best||0)+'</span></div>'+
+  '<a class="pcard-go" data-ga-launch href="'+href+'" aria-label="খেলুন: '+E(title)+'"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 .8v10.4L11 6z"/></svg><span>এখনই খেলুন</span></a></div></article>';
+}
+function gaQuizCard(g){var ch=gaGetChapters().filter(function(c){return c.id===g.chapterId})[0]||{};return window.CL_QUIZ_ANIM.card({id:g.id,title:gameTitle(g),chapterId:g.chapterId,subjectKey:g.subjectKey||ch.subjectKey,paper:ch.paper||'',count:((g.data||{}).q||[]).length,xp:+g.xp||0})}
+function gaGameCard(g){
+ if(g&&g.chapterQuiz&&window.CL_QUIZ_ANIM)return gaQuizCard(g);
+ var rec=(GS().games||{})[g.id]||{plays:0,best:0},mode=gaGameMode(g),guide=gaGameGuide(g),quiz=mode==='quiz',sim=mode==='simulation';
+ if(mode==='games'&&window.CL_ARCADE_PREVIEW&&!g.chapterQuiz)return gaPremiumCard(g,arguments[1]);
+ var href='#/play/'+E(g.id),cta=quiz?(g.chapterQuiz?'কুইজ শুরু করুন':'লেভেল বেছে নিন'):sim?'সিমুলেশন খুলুন':'এখনই খেলুন';
+ var about=g.chapterQuiz?(g.d||'অধ্যায়ের সব প্রশ্ন একত্রে অনুশীলন করুন।'):(g.type==='arcadeQuest'?(g.d||'চারটি ইন্টারঅ্যাকটিভ মিশনে ধারণাটি নিজে প্রয়োগ করো।'):(g.d||guide.how||'অধ্যায়ভিত্তিক ইন্টারঅ্যাকটিভ গেম।'));
+ return '<article class="ga-game-card ga-card-'+mode+(g.chapterQuiz?' ga-card-chapter-quiz':'')+'">'+
+  '<div class="ga-game-card-head"><span class="ga-game-icon" style="--icon-hue:'+iconHue(g.id)+'" aria-hidden="true">'+E(gameIcon(g))+'</span><div class="ga-card-title-wrap"><h4>'+E(gameTitle(g))+'</h4>'+'</div></div>'+
+  '<div class="ga-card-about"><span>'+(g.chapterQuiz?(g.data.q||[]).length+' QUESTIONS':'GAME BRIEF · গেম সম্পর্কে')+'</span><p>'+E(about)+'</p></div>'+
+  '<div class="ga-game-card-bottom"><div class="ga-game-stats">'+(g.chapterQuiz?'<span>🧠 '+(g.data.q||[]).length+'টি প্রশ্ন</span><span>✓ ব্যাখ্যাসহ</span>':'<span>◷ '+(rec.plays||0)+' বার খেলা</span><span>★ সেরা '+(+rec.best||0)+'</span>')+'</div><div class="ga-game-actions"><a class="btn pri" data-ga-launch href="'+href+'" aria-label="'+cta+': '+E(gameTitle(g))+'">'+cta+' →</a></div></div></article>';
+}
+function gaGetChapters(){return window.CL_GAME_ACADEMY&&Array.isArray(window.CL_GAME_ACADEMY.chapters)?window.CL_GAME_ACADEMY.chapters:[]}
+function gaAllGames(){return (GAMES||[]).filter(function(g){return g&&g.on!==false&&g.on!=='0'&&g.type!=='cannon'&&g.type!=='simExplorer'&&!/physics-formula-sprint/i.test(String(g.id||''))&&String(g.t||'').trim()!=='Physics Formula Sprint'})}
+function gaMatchQuery(g,q){if(!q)return true;var m=gaMeta(g);var ch=m.chapter||[];return [g.t,g.title,g.d,g.id,gaSubjectName(m.subjectKey)].concat(ch.map(function(c){return c.title+' '+c.paper})).join(' ').toLowerCase().indexOf(q.toLowerCase())>=0}
+function renderGameAcademyCatalog(mode,subject,query,kindF){
+ var raw=gaAllGames().filter(function(g){var m=gaMeta(g);return !gaIsQuizGame(g)&&(mode==='all'||mode==='games')&&(subject==='all'||m.subjectKey===subject)&&gaMatchQuery(g,query)}),quizzes=((mode==='all'||mode==='quiz')?gaBuildChapterQuizzes():[]).filter(function(g){var m=gaMeta(g);return(mode==='all'||mode==='quiz')&&(subject==='all'||m.subjectKey===subject)&&gaMatchQuery(g,query)}),chapters=gaGetChapters(),html='',subjects=['physics','chemistry','math','mixed'];
+ if(mode==='games'&&window.CL_ARCADE_PREVIEW){
+  var PV=window.CL_ARCADE_PREVIEW,chOrder={};chapters.forEach(function(c,i){chOrder[c.id]=i});
+  var gIcon={physics:'⚛️',chemistry:'🧪',math:'📐',mixed:'🎯'},gSub={physics:'Physics · ১ম ও ২য় পত্র',chemistry:'Chemistry · ১ম ও ২য় পত্র',math:'Higher Mathematics · ১ম ও ২য় পত্র',mixed:'বিভিন্ন বিষয়ের সমন্বিত অনুশীলন'};
+  raw=raw.filter(function(g){return !kindF||kindF==='all'||PV.group(g)===kindF});
+  subjects.forEach(function(sk){
+   var gs=raw.filter(function(g){return gaMeta(g).subjectKey===sk});if(!gs.length)return;
+   gs.sort(function(a,b){var ca=(gaMeta(a).chapterKeys||[])[0],cb=(gaMeta(b).chapterKeys||[])[0];return (chOrder[ca]==null?999:chOrder[ca])-(chOrder[cb]==null?999:chOrder[cb])});
+   html+='<section class="pg-subject pg-'+sk+'"><div class="pg-head"><span class="pg-ico" aria-hidden="true">'+gIcon[sk]+'</span><div><h2>'+E(gaSubjectName(sk))+'</h2><p>'+E(gSub[sk])+'</p></div><b>'+gs.length+'টি গেম</b></div><div class="pg-grid">'+gs.map(function(g,i){return gaGameCard(g,i)}).join('')+'</div></section>';
+  });
+  if(!html)html='<div class="ga-empty card"><span>🔎</span><h3>এখানে এখনো কিছু পাওয়া যায়নি</h3><p>অন্য বিষয়, ধরন বা শব্দ দিয়ে খুঁজে দেখো।</p></div>';
+  return html;
+ }
+ if(mode==='quiz'&&window.CL_QUIZ_ANIM){
+  var QO={};chapters.forEach(function(c,i){QO[c.id]=i});
+  var qIcon={physics:'⚛️',chemistry:'🧪',math:'📐',mixed:'🎯'},qSub={physics:'Physics · ১ম ও ২য় পত্র',chemistry:'Chemistry · ১ম ও ২য় পত্র',math:'Higher Mathematics · ১ম ও ২য় পত্র',mixed:'বিভিন্ন বিষয়ের সমন্বিত অনুশীলন'};
+  subjects.forEach(function(sk){
+   var qs2=quizzes.filter(function(g){return gaMeta(g).subjectKey===sk});if(!qs2.length)return;
+   qs2.sort(function(a,b){return (QO[a.chapterId]==null?999:QO[a.chapterId])-(QO[b.chapterId]==null?999:QO[b.chapterId])});
+   html+='<section class="pg-subject pg-'+sk+'"><div class="pg-head"><span class="pg-ico" aria-hidden="true">'+qIcon[sk]+'</span><div><h2>'+E(gaSubjectName(sk))+'</h2><p>'+E(qSub[sk])+'</p></div><b>'+qs2.length+'টি কুইজ</b></div><div class="pg-grid">'+qs2.map(gaQuizCard).join('')+'</div></section>';
+  });
+  if(!html)html='<div class="ga-empty card"><span>🔎</span><h3>এখানে এখনো কিছু পাওয়া যায়নি</h3><p>অন্য বিষয় বা শব্দ দিয়ে খুঁজে দেখো।</p></div>';
+  return html;
+ }
+ subjects.forEach(function(sk){
+  var gs=raw.filter(function(g){return gaMeta(g).subjectKey===sk}),qs=quizzes.filter(function(g){return gaMeta(g).subjectKey===sk});if(!gs.length&&!qs.length)return;
+  var label=gaSubjectName(sk),icon=({physics:'⚛️',chemistry:'🧪',math:'📐',mixed:'🎯'})[sk],sub=({physics:'Physics · ১ম ও ২য় পত্র',chemistry:'Chemistry · ১ম ও ২য় পত্র',math:'Higher Mathematics · ১ম ও ২য় পত্র',mixed:'বিভিন্ন বিষয়ের সমন্বিত অনুশীলন'})[sk];
+  html+='<section class="ga-subject-block ga-subject-'+sk+'"><div class="ga-subject-head"><span class="ga-subject-icon">'+icon+'</span><div><h2>'+E(label)+'</h2><p>'+E(sub)+'</p></div><b>'+(gs.length+qs.length)+'টি</b></div>';
+  var placed={};function chapGroup(title,paper,arr){return '<section class="lab-subject-group ga-chapter-group"><h2 class="subh">'+E(title)+' <small>'+arr.length+'</small>'+(paper?'<span class="ga-paper-tag">'+E(paper)+'</span>':'')+'</h2><div class="ga-game-grid">'+arr.map(gaGameCard).join('')+'</div></section>'}
+  chapters.filter(function(c){return c.subjectKey===sk}).forEach(function(ch){var group=[];var qg=qs.filter(function(g){return g.chapterId===ch.id})[0];if(qg)group.push(qg);var cg=gs.filter(function(g){return !placed[g.id]&&gaMeta(g).chapterKeys.indexOf(ch.id)>=0});cg.forEach(function(g){placed[g.id]=1});group=group.concat(cg);if(group.length)html+=chapGroup(ch.title,ch.paper,group)});
+  var rest=gs.filter(function(g){return !placed[g.id]&&!gaMeta(g).chapterKeys.length});if(rest.length)html+=chapGroup('অন্যান্য চ্যালেঞ্জ','',rest);
+  html+='</section>';
+ });
+ if(!html)html='<div class="ga-empty card"><span>🔎</span><h3>এখানে এখনো কিছু পাওয়া যায়নি</h3><p>অন্য বিষয় বা শব্দ দিয়ে খুঁজে দেখো।</p></div>';
+ return html;
+}
+function gaLastSession(){try{var x=JSON.parse(localStorage.getItem('cl_arcade_last_v1')||'null');if(!x||!x.id)return null;var g=gaGameById(x.id);if(!g)return null;var level=gaIsQuizGame(g)&&x.level?String(x.level):'';return{game:g,href:'#/play/'+encodeURIComponent(g.id)+(level?'/'+encodeURIComponent(level):'')}}catch(e){return null}}
+function gaDailyMystery(mode){var all=gaAllGames().filter(function(g){return !mode||gaGameMode(g)===mode});if(!all.length)return null;var d=new Date(),start=new Date(d.getFullYear(),0,0),day=Math.floor((d-start)/86400000),seed=(d.getFullYear()*397+day*7919)%all.length;return all[(seed+all.length)%all.length]}
+function gameAcademyPage(){
+ var games=gaAllGames();
+ return '<div class="w pgw game-academy-page arcade-page">'+
+  '<section class="ga-hero"><div class="ga-hero-copy"><span class="ga-eyebrow">GOLDEN SNITCH · ARCADE</span><h1>খেলতে খেলতে নতুন কিছু শেখো</h1><p>এখানে শুধু স্কোর নয়—প্রতিটি গেমের ভেতরে আছে একটি শেখার লক্ষ্য। পাজল, ম্যাচিং, সাজানো ও বিল্ডিং মিশনে নিজে অংশ নাও; চাইলে Quiz-ও আলাদা করে অনুশীলন করো।</p><div class="ga-hero-points"><span>✦ হাতে-কলমে শেখা</span><span>✦ অধ্যায়ভিত্তিক অনুশীলন</span><span>✦ XP ও ব্যক্তিগত সেরা স্কোর</span></div></div><div class="ga-hero-art" aria-hidden="true"><div class="ga-orbit ga-orbit-one"></div><div class="ga-orbit ga-orbit-two"></div><span>✧</span><small>PLAY · DISCOVER · LEARN</small></div></section>'+
+  '<section class="ga-mode-deck" role="tablist" aria-label="Arcade category">'+
+   '<button type="button" class="ga-mode-card is-active" data-ga-mode="games" role="tab" aria-selected="true"><span class="ga-mode-icon">🎮</span><span class="ga-mode-copy"><b>Games</b><small>পাজল ও মিশন</small><em>খেলে কনসেপ্ট শেখো</em></span><strong>'+gaModeCount('games')+'</strong></button>'+
+   '<button type="button" class="ga-mode-card" data-ga-mode="quiz" role="tab" aria-selected="false"><span class="ga-mode-icon">🧠</span><span class="ga-mode-copy"><b>Quiz</b><small>প্রশ্ন ও চ্যালেঞ্জ</small><em>প্রস্তুতি যাচাই করো</em></span><strong>'+gaModeCount('quiz')+'</strong></button>'+
+  '</section>'+
+  '<div class="ga-toolbar" role="search"><label class="ga-search"><span aria-hidden="true">⌕</span><input id="gaSearch" type="search" placeholder="গেম, অধ্যায় বা কনসেপ্ট খুঁজুন…" aria-label="গেম, অধ্যায় বা কনসেপ্ট খুঁজুন"></label><label class="ga-subject-select-label"><span>বিষয়</span><select id="gaSubjectFilter" aria-label="বিষয় বেছে নিন"><option value="all">সব বিষয়</option><option value="physics">পদার্থবিজ্ঞান</option><option value="chemistry">রসায়ন</option><option value="math">উচ্চতর গণিত</option><option value="mixed">মিশ্র</option></select></label><span class="ga-catalog-count"><b>'+games.length+'</b>টি playable item</span></div>'+
+  '<div id="gaCatalog">'+renderGameAcademyCatalog('games','all','','all')+'</div>'+
+  '<section class="ga-howto"><div><span class="ga-eyebrow">YOUR LEARNING LOOP</span><h2>Arcade-এ কীভাবে এগোবে?</h2></div><div class="ga-howto-grid"><article><b>01 · Choose</b><p>Games বা Quiz থেকে নিজের পছন্দ বেছে নাও।</p></article><article><b>02 · Explore</b><p>গেমের হাইলাইটেড পরিচিতি পড়ে নিজের লক্ষ্য ঠিক করো।</p></article><article><b>03 · Learn</b><p>ভুল হলে ব্যাখ্যা পড়ো, আবার চেষ্টা করো এবং নতুন ধারণা শিখো।</p></article><article><b>04 · Improve</b><p>XP, খেলার সংখ্যা ও ব্যক্তিগত সেরা স্কোর দিয়ে অগ্রগতি দেখো।</p></article></div></section></div>';
+}
+function mountGameAcademy(root){
+ if(!root)return;if(!gaChapterQuizCache){(window.requestIdleCallback||function(f){setTimeout(f,1500)})(function(){try{gaBuildChapterQuizzes()}catch(e){}},{timeout:5000})}var state=root.__gaController;
+ if(!state){
+  state={mode:'games',subject:'all',q:'',kind:'all',searchEl:null,subjectEl:null};
+  state.render=function(){
+   var c=root.querySelector('#gaCatalog');if(c)c.innerHTML=renderGameAcademyCatalog(state.mode,state.subject,state.q,state.kind);
+    var PVW=window.CL_ARCADE_PREVIEW,kb=root.querySelector('#pgKinds');
+    if(kb){var showK=state.mode==='games'&&!!PVW;kb.hidden=!showK;if(showK){var pool=gaVisibleGames('games').filter(function(g){var m=gaMeta(g);return(state.subject==='all'||m.subjectKey===state.subject)&&gaMatchQuery(g,state.q)}),cnt={all:pool.length};PVW.groups.forEach(function(gr){cnt[gr.id]=pool.filter(function(g){return PVW.group(g)===gr.id}).length});
+     kb.innerHTML=[{id:'all',label:'সব গেম',ico:'✦'}].concat(PVW.groups).filter(function(gr){return gr.id==='all'||cnt[gr.id]>0}).map(function(gr){return'<button type="button" class="pg-kind'+(gr.id===state.kind?' is-active':'')+'" data-pg-kind="'+gr.id+'" aria-pressed="'+(gr.id===state.kind)+'"><span aria-hidden="true">'+gr.ico+'</span>'+E(gr.label)+'<em>'+cnt[gr.id]+'</em></button>'}).join('')}}
+    if(PVW)PVW.observe(root);if(window.CL_QUIZ_ANIM)window.CL_QUIZ_ANIM.observe(root);
+   root.querySelectorAll('[data-ga-mode]').forEach(function(b){var on=b.dataset.gaMode===state.mode;b.classList.toggle('is-active',on);b.setAttribute('aria-selected',String(on))});
+   var titles={all:['All · সম্পূর্ণ Arcade','ইন্টারঅ্যাকটিভ Games দিয়ে শুরু করো; Quiz আলাদা ট্যাবে আছে।'],games:['Games · খেলতে খেলতে শেখো','প্রতিটি গেমের পরিচিতি এক নজরে দেখে নিজের পছন্দের মিশন বেছে নাও।'],quiz:['Quiz · নিজের প্রস্তুতি যাচাই করো','Concept থেকে Boss Level—প্রশ্নের ব্যাখ্যা দেখে শেখো এবং নিজের অগ্রগতি যাচাই করো।'],simulation:['Simulation · নিজে পরীক্ষা করে বোঝো','স্লাইডার ও কন্ট্রোল বদলে মডেল চালাও; ফলাফল ও গ্রাফের পরিবর্তন দেখো।']};
+   var t=titles[state.mode]||titles.games,heading=root.querySelector('#gaCatalogTitle'),intro=root.querySelector('#gaCatalogIntro');if(heading)heading.textContent=t[0];if(intro)intro.textContent=t[1];
+   var count=root.querySelector('.ga-catalog-count b');if(count)count.textContent=String(gaCatalogCount(state.mode,state.subject,state.q,state.kind));
+  };
+  root.addEventListener('click',function(ev){var kb=ev.target&&ev.target.closest?ev.target.closest('[data-pg-kind]'):null;if(kb&&root.contains(kb)){ev.preventDefault();state.kind=kb.dataset.pgKind||'all';state.render();return}var b=ev.target&&ev.target.closest?ev.target.closest('[data-ga-mode]'):null;if(!b||!root.contains(b))return;ev.preventDefault();state.mode=b.dataset.gaMode||'games';state.render()});
+  root.__gaController=state;
+ }
+ var search=root.querySelector('#gaSearch');if(search&&search!==state.searchEl){state.searchEl=search;search.addEventListener('input',function(){state.q=search.value.trim();state.render()})}
+ var subject=root.querySelector('#gaSubjectFilter');if(subject&&subject!==state.subjectEl){state.subjectEl=subject;subject.addEventListener('change',function(){state.subject=subject.value||'all';state.render()})}
+ state.render();
+}
+function gaLevelFor(id){return GA_LEVELS.filter(function(l){return l.id===id})[0]||GA_LEVELS[0]}
+function gaGameById(id){return gaChapterQuizById(id)||gaAllGames().filter(function(g){return g.id===id})[0]}
+function gaChapterQuizIntro(g){
+var chapter=gaGetChapters().filter(function(c){return c.id===g.chapterId})[0]||{},src=(window.CL_HSC_SYLLABUS_QUIZ_V79||{})[g.chapterId]||{};
+var subject=chapter.subjectKey||g.subjectKey,focus=subject==='physics'?'গুরুত্বপূর্ণ ধারণা, সূত্র ও বাস্তব পরিস্থিতিতে পদার্থবিজ্ঞানের প্রয়োগ অনুশীলন করো।':subject==='chemistry'?'রাসায়নিক ধারণা, বিক্রিয়া ও পরীক্ষণভিত্তিক প্রশ্ন অনুশীলন করো।':'গাণিতিক ধারণা, সূত্র ও ধাপে ধাপে সমস্যা সমাধান অনুশীলন করো।';
+return '<div class="w pgw ga-level-picker ga-chapter-quiz-intro"><a class="bk" href="#/play">← Arcade-এ ফিরুন</a><div class="ga-level-game-head"><span class="ga-game-icon" style="--icon-hue:'+iconHue(g.id)+'">'+E(gameIcon(g))+'</span><div><h1>'+E(gameTitle(g))+'</h1><p>'+E(chapter.subject||gaSubjectName(g.subjectKey))+' · '+E(chapter.paper||src.paper||'')+'</p></div></div><section class="cq-intro-panel cq-student-intro"><span class="ga-eyebrow">CHAPTER PRACTICE</span><h2>'+E(chapter.title||g.t)+' — অধ্যায়ভিত্তিক অনুশীলন</h2><p>'+E(focus)+' প্রতিটি প্রশ্ন মনোযোগ দিয়ে পড়ো এবং সঠিক বিকল্পটি বেছে নাও। উত্তর দেওয়ার পর প্রয়োজনীয় ব্যাখ্যা দেখো; ভুল হলে Mistake Review থেকে আবার অনুশীলন করতে পারবে।</p><div class="cq-student-guidance"><span>✓ প্রশ্নের শর্ত ভালোভাবে পড়ো</span><span>✓ চারটি বিকল্পের মধ্যে সঠিকটি বেছে নাও</span><span>✓ ভুল উত্তর হলে ব্যাখ্যা দেখে ধারণা পরিষ্কার করো</span></div><div class="cq-intro-actions"><a class="btn pri" href="#/play/'+E(g.id)+'/boss">কুইজ শুরু করুন →</a><a class="btn" href="#/play/'+E(g.id)+'/review">🧠 এই অধ্যায়ের ভুল রিভিউ</a><a class="btn" href="#/mistakes">সব অধ্যায়ের ভুল দেখুন</a></div></section></div>'
+}
+function gaFindChapterQuestion(quizId, questionId, questionText){var quiz=gaGameById(quizId),qs=quiz&&quiz.data&&quiz.data.q||[],target=String(questionId||'');for(var i=0;i<qs.length;i++)if(target&&String(qs[i].questionId||qs[i].id)===target)return qs[i];if(questionText){var wanted=gaMistakeHash(questionText);for(var j=0;j<qs.length;j++)if(gaMistakeHash(qs[j]&&qs[j].q)===wanted)return qs[j]}return null}
+function gaReviewAttemptHistoryMarkup(attempts){if(!Array.isArray(attempts)||!attempts.length)return '';var rows=attempts.slice().map(function(a,i){var when=new Date(Number(a.timestamp)||Date.now()).toLocaleString('bn-BD'),level=({concept:'ধারণা',board:'বোর্ড চ্যালেঞ্জ',admission:'ভর্তি প্রস্তুতি',boss:'Boss Level'})[a.level]||a.level||'অনুশীলন';return '<li><b>'+E(when)+'</b><span>'+E(level)+'</span><p>তোমার উত্তর: '+E(a.selectedAnswer||'উত্তর সংরক্ষিত নেই')+'</p><p>সঠিক উত্তর: '+E(a.correctAnswer||'')+'</p></li>'}).join('');return '<details class="ga-review-attempt-history"><summary>পূর্বের চেষ্টা ও উত্তর ('+attempts.length+')</summary><ol>'+rows+'</ol></details>'}
+function gaReviewExplanationMarkup(entry, original){
+ var q=original||{},stored=entry.explanation&&typeof entry.explanation==='object'?entry.explanation:{},source=q.explanation&&typeof q.explanation==='object'?q.explanation:{},ex=Object.assign({},source),api=window.CL_QUIZ_ENRICHMENT_V86;
+ Object.keys(stored).forEach(function(key){var value=stored[key];if(value!=null&&(!(typeof value==='string')||value.trim()!==''))ex[key]=value;});
+ var main=String(ex.core||q.longExplain||entry.longExplain||entry.e||q.e||'').trim(),out='<div class="ga-review-learning">';
+ /* Media remains subject to the existing verification and context-matching policy. */
+ var approvedMedia=(q.qualityApproved===true||entry.qualityApproved===true)&&(q.editorialReviewed===true||entry.editorialReviewed===true),
+ mediaApi=api&&approvedMedia;
+ if(mediaApi){
+  var qMedia=Array.isArray(q.media)&&q.media.length?q.media:(Array.isArray(entry.media)?entry.media:[]);
+  if(qMedia.length){var questionVisual=api.renderMedia({media:qMedia},'question');if(questionVisual)out+=questionVisual;}
+  var explanationMedia=Array.isArray(ex.media)?ex.media:[];
+  if(explanationMedia.length){var explanationVisual=api.renderMedia({media:explanationMedia},'explanation');if(explanationVisual)out+='<section class="ga-review-explanation-media"><h4>ব্যাখ্যার সহায়ক চিত্র</h4>'+explanationVisual+'</section>';}
+ }
+ function section(title,value,cls){var text=String(value==null?'':value).trim();if(!text)return '';return '<section'+(cls?' class="'+cls+'"':'')+'><h4>'+title+'</h4><p>'+E(text)+'</p></section>';}
+ if(main)out+=section('মূল ধারণা',main,'is-concept');
+ var analysis=String(ex.analysis||entry.analysis||q.analysis||'').trim();
+ if(analysis&&analysis!==main)out+=section('বিস্তারিত ব্যাখ্যা',analysis,'is-analysis');
+ var reasoning=String(ex.reasoningNote||entry.reasoningNote||q.reasoningNote||'').trim();
+ if(reasoning&&reasoning!==main&&reasoning!==analysis)out+=section('ভাবনার দিক',reasoning,'is-reasoning');
+ var simple=String(ex.simple||ex.simpleExplanation||entry.simpleExplanation||q.simpleExplanation||'').trim();
+ if(simple&&simple!==main&&simple!==analysis&&simple!==reasoning)out+=section('সহজভাবে বুঝি',simple,'is-simple');
+ var formula=String(ex.formula||ex.formulaExplain||entry.formulaExplain||q.formulaExplain||'').trim();
+ if(formula)out+='<section class="is-formula"><h4>প্রয়োজনীয় সূত্র</h4><p>'+E(formula)+'</p></section>';
+ var steps=Array.isArray(ex.steps)?ex.steps:(Array.isArray(entry.solutionSteps)?entry.solutionSteps:(Array.isArray(q.solutionSteps)?q.solutionSteps:[]));
+ if(steps.length){var stepHtml=steps.map(function(step){var t=typeof step==='string'?step:String(step&& (step.text||step.explanation||step.detail)||'');return t.trim()?'<li>'+E(t.trim())+'</li>':''}).join('');if(stepHtml)out+='<section class="is-steps"><h4>সমাধানের ধাপ</h4><ol>'+stepHtml+'</ol></section>';}
+ var options=Array.isArray(q.o)?q.o:(Array.isArray(entry.options)?entry.options:[]),optionAnalysis=Array.isArray(ex.optionAnalysis)?ex.optionAnalysis:(Array.isArray(entry.optionAnalysis)?entry.optionAnalysis:(Array.isArray(q.optionAnalysis)?q.optionAnalysis:[]));
+ if(optionAnalysis.length){var optionHtml=optionAnalysis.map(function(item,i){var t=typeof item==='string'?item:String(item&&(item.explanation||item.text||item.reason)||'');if(!t.trim())return '';return '<li><b>'+E(options[i]||('বিকল্প '+(i+1)))+'</b><p>'+E(t.trim())+'</p></li>';}).join('');if(optionHtml)out+='<section class="is-options"><h4>বিকল্পগুলোর বিশ্লেষণ</h4><ul>'+optionHtml+'</ul></section>';}
+ var misconception=String(ex.misconception||entry.misconception||q.misconception||'').trim();
+ if(misconception)out+=section('যে ভুলটি এড়াবে',misconception,'is-warning');
+ var realWorld=String(ex.realWorld||entry.realWorld||q.realWorld||'').trim();
+ if(realWorld)out+=section('বাস্তব প্রয়োগ',realWorld,'is-realworld');
+ if(out==='<div class="ga-review-learning">')out+='<section class="is-concept"><h4>ব্যাখ্যা</h4><p>এই প্রশ্নের জন্য বিস্তারিত ব্যাখ্যা এখনো যোগ করা হয়নি। সংশ্লিষ্ট অধ্যায়ের মূল ধারণা ও পাঠ্যবইয়ের উদাহরণ দেখে উত্তরটি মিলিয়ে নাও।</p></section>';
+ return out+'</div>';
+}
+function gaReviewPage(g){
+ var rows=gaStoredMistakes(g&&g.id),allMode=!g,
+ chapterOptions=allMode?gaGetChapters().map(function(ch){return'<option value="'+E(ch.id)+'">'+E(ch.title||ch.id)+'</option>'}).join(''):'',
+ reviewRows=rows.map(function(x,i){
+  var status=x.reviewStatus||'unreviewed',original=gaFindChapterQuestion(x.quizId,x.questionId,x.q),why=gaReviewExplanationMarkup(x,original),attempts=x.attempts||[],difficulty=({easy:'সহজ',medium:'মাঝারি','deep-conceptual':'গভীর ধারণা','hard-advanced':'কঠিন/উন্নত'})[x.difficulty]||gaLevelFor(x.level).name;
+  var meta='<div class="ga-review-meta">'+(x.subject?'<span>'+E(x.subject)+'</span>':'')+(x.paper?'<span>'+E(x.paper)+'</span>':'')+(x.chapterTitle?'<span>'+E(x.chapterTitle)+'</span>':'')+(x.subtopic?'<span>'+E(String(x.subtopic).replace(/^ভেক্টরের প্রকারভেদ\s*:\s*.*$/,'ভেক্টরের প্রকারভেদ'))+'</span>':'')+(x.questionType?'<span>'+E(((window.CL_QUIZ_ENRICHMENT_V86||{}).typeLabels||{})[x.questionType]||x.questionType)+'</span>':'')+'<span class="ga-review-status-tag '+(status==='reviewed'?'is-reviewed':'')+'">'+(status==='reviewed'?'রিভিউ সম্পন্ন':'রিভিউ বাকি')+'</span></div>';
+  var answers='<div class="ga-review-answer-grid">'+((x.selectedAnswer||x.yourAnswer)?'<section class="ga-review-answer-card is-yours"><span>তোমার উত্তর</span><strong>'+E(x.selectedAnswer||x.yourAnswer)+'</strong></section>':'')+'<section class="ga-review-answer-card is-correct"><span>সঠিক উত্তর</span><strong>'+E(x.correctAnswer||x.a||'উত্তর সংরক্ষিত নেই')+'</strong></section></div>';
+  return '<details class="ga-review-item" data-review-row data-review-status="'+E(status)+'" data-review-difficulty="'+E(x.difficulty||'')+'" data-review-chapter="'+E(x.chapterId||'')+'"><summary class="ga-review-question"><span class="ga-review-index">'+(i+1)+'</span><span class="ga-review-question-text">'+E(x.q)+'</span><span class="ga-review-chevron" aria-hidden="true">⌄</span></summary><div class="ga-review-expanded">'+meta+answers+'<section class="ga-review-explanation-panel"><div class="ga-review-explanation-heading"><span class="ga-review-explanation-icon">✦</span><div><h3>বিস্তারিত ব্যাখ্যা</h3><p>মূল ধারণা, সমাধানের যুক্তি ও প্রয়োজনীয় তথ্য একসঙ্গে দেখো।</p></div></div>'+why+'</section>'+(attempts.length?gaReviewAttemptHistoryMarkup(attempts):'')+'<div class="ga-review-foot-meta"><span>'+E(difficulty)+'</span><span>'+(x.wrongCount||1)+' বার ভুল</span><span>সর্বশেষ '+E(new Date(x.updatedAt||x.at||Date.now()).toLocaleString('bn-BD'))+'</span></div><div class="ga-review-actions">'+(status!=='reviewed'?'<button type="button" class="btn" data-ga-mark-reviewed data-quiz-id="'+E(x.quizId)+'" data-question-id="'+E(x.questionId)+'">✓ রিভিউ সম্পন্ন চিহ্নিত</button>':'<span class="ga-reviewed-note">✓ ধারণাটি রিভিউ করা হয়েছে</span>')+'</div></div></details>'
+ }).join('');
+ return '<div class="w pgw ga-level-picker ga-review-page"><a class="bk" href="'+(g?'#/play/'+E(g.id):'#/play')+'">← '+(g?E(gameTitle(g)):'Arcade-এ ফিরুন')+'</a><div class="ga-review-head"><span>🧠</span><div><span class="ga-eyebrow">MISTAKE REVIEW</span><h1>ভুল থেকে শেখো</h1><p>'+E(g?gameTitle(g):'সব অধ্যায়ের Mistake Review')+' · <b id="gaReviewCount">'+rows.length+'</b>টি সংরক্ষিত ভুল</p></div><button class="btn" type="button" id="gaClearMistakes">'+(g?'এই অধ্যায়ের ভুল মুছুন':'সব ভুল মুছুন')+'</button></div><div class="ga-review-filters"><label>অবস্থা<select id="gaReviewStatus"><option value="unreviewed" selected>রিভিউ বাকি</option><option value="all">সব ভুল</option><option value="reviewed">রিভিউ সম্পন্ন</option></select></label>'+(allMode?'<label>অধ্যায়<select id="gaReviewChapter"><option value="all">সব অধ্যায়</option>'+chapterOptions+'</select></label>':'')+'<label>কঠিনতা<select id="gaReviewDifficulty"><option value="all">সব স্তর</option><option value="easy">সহজ</option><option value="medium">মাঝারি</option><option value="deep-conceptual">গভীর ধারণা</option><option value="hard-advanced">কঠিন/উন্নত</option></select></label></div>'+(rows.length?'<div class="ga-review-list" id="gaReviewList">'+reviewRows+'</div><p class="ga-review-filter-empty" id="gaReviewFilterEmpty" hidden>এই ফিল্টারে কোনো প্রশ্ন পাওয়া যায়নি।</p>':'<div class="ga-empty card"><span>✨</span><h3>এখনও কোনো ভুল সংরক্ষিত হয়নি</h3><p>অধ্যায় কুইজে ভুল উত্তর দিলে প্রশ্নটি এখানে সংরক্ষিত হবে।</p></div>')+'<div class="ga-level-footer"><a class="btn pri" href="'+(g?'#/play/'+E(g.id):'#/play')+'">আবার অনুশীলন</a><a class="btn" href="#/play">অন্য অধ্যায় বেছে নাও</a></div></div>'
+}
+
+function mountGameMistakes(root,id){
+ var clear=root.querySelector('#gaClearMistakes');
+ if(clear)clear.addEventListener('click',function(){if(!confirm(id?'এই অধ্যায়ের সংরক্ষিত ভুলগুলো মুছে ফেলবেন?':'সব অধ্যায়ের সংরক্ষিত ভুলগুলো মুছে ফেলবেন?'))return;gaClearStoredMistakes(id||'');route()});
+ var status=root.querySelector('#gaReviewStatus'),chapter=root.querySelector('#gaReviewChapter'),difficulty=root.querySelector('#gaReviewDifficulty'),list=root.querySelector('#gaReviewList');
+ function apply(){if(!list)return;var count=0;Array.prototype.forEach.call(list.querySelectorAll('[data-review-row]'),function(row){var ok=(status&&status.value!=='all'?row.dataset.reviewStatus===status.value:true)&&(chapter&&chapter.value!=='all'?row.dataset.reviewChapter===chapter.value:true)&&(difficulty&&difficulty.value!=='all'?row.dataset.reviewDifficulty===difficulty.value:true);row.hidden=!ok;if(ok)count++});var c=root.querySelector('#gaReviewCount'),empty=root.querySelector('#gaReviewFilterEmpty');if(c)c.textContent=count;if(empty)empty.hidden=count>0}
+ [status,chapter,difficulty].forEach(function(el){if(el)el.addEventListener('change',apply)});
+ if(status)status.value='unreviewed';
+ apply();
+ if(list)list.addEventListener('click',function(ev){
+  var mark=ev.target.closest('[data-ga-mark-reviewed]');
+  if(mark){ev.preventDefault();ev.stopPropagation();if(gaMarkMistakeReviewed(mark.dataset.quizId,mark.dataset.questionId))route();else if(window.FX&&FX.toast)FX.toast('রিভিউ অবস্থা সংরক্ষণ করা যায়নি। ব্রাউজারের Storage অনুমতি পরীক্ষা করুন।','bad')}
+ });
+}
+function gaStagedGame(g,level){var c=clone(g),d=clone(g.data||{}),map={blitz:'q',tf:'items',scramble:'words',memory:'pairs',balance:'eqs',flame:'items','oddOne':'sets',stepOrder:'puzzles'};c.challengeLevel=({concept:1,board:2,admission:3,boss:4})[level]||1;c.levelId=level;c.data=d;if(c.chapterQuiz){d.q=(d.q||[]).slice();if(level==='retry'){var retryTarget=window.__clReviewRetryTarget||null;try{retryTarget=retryTarget||JSON.parse(sessionStorage.getItem('clReviewRetryTarget')||'null')}catch(e){}if(retryTarget&&retryTarget.quizId===g.id){var rq=gaFindChapterQuestion(g.id,retryTarget.questionId,retryTarget.questionText);if(rq){d.q=[rq];c.reviewRetryQuestionId=String(rq.questionId||rq.id||retryTarget.questionId);c.reviewRetry=true;}try{sessionStorage.removeItem('clReviewRetryTarget')}catch(e){}window.__clReviewRetryTarget=null;} }d.rounds=d.q.length;d.time=0;d.useChapters='0';c.data=d;return c}var field=map[c.type],arr=field&&Array.isArray(d[field])?d[field].slice():[];if(arr.length){var picked=arr,hasTier=arr.some(function(x){return x&&Number(x.tier)>0});if(level==='concept')picked=hasTier?arr.filter(function(x){return Number(x.tier)<=1}):arr.slice(0,Math.max(2,Math.ceil(arr.length*.4)));else if(level==='board')picked=hasTier?arr.filter(function(x){return Number(x.tier)<=2}):arr.slice(0,Math.max(3,Math.ceil(arr.length*.65)));else if(level==='admission')picked=hasTier?arr.filter(function(x){return Number(x.tier)>=2}):arr.slice(Math.max(0,Math.floor(arr.length*.4)));else picked=arr.slice();var mins={q:2,items:3,words:2,pairs:2,eqs:1,sets:2,puzzles:1};if(picked.length<(mins[field]||1))picked=arr.slice();d[field]=picked}if(c.type==='blitz'){d.time=({concept:75,board:65,admission:50,boss:90})[level]||65;d.rounds=(d.q||[]).length;d.useChapters='0'}c.data=d;return c}
+var pages={
+ 'study-space':function(){return studySpace()},
+ 'smart-practice':function(){return smartPractice()},
+ daily:function(){return dailyPage()},
+ analytics:function(){return studyAnalytics()},
+ profile:function(){var u=student();if(!u)return '<div class="w pgw"><div class="card stgin"><h1>Sign in to view your profile</h1><p class="lead">Your profile, settings, and XP are available after signing in.</p><a class="btn pri" href="#/account/signin">Sign in</a></div></div>';var g=GS(),l=lvl(g.xp),av=u.avatar?'<img class="profile-avatar-img" src="'+E(u.avatar)+'" alt="Profile picture">':'<span class="profile-avatar-letter">'+E((u.name||'S').trim().charAt(0).toUpperCase())+'</span>';return '<div class="w pgw profile-page"><div class="profile-head card"><div class="profile-avatar">'+av+'</div><div class="profile-main"><span class="pill"><i></i> STUDENT PROFILE</span><h1>'+E(u.name||'Student')+'</h1><div class="row profile-shortcuts"><a class="btn" href="#/edit-profile">⚙ Edit profile</a><a class="btn" href="#/settings">Settings</a></div></div></div><div class="profile-stats"><div class="card"><span>Experience points</span><strong>'+Math.max(0,Number(g.xp)||0)+' XP</strong></div><div class="card"><span>Current level</span><strong>Level '+l.n+'</strong></div><div class="card"><span>Learning streak</span><strong>🔥 '+g.streak+' days</strong></div><div class="card"><span>Simulations explored</span><strong>'+Object.keys(g.sims).length+'</strong></div></div><div class="row profile-actions"><a class="btn pri" href="#/progress">View full progress</a><a class="btn" href="#/settings">Settings</a><button class="btn" id="studentLogout" type="button">Sign out</button></div></div>'},
+ 'edit-profile':function(){var u=student();if(!u)return '<div class="w pgw"><div class="card stgin"><h1>Sign in required</h1><a class="btn pri" href="#/account/signin">Sign in</a></div></div>';return '<div class="w pgw auth-wrap"><div class="card stgin"><span class="pill"><i></i> ACCOUNT SETTINGS</span><h1 class="ctitle">Edit your profile</h1><p class="lead">Change your picture and information. Your XP and learning progress stay connected to your account.</p><form id="studentProfileForm" class="auth-form"><div class="profile-picture-edit"><div id="profilePreview" class="profile-avatar">'+(u.avatar?'<img class="profile-avatar-img" src="'+E(u.avatar)+'" alt="Profile picture">':'<span class="profile-avatar-letter">'+E((u.name||'S').trim().charAt(0).toUpperCase())+'</span>')+'</div><label class="btn" for="profilePicture">Change profile picture</label><input id="profilePicture" type="file" accept="image/png,image/jpeg,image/webp" hidden><small class="mutt">JPG, PNG or WebP; image will be resized before saving.</small></div><label class="auth-field"><span>Full name</span><input name="name" required minlength="2" maxlength="80" value="'+E(u.name||'')+'"></label><label class="auth-field"><span>Email address (cannot be changed here)</span><input value="'+E(u.email||'')+'" disabled></label><label class="auth-field"><span>About me</span><textarea name="bio" maxlength="240" rows="3" placeholder="A little about you">'+E(u.bio||'')+'</textarea></label><label class="auth-field"><span>School / institution</span><input name="school" required minlength="2" maxlength="120" value="'+E(u.school||'')+'" placeholder="Your school or college"></label><label class="auth-field"><span>Location</span><input name="location" maxlength="120" value="'+E(u.location||'')+'" placeholder="City or area (optional)"></label><p id="profileMessage" class="mutt" role="status"></p><button class="btn pri auth-submit" type="submit">Save changes →</button><a class="btn profile-back" href="#/profile">Back to profile</a><a class="btn" href="#/settings">General settings</a></form></div></div>'},
+ account:function(){var raw=location.hash.split('?')[1]||'',params=new URLSearchParams(raw),mode=(location.hash.split('/')[2]||'signin').split('?')[0],returnTo=params.get('return')||'';if(returnTo&&/^#\//.test(returnTo)){try{sessionStorage.setItem('clAuthReturn',returnTo)}catch(e){}}return '<div class="w pgw auth-wrap"><div class="card stgin"><div class="auth-mark">✦ <span>GOLDEN SNITCH ACCOUNT</span></div><h1 class="ctitle">'+(mode==='signup'?'Create your account':'Welcome back')+'</h1><p class="lead">'+(mode==='signup'?'Save your learning progress and compete on the leaderboard.':'Sign in to sync progress and appear on the leaderboard.')+'</p><div class="auth-free-note"><strong>Free access:</strong> You can use study tools, interactive games, simulations and Graph Lab without signing in. XP on this device works locally; sign in to attach XP to your account and appear on the leaderboard.</div><div class="tabs"><a class="tab '+(mode==='signin'?'on':'')+'" href="#/account/signin'+(returnTo?'?return='+encodeURIComponent(returnTo):'')+'">Sign in</a><a class="tab '+(mode==='signup'?'on':'')+'" href="#/account/signup'+(returnTo?'?return='+encodeURIComponent(returnTo):'')+'">Sign up</a></div><form id="studentAuth" class="auth-form" data-mode="'+mode+'">'+(mode==='signup'?'<label class="auth-field"><span>Full name</span><input name="name" autocomplete="name" placeholder="Your name" required minlength="2" maxlength="80"></label><label class="auth-field"><span>Institute Name</span><input name="school" autocomplete="organization" placeholder="Your school, college or institute" required minlength="2" maxlength="120"></label>':'')+'<label class="auth-field"><span>Email address</span><input name="email" type="email" inputmode="email" autocapitalize="none" spellcheck="false" autocomplete="email" placeholder="you@example.com" required maxlength="254"></label><label class="auth-field"><span>Password</span><span class="auth-password-row"><input id="studentPassword" name="password" type="password" autocomplete="'+(mode==='signup'?'new-password':'current-password')+'" placeholder="'+(mode==='signup'?'At least 8 characters':'Enter your password')+'" minlength="8" maxlength="200" required><button type="button" class="auth-show-password" data-toggle-password aria-label="Show password">Show</button></span></label>'+(mode==='signin'?'<button type="button" class="auth-forgot" data-forgot-password>Forgot password?</button><p id="forgotMessage" class="mutt" role="status" hidden>Self-service email recovery is not configured yet. Please contact the Golden Snitch administrator for a secure reset. Never share your password.</p>':'<p class="mutt">Use at least 8 characters. Your password is never shown publicly.</p>')+'<p id="authMessage" class="mutt" role="status" aria-live="polite"></p><button class="btn pri auth-submit" type="submit">'+(mode==='signup'?'Create account':'Sign in')+' <span aria-hidden="true">→</span></button><p class="auth-switch">'+(mode==='signup'?'Already have an account? <a href="#/account/signin'+(returnTo?'?return='+encodeURIComponent(returnTo):'')+'">Sign in</a>':'New to Golden Snitch? <a href="#/account/signup'+(returnTo?'?return='+encodeURIComponent(returnTo):'')+'">Create an account</a>')+'</p></form></div></div>'},
+
+ '':function(){var visible=HOME.filter(function(s){var copy=[s.pill,s.kicker,s.heading,s.h,s.title,s.p,s.p2,s.subtitle,s.description].filter(Boolean).join(' ').toLowerCase();var quick=/quick\s*access/i.test(copy)||/এক\s*জায়গায়\s*শেখা[,.]?\s*অনুশীলন\s*ও\s*পরিকল্পনা/.test(copy)||/এক\s*জায়গায়\s*শেখা[,.]?\s*অনুশীলন\s*ও\s*পরিকল্পনা/.test(copy);return s.on!==false&&s.on!=='0'&&SEC[s.type]&&!quick});var chapterCta=visible.filter(function(s){return s.id==='s-cta'});var faqSections=visible.filter(function(s){return s.type==='faq'});var ticker=visible.filter(function(s){return s.type==='marquee'});var other=visible.filter(function(s){return s.id!=='s-cta'&&s.type!=='marquee'&&s.type!=='faq'});var otherHtml=other.map(function(s){return s.id==='s-why'?homeFlowchart(s):SEC[s.type](s)}).join('');return secHero()+ticker.map(function(s){return SEC[s.type](s)}).join('')+homeQuickAccess()+otherHtml+homeDiscoveryMotion()+homeScienceOutro()+chapterCta.map(function(s){return SEC[s.type](s)}).join('')+faqSections.map(function(s){return SEC.faq(s)}).join('')},
+ chapters:function(){var labels=[['all','All'],['phy','Physics'],['chem','Chemistry'],['math','Higher Mathematics']];return'<div class="w pgw chapters-page"><h1 class="rv">'+E(X('ch_h'))+'</h1><div class="filters rv chapter-filter-wrap"><div class="chips left chapter-filter-chips">'+labels.map(function(x){return'<button type="button" class="chipb chapter-filter-btn'+(chF==x[0]?' on':'')+'" data-chf="'+x[0]+'" aria-pressed="'+(chF==x[0]?'true':'false')+'">'+x[1]+'</button>'}).join('')+'</div><input id="chq" class="search" type="search" placeholder="'+E(X('ch_search'))+'" value="'+E(chQ)+'" aria-label="'+E(X('ch_search'))+'"></div><div id="chg">'+chGrid()+'</div></div>'},
+ play:function(){return gameAcademyPage()},
+ lab:function(){
+  var g=GS(),ls=LABS.filter(function(x){return x.on!==false&&x.on!=='0'});
+  var physicsOrder=['ভৌত জগৎ ও পরিমাপ','ভেক্টর','গতিবিদ্যা','প্রক্ষেপণ গতি','নিউটনীয় বলবিদ্যা','কাজ, শক্তি ও ক্ষমতা','মহাকর্ষ ও অভিকর্ষ','পদার্থের গাঠনিক ধর্ম','পর্যাবৃত্ত গতি','তরঙ্গ','আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব'];
+  var chemOrder=['ল্যাবরেটরির নিরাপদ ব্যবহার','গুণগত রসায়ন','মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন','রাসায়নিক পরিবর্তন','কর্মমুখী রসায়ন'];
+  var mathOrder=['ম্যাট্রিক্স ও নির্ণায়ক','ভেক্টর','সরলরেখা','বৃত্ত','বিন্যাস ও সমাবেশ','ত্রিকোণমিতিক অনুপাত','সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত','ফাংশন ও ফাংশনের লেখচিত্র','অন্তরীকরণ','যোগজীকরণ'];
+  var physics=ls.filter(function(l){return labSubject(l.sub)==='পদার্থবিজ্ঞান';}).filter(function(l){return l.arcadeImported||!/(optics|circuit|electricity|magnetic|magnetism|capacitor|electrostatic|photoelectric|induction)/i.test([l.id,l.sim,l.t,l.chapter,l.concept].join(' '));}),chemistry=ls.filter(function(l){return labSubject(l.sub)==='রসায়ন';}),maths=ls.filter(function(l){return labSubject(l.sub)==='উচ্চতর গণিত';});
+  function blob(l){return [l.id,l.sim,l.t,l.title,l.chapter,l.concept,l.d,l.tip].join(' ').toLowerCase();}
+  function physicsChapterFor(l){
+   var z=blob(l);if(/projectile|trajectory|launch.?angle|projectile.?range|drop.?vs.?projectile/.test(z))return 'প্রক্ষেপণ গতি';
+   var raw=String(l.physicsChapter||l.chapter||'').trim(),aliases={'Vectors':'ভেক্টর','Vector':'ভেক্টর','Kinematics':'গতিবিদ্যা','Motion':'গতিবিদ্যা','Dynamics':'নিউটনীয় বলবিদ্যা','Newtonian Mechanics':'নিউটনীয় বলবিদ্যা','Work, Energy & Power':'কাজ, শক্তি ও ক্ষমতা','Work, Energy and Power':'কাজ, শক্তি ও ক্ষমতা','Gravitation':'মহাকর্ষ ও অভিকর্ষ','Gravity':'মহাকর্ষ ও অভিকর্ষ','Periodic Motion':'পর্যাবৃত্ত গতি','Oscillation':'পর্যাবৃত্ত গতি','Waves':'তরঙ্গ','Wave Motion':'তরঙ্গ','Ideal Gas':'আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব','Measurement':'ভৌত জগৎ ও পরিমাপ','Metrology':'ভৌত জগৎ ও পরিমাপ','Structure':'পদার্থের গাঠনিক ধর্ম','Fluids':'পদার্থের গাঠনিক ধর্ম'};
+   raw=aliases[raw]||raw;if(physicsOrder.indexOf(raw)>=0)return raw;if(l.arcadeImported&&raw)return raw;
+   if(/vernier|screw.?gauge|caliper|measurement|metrology|unit.?conversion|significant|dimension|uncertainty|measurement-error/.test(z))return physicsOrder[0];
+   if(/vector|river.?boat|dot.?product|cross.?product|components/.test(z))return physicsOrder[1];
+   if(/free.?fall|falling.?object|tiger.?deer|bus.?train|relative.?motion|kinematic|motion.?graph|two.?object/.test(z))return physicsOrder[2];
+   if(/newton|force|friction|pulley|elevator|impulse|collision|momentum|gun.?bullet|recoil|circular.?motion|vertical.?circle|banking|inclined.?plane|conical.?pendulum/.test(z))return physicsOrder[4];
+   if(/work|energy|power|efficiency|spring.?energy|work.?force/.test(z))return physicsOrder[5];
+   if(/gravity|gravitation|satellite|orbital|orbit|escape.?velocity|gravitational.?potential|kepler/.test(z))return physicsOrder[6];
+   if(/elastic|stress|strain|young|hydraulic|buoyancy|archimedes|bernoulli|fluid|viscos|capillary|surface.?tension|torricelli|pressure/.test(z))return physicsOrder[7];
+   if(/shm|pendulum|oscillat|spring|periodic|harmonic/.test(z))return physicsOrder[8];
+   if(/wave|sound|doppler|beat|resonance|standing/.test(z))return physicsOrder[9];
+   if(/gas|molecular|rms|kinetic.?theory|thermodynamic|pv.?cycle|internal.?energy|ideal.?gas|maxwell/.test(z))return physicsOrder[10];
+   return physicsOrder[2];
+  }
+  function chemistryChapterFor(l){var raw=String(l.chapter||'').trim();if(l.arcadeImported&&raw)return raw;var z=blob(l);
+   if(/lab.?safety|safety|lab.?glass|glassware|chemical.?handling|waste.?disposal|hazard|first.?aid|lab.?procedure|laboratory/.test(z))return chemOrder[0];
+   if(/periodic|bond|polarity|electron.?config|valence|orbital|shell|isotope|bohr|rutherford|atom.?basics|quantum|aufbau|hund|pauli/.test(z))return chemOrder[2];
+   if(/qualitative|ion.?identification|wet.?test|flame|cation|anion|precipitat|ion.?detective|qualitative.?analysis|mass.?atlas/.test(z))return chemOrder[1];
+   if(/kinetic|equilibrium|acid|base|titration|electrochem|electrolysis|redox|reaction|stoich|enthalpy|thermochem|ph\b|chemical.?change|reaction.?energy/.test(z))return chemOrder[3];
+   return chemOrder[4];
+  }
+  function mathChapterFor(l){var raw=String(l.chapter||'').trim();if(l.arcadeImported&&raw)return raw;var z=blob(l);
+   if(/matrix|matrices|determinant/.test(z))return mathOrder[0];
+   if(/vector/.test(z))return mathOrder[1];
+   if(/straight.?line|slope|line.?equation|line.?explorer/.test(z))return mathOrder[2];
+   if(/circle|conic|radius|tangent.?circle/.test(z))return mathOrder[3];
+   if(/permutation|combination|combinatoric|probability|factorial/.test(z))return mathOrder[4];
+   if(/associated.?angle|compound.?angle|trig.?graph|trigonometric.?identity|unit.?circle/.test(z))return /associated|compound|graph/.test(z)?mathOrder[6]:mathOrder[5];
+   if(/trig|sine|cosine|tangent|cotangent/.test(z))return mathOrder[5];
+   if(/integration|integral|antiderivative/.test(z))return mathOrder[9];
+   if(/differentiation|derivative|gradient|tangent|limit.?explorer/.test(z))return mathOrder[8];
+   if(/function|complex|graph|conic|coordinate/.test(z))return mathOrder[7];
+   return mathOrder[7];
+  }
+  function groupedPanel(key,order,items,mapper){var groups={};order.forEach(function(n){groups[n]=[];});items.forEach(function(l){var name=mapper(l);if(!groups[name])groups[name]=[];groups[name].push(l);});return'<section class="lab-subject-panel" data-lab-panel="'+key+'">'+order.map(function(name,idx){var arr=groups[name]||[];if(!arr.length)return '';return'<section class="lab-subject-group" data-lab-group="'+E(key+'-'+idx)+'"><h2 class="subh">'+E(name)+' <small>'+arr.length+'টি</small></h2><div class="gA g3 lab-card-grid sx-grid">'+arr.map(function(l,i){return card(l,i,name);}).join('')+'</div></section>';}).join('')+'</section>';}
+  function card(l,i,chapter){var ico=simIcon(l),title=simTitle(l),done=!!(g.sims[l.id]||g.sims[l.sim]);if(window.CL_SIM_ANIM){var sj=labSubject(l.sub);return window.CL_SIM_ANIM.card({id:l.id,title:title,desc:simDescription(l),icon:ico,subject:sj,sk:sj==='পদার্থবিজ্ঞান'?'phy':sj==='রসায়ন'?'chem':'math',done:done})}return'<a class="card gm tilt rv lab-sim-card" style="--d:'+(Math.min(i*.003,.08))+'s;--icon-hue:'+iconHue(l.id)+'" href="#/lab/'+E(l.id)+'"><span class="gico" aria-hidden="true">'+E(ico)+'</span>'+(done?'<span class="diff d-easy">✓ দেখা হয়েছে</span>':'')+'<h3>'+E(title)+'</h3>'+'<p>'+E(simDescription(l))+'</p><span class="go">সিমুলেশন খুলুন <span aria-hidden="true">→</span></span></a>'; }
+  [ [physics,physicsOrder],[chemistry,chemOrder],[maths,mathOrder] ].forEach(function(pair){pair[0].forEach(function(l){if(l.arcadeImported&&l.chapter&&pair[1].indexOf(l.chapter)<0)pair[1].push(l.chapter);});});
+  var physicsHtml=groupedPanel('phy',physicsOrder,physics,physicsChapterFor),chemHtml=groupedPanel('chem',chemOrder,chemistry,chemistryChapterFor),mathHtml=groupedPanel('math',mathOrder,maths,mathChapterFor);
+  return'<div class="w pgw lab-page"><span class="pill"><i></i>🧪 ইন্টারঅ্যাকটিভ লার্নিং ল্যাব</span><h1>সিমুলেশন</h1><p class="lead">বিষয় বেছে নিন, অথবা এক বাটনে সব বিষয়ের সিমুলেশন একসাথে দেখুন। খালি অধ্যায় বাদ দেওয়া হয়েছে—কার্ডগুলো সরাসরি খুলে পরীক্ষা করুন।</p><div class="subject-chooser" id="labSubjectChooser" role="tablist" aria-label="সিমুলেশনের বিষয়"><button type="button" class="subject-choice subject-choice-phy on" data-lab-subject="phy" role="tab" aria-selected="true"><span class="subject-choice-copy"><b>পদার্থবিজ্ঞান</b><small>'+physics.length+'টি সিমুলেশন</small></span><span class="subject-choice-visual subject-choice-visual-phy" aria-hidden="true"><svg viewBox="0 0 100 100"><circle class="atom-core" cx="50" cy="50" r="7"/><g class="atom-orbit orbit-one"><ellipse cx="50" cy="50" rx="38" ry="15"/></g><g class="atom-orbit orbit-two"><ellipse cx="50" cy="50" rx="38" ry="15" transform="rotate(60 50 50)"/></g><g class="atom-orbit orbit-three"><ellipse cx="50" cy="50" rx="38" ry="15" transform="rotate(120 50 50)"/></g><circle class="atom-electron" cx="87" cy="50" r="4"/></svg></span></button><button type="button" class="subject-choice subject-choice-chem" data-lab-subject="chem" role="tab" aria-selected="false"><span class="subject-choice-copy"><b>রসায়ন</b><small>'+chemistry.length+'টি সিমুলেশন</small></span><span class="subject-choice-visual subject-choice-visual-chem" aria-hidden="true"><svg viewBox="0 0 100 100"><path class="chem-bond" d="M24 67L47 34L77 61L24 67"/><path class="chem-bond chem-bond-two" d="M47 34L48 77"/><circle class="chem-node node-a" cx="24" cy="67" r="9"/><circle class="chem-node node-b" cx="47" cy="34" r="12"/><circle class="chem-node node-c" cx="77" cy="61" r="10"/><circle class="chem-node node-d" cx="48" cy="77" r="7"/><circle class="chem-pulse" cx="47" cy="34" r="19"/></svg></span></button><button type="button" class="subject-choice subject-choice-math" data-lab-subject="math" role="tab" aria-selected="false"><span class="subject-choice-copy"><b>উচ্চতর গণিত</b><small>'+maths.length+'টি সিমুলেশন</small></span><span class="subject-choice-visual subject-choice-visual-math" aria-hidden="true"><svg viewBox="0 0 100 100"><path class="math-axis" d="M12 82H90M20 90V10"/><path class="math-curve" d="M23 73C34 73 36 28 54 27S71 75 86 20"/><circle class="math-point" cx="54" cy="27" r="4"/><path class="math-grid" d="M20 45H88M20 63H88M42 12V82M64 12V82"/></svg></span></button></div><div class="lab-catalog-actions"><button type="button" class="btn pri" id="labShowAll" aria-pressed="false">▦ সব সিমুলেশন একসাথে দেখুন</button><span id="labCatalogStatus" role="status">শুধু পদার্থবিজ্ঞান দেখানো হচ্ছে</span></div><div id="lbg" class="lab-subject-groups">'+physicsHtml+chemHtml.replace('data-lab-panel="chem"','data-lab-panel="chem" hidden')+mathHtml.replace('data-lab-panel="math"','data-lab-panel="math" hidden')+'</div><div class="lab-extra-link"><a class="btn" href="#/shortcuts">⚡ অধ্যায়ভিত্তিক Shortcut Tricks</a><a class="btn" href="#/graphs">📊 সব Graph Lab</a></div><p class="mutt lab-footnote">স্লাইডার অথবা পাশে থাকা সংখ্যার ঘরে মান লিখুন। জুম/স্ক্রিনের আকার বদলালেও কার্ড ও কন্ট্রোল স্ক্রিনের মধ্যে ফিট হবে।</p></div>';
+ },
+ graphs:function(){return window.CL_GRAPHS?window.CL_GRAPHS.renderList():'<div class="w pgw"><h1>Graph Lab</h1><p>গ্রাফ ক্যাটালগ লোড করা যায়নি।</p></div>'},
+ shortcuts:function(){return window.CL_SHORTCUTS?window.CL_SHORTCUTS.renderList():'<div class="w pgw"><h1>Shortcut Tricks</h1><p>শর্টকাট ক্যাটালগ লোড করা যায়নি।</p></div>'},
+ progress:function(){var g=GS(),l=lvl(g.xp),pc=Math.round(l.into/l.size*100),perf=metric('perfect',g);
+  var progressSyllabus=[
+   {s:'phy',title:'পদার্থবিজ্ঞান ১ম পত্র',chapters:[
+    ['ভৌতজগৎ ও পরিমাপ',['physical world and measurement','physical world']],['ভেক্টর',['vectors']],['গতিবিদ্যা',['kinematics']],['নিউটনিয়ান বলবিদ্যা',['newtonian mechanics','dynamics','force and motion']],['কাজ, শক্তি ও ক্ষমতা',['work, energy and power','work energy and power']],['মহাকর্ষ ও অভিকর্ষ',['gravitation and gravity','gravitation']],['পদার্থের গাঠনিক ধর্ম',['structural properties of matter','properties of matter']],['পর্যাবৃত্ত গতি',['periodic motion']],['তরঙ্গ',['waves','wave']],['আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব',['ideal gas and kinetic theory of gases','ideal gas','kinetic theory of gases']]
+   ]},
+   {s:'chem',title:'রসায়ন ১ম পত্র',chapters:[
+    ['ল্যাবরেটরির নিরাপদ ব্যবহার',['safe use of laboratory','laboratory safety','lab safety']],['গুণগত রসায়ন',['qualitative chemistry']],['মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন',['periodic properties and chemical bond of elements','periodic properties and chemical bonding','periodic properties','chemical bonding']],['রাসায়নিক পরিবর্তন',['chemical change','chemical changes','chemical reactions']],['কর্মমুখী রসায়ন',['vocational chemistry','applied chemistry']]
+   ]},
+   {s:'math',title:'উচ্চতর গণিত ১ম পত্র',chapters:[
+    ['ম্যাট্রিক্স ও নির্ণায়ক',['matrices and determinants']],['ভেক্টর',['vectors']],['সরলরেখা',['straight lines','straight line']],['বৃত্ত',['circles','circle']],['বিন্যাস ও সমাবেশ',['permutation and combination','permutations and combinations']],['ত্রিকোণমিতিক অনুপাত',['trigonometric ratios']],['সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত',['trigonometric ratios of associated angles','associated angles']],['ফাংশন ও ফাংশনের লেখচিত্র',['functions and graphs of functions','functions and graphs']],['অন্তরীকরণ',['differentiation']],['যোগজীকরণ',['integration']]
+   ]}
+  ];
+  var rows=progressSyllabus.map(function(subject){
+   var chapters=subject.chapters.map(function(entry){
+    var label=entry[0],aliases=entry[1],matches=CHL.filter(function(c){if(c.s!==subject.s)return false;var raw=chTitle(c).toLowerCase();return aliases.some(function(a){if(a==='trigonometric ratios'&&raw.indexOf('associated angles')>=0)return false;return raw===a||raw.indexOf(a)>=0;});});
+    var available=matches.filter(function(c){return c.status==='available';}),done=available.reduce(function(n,c){return n+cnt(c.id);},0),total=available.length*4,pct=total?Math.round(done/total*100):0,routeTitle=matches.length?chTitle(matches[0]):label;
+    return'<a class="progress-chapter-row" href="#/chapter-list/'+E(encodeURIComponent(subject.s+'|'+routeTitle))+'"><span class="progress-chapter-name">'+E(label)+'</span><span class="progress-chapter-meter" aria-label="'+pct+'% complete"><i style="width:'+pct+'%"></i></span><small>'+pct+'%</small></a>';
+   }).join('');
+   return'<section class="progress-subject-group" data-progress-subject="'+subject.s+'"><h3>'+E(subject.title)+'</h3><div class="progress-chapter-list">'+chapters+'</div></section>';
+  }).join('');
+  return'<div class="w pgw" style="max-width:860px"><h1 class="rv">'+E(X('pr_h'))+'</h1><p class="lead rv">'+E(X('pr_lead'))+'</p><div class="card lvcard rv"><div class="lring" style="--pct:'+pc+'"><b>'+l.n+'</b><small>'+E(X('pr_level'))+'</small></div><div class="lvt"><h3>'+g.xp+' XP</h3><p>'+(l.size-l.into)+' XP → '+E(X('pr_level'))+' '+(l.n+1)+'</p><div class="bar"><i style="width:'+pc+'%"></i></div><p class="streak">🔥 '+g.streak+' '+E(X('pr_streak'))+'</p></div></div>'
+  +'<div class="stats4">'+[[tot(),X('pr_stages')],[Object.keys(g.sims).length,X('pr_sims')],[metric('games',g),X('pr_games')],[perf,X('pr_perfect')]].map(function(s,i){return'<div class="card rv" style="--d:'+i*.06+'s"><b data-count="'+s[0]+'">0</b><span>'+E(s[1])+'</span></div>'}).join('')+'</div>'
+  +progressExtras()+'<h2 class="mt subh">'+E(X('pr_badges'))+'</h2><div class="badges">'+(GAM.badges||[]).map(function(b,i){var got=g.badges[b.id];return'<div class="card bdg tilt rv'+(got?' got':'')+'" style="--d:'+i*.04+'s"><span class="bi">'+E(b.i)+'</span><b>'+E(b.t)+'</b><small>'+E(b.d)+'</small><i>'+(got?'✓':'🔒')+'</i></div>'}).join('')+'</div>'
+  +'<h2 class="mt subh">'+E(X('pr_chapters'))+'</h2>'+rows+'<p style="margin-top:34px"><button class="btn" data-reset>'+E(X('pr_reset'))+'</button></p></div>'},
+ leaderboard:function(){var g=GS();return'<div class="w pgw leaderboard-page"><div class="leader-intro"><span class="pill"><i></i>STUDENT RANKINGS</span><h1>Leaderboard</h1><p class="lead">Celebrate progress, one concept at a time.</p></div><div class="leader-summary"><div><span class="stat-label">Your device XP</span><strong>'+Math.max(0,Number(g.xp)||0)+'</strong><span class="stat-label">XP earned here</span></div><div><span class="stat-label">Ranking status</span><strong id="leaderCount">—</strong><span class="stat-label">student accounts</span></div></div><div id="leaderboardData" class="leaderboard-data"><div class="leader-loading"><span class="loader-dot"></span> Loading student rankings…</div></div><p class="leader-note">Rankings are based on XP saved to Golden Snitch accounts. Progress stored only on this device is shown separately.</p></div>'},
+ about:function(){return'<div class="w pgw about-page" style="max-width:900px"><div class="about-hero rv"><span class="eyebrow about-project-kicker">✦ GOLDEN SNITCH · ABOUT THE PROJECT</span><h1>'+E(X('ab_h'))+'</h1><p class="lead" style="max-width:none">'+E(S.about)+'</p>'+(S.aboutImg?'<img class="cv" src="'+E(S.aboutImg)+'" alt="Golden Snitch project">':'')+'</div><div class="about-grid"><section class="card about-card rv"><span class="about-icon" aria-hidden="true">◎</span><h2>উদ্দেশ্য ও লক্ষ্যপাঠক</h2><p>Golden Snitch-এর লক্ষ্য হলো সূত্র মুখস্থ করার বদলে ধারণা বোঝা—বাস্তব উদাহরণ, ধাপে ধাপে ব্যাখ্যা, কুইজ, গেম ও ইন্টারঅ্যাকটিভ সিমুলেশনের মাধ্যমে। এটি মূলত HSC পর্যায়ের Physics, Chemistry ও Higher Mathematics-এর শিক্ষার্থীদের জন্য তৈরি; কৌতূহলী অন্য শিক্ষার্থীরাও ব্যবহার করতে পারে।</p></section><section class="card about-card rv"><span class="about-icon" aria-hidden="true">☑</span><h2>কনটেন্ট তৈরি ও যাচাই</h2><p>শেখার উপকরণগুলো অধ্যায় ও কনসেপ্ট অনুযায়ী সাজানো হয়। প্রকাশের আগে সূত্র, একক, উদাহরণ ও কুইজের উত্তর মিলিয়ে দেখা উচিত; ইন্টারঅ্যাকটিভ মডেলগুলোকে ধারণা বোঝানোর সহায়ক হিসেবে ব্যবহার করুন, পরীক্ষাগারের বাস্তব পরিমাপের বিকল্প হিসেবে নয়। ভুল বা অস্পষ্ট কিছু চোখে পড়লে নিচের মতামত ফর্মে জানাতে পারেন।</p></section><section class="card about-card rv creator-team-section"><span class="about-icon about-icon-person" aria-hidden="true"><svg viewBox="0 0 24 24" role="img" focusable="false"><circle cx="12" cy="7" r="3.2"/><path d="M5 21v-2.2a7 7 0 0 1 14 0V21Z"/><path d="M8.7 4.9 9.5 3h5l.8 1.9"/></svg></span><h2>নির্মাতা</h2><p>Golden Snitch তৈরি করেছেন Taimur Shams ও Moshiur Rahman Araf—একটি স্বাধীন, শিক্ষার্থী-পরিচালিত শিক্ষামূলক প্রজেক্ট হিসেবে। উদ্দেশ্য হলো বাংলা ভাষায় সহজবোধ্য ও ধারণাভিত্তিক বিজ্ঞান ও গণিত শেখার অভিজ্ঞতা তৈরি করা।</p><div class="creator-profiles" aria-label="Golden Snitch-এর নির্মাতারা"><article class="creator-profile" style="--creator-delay:0ms"><div class="creator-avatar-ring"><span class="creator-avatar-fallback" aria-hidden="true">TS</span><img src="'+E(assetImage("creator-taimur.webp"))+'" alt="Taimur Shams-এর ছবি" width="480" height="480" loading="eager" fetchpriority="high" decoding="sync"></div><div class="creator-profile-meta"><h3>Taimur Shams</h3><span>প্রকল্প নির্মাতা</span></div><span class="creator-spark" aria-hidden="true">✦</span></article><article class="creator-profile" style="--creator-delay:140ms"><div class="creator-avatar-ring"><span class="creator-avatar-fallback" aria-hidden="true">MA</span><img src="'+E(assetImage("creator-moshiur.webp"))+'" alt="Moshiur Rahman Araf-এর ছবি" width="480" height="480" loading="eager" fetchpriority="high" decoding="sync"></div><div class="creator-profile-meta"><h3>Moshiur Rahman Araf</h3><span>প্রকল্প নির্মাতা</span></div><span class="creator-spark" aria-hidden="true">✧</span></article></div><p class="mutt creator-note">একটি শিক্ষার্থী-পরিচালিত উদ্যোগ—ধারণা বোঝা, পরীক্ষা করা এবং জ্ঞান ভাগ করে নেওয়ার জন্য।</p></section><section class="card about-card rv" id="feedback"><span class="about-icon about-icon-feedback" aria-hidden="true"><svg viewBox="0 0 24 24" role="img" focusable="false"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-5 4v-4.8A2.5 2.5 0 0 1 4 13.5Z"/><path d="M8 8h8M8 11.5h5"/></svg></span><h2>মতামত ও সমস্যা জানান</h2><p>কোনো ভুল, কাজ না করা বাটন বা নতুন ফিচারের পরামর্শ থাকলে এখানে জানান। আপনার মতামত আমাদের আরও ভালো শেখার অভিজ্ঞতা তৈরি করতে সাহায্য করবে।</p><form id="feedbackForm" class="feedback-form"><label class="feedback-label" for="feedbackName">আপনার নাম (ঐচ্ছিক)</label><input id="feedbackName" name="name" maxlength="80" autocomplete="name" placeholder="নাম লিখুন"><label class="feedback-label" for="feedbackEmail">ইমেইল (ঐচ্ছিক)</label><input id="feedbackEmail" name="email" type="email" maxlength="254" autocomplete="email" placeholder="প্রয়োজনে যোগাযোগের জন্য"><label class="feedback-label" for="feedbackText">আপনার বার্তা</label><textarea id="feedbackText" name="message" rows="4" minlength="5" maxlength="2000" required placeholder="পেজের নাম, কী সমস্যা হয়েছে এবং কী আশা করেছিলেন লিখুন…"></textarea><div class="feedback-honey" aria-hidden="true"><label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off"></label></div><p id="feedbackStatus" class="mutt" role="status" aria-live="polite"></p><button class="btn pri" type="submit" id="sendFeedback">বার্তা পাঠান ↗</button></form></section><section class="card about-card student-review-card rv" id="studentReview"><span class="about-icon student-review-icon" aria-hidden="true">★</span><div class="student-review-heading"><div><span class="student-review-kicker">YOUR VOICE MATTERS</span><h2>আপনার রিভিউ দিন</h2><p>Golden Snitch ব্যবহার করে আপনার অভিজ্ঞতা কেমন? ১–৫ স্টার দিন এবং কী ভালো লেগেছে বা কী আরও ভালো করা যায়, তা লিখুন।</p></div><span class="student-review-orbit" aria-hidden="true">✦</span></div><div class="review-rating-block"><span class="review-field-title">আপনার মূল্যায়ন</span><div class="review-star-picker" role="group" aria-label="১ থেকে ৫ স্টার নির্বাচন করুন"><button type="button" data-review-rating="1" aria-label="১ স্টার" aria-pressed="false">★</button><button type="button" data-review-rating="2" aria-label="২ স্টার" aria-pressed="false">★</button><button type="button" data-review-rating="3" aria-label="৩ স্টার" aria-pressed="false">★</button><button type="button" data-review-rating="4" aria-label="৪ স্টার" aria-pressed="false">★</button><button type="button" data-review-rating="5" aria-label="৫ স্টার" aria-pressed="false">★</button></div><p class="review-rating-caption" id="reviewRatingCaption" aria-live="polite">স্টার বেছে নিন</p><input type="hidden" name="rating" id="reviewRating" value="0"></div><form id="studentReviewForm" class="student-review-form"><label for="reviewName">আপনার নাম <span>(ঐচ্ছিক)</span></label><input id="reviewName" name="name" maxlength="80" autocomplete="name" value="'+E((student()||{}).name||'')+'" placeholder="আপনার নাম লিখুন"><label for="reviewMessage">আপনার রিভিউ</label><textarea id="reviewMessage" name="message" rows="4" minlength="10" maxlength="1200" required placeholder="আপনার অভিজ্ঞতা, ভালো লাগা বা উন্নতির পরামর্শ লিখুন…"></textarea><div class="feedback-honey" aria-hidden="true"><label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off"></label></div><p id="reviewStatus" class="mutt student-review-status" role="status" aria-live="polite"></p><button class="btn pri student-review-submit" type="submit" id="sendReview">রিভিউ জমা দিন <span aria-hidden="true">↗</span></button></form></section></div><section class="card about-legal rv"><h2>Privacy Policy — গোপনীয়তা</h2><p>Golden Snitch অ্যাকাউন্ট ব্যবহার করলে নাম, ইমেইল, প্রতিষ্ঠান এবং শেখার XP/প্রগতি সংরক্ষিত হতে পারে। পাসওয়ার্ড সরাসরি প্রদর্শন করা হয় না। Leaderboard-এ নাম ও XP দেখানো হতে পারে। ব্যক্তিগত তথ্য শেয়ার করার আগে ভেবে নিন এবং প্রোফাইল/প্রাইভেসি নিয়ন্ত্রণের উপলভ্য বিকল্প ব্যবহার করুন।</p><h2>Terms of Use — ব্যবহারের শর্ত</h2><p>Golden Snitch শিক্ষামূলক সহায়ক। সিমুলেশন ও কুইজ শেখার জন্য; পরীক্ষার আগে আপনার বোর্ড/প্রতিষ্ঠানের নির্ধারিত সিলেবাস ও নির্ভরযোগ্য পাঠ্যবইয়ের সঙ্গে মিলিয়ে নিন। সাইটের অপব্যবহার, অন্যের অ্যাকাউন্টে প্রবেশের চেষ্টা বা ভুল তথ্য ইচ্ছাকৃতভাবে ছড়ানো থেকে বিরত থাকুন। এই সারাংশ পূর্ণাঙ্গ আইনি পরামর্শ নয়।</p><p class="mutt">গোপনীয়তা বা ব্যবহারের শর্ত নিয়ে প্রশ্ন/সংশোধনের জন্য মতামত ফর্ম ব্যবহার করুন।</p></section></div>'}
+};
+function chapterListPage(encoded){var key='';try{key=decodeURIComponent(encoded||'')}catch(e){key=encoded||''}var bits=key.split('|'),sub=bits.shift()||'',title=bits.join('|'),items=chItems(sub,title);if(!items.length)return pages.chapters();
+ var st=chStat(items),titles=[];(L[sub]||[]).forEach(function(c){var t=chTitle(c);if(!(c.id==='qualitative-chemistry'&&CHL.some(function(x){return x.id==='qc-01'}))&&titles.indexOf(t)<0)titles.push(t)});var ix=titles.indexOf(title),prev=ix>0?titles[ix-1]:null,next=ix>=0&&ix<titles.length-1?titles[ix+1]:null;
+ var cont=st.next?'<a class="btn pri" href="#/chapter/'+E(st.next.id)+'">'+(st.started?'চালিয়ে যান':'প্রথম কনসেপ্ট শুরু করুন')+': '+E(st.next.t)+' →</a>':'<span class="bd2">✓ এই অধ্যায়ের সব চালু কনসেপ্ট সম্পন্ন</span>';
+ return '<div class="w pgw chapter-list-page"><a class="bk" href="#/lab">← Learning Lab</a><h1 class="rv">'+E(title)+'</h1><p class="lead rv">এই অধ্যায়ের কনসেপ্টগুলো ক্রমানুসারে শিখুন। প্রতিটি কনসেপ্টে ব্যাখ্যা, ইন্টারঅ্যাকটিভ সিমুলেশন ও কুইজ রয়েছে।</p>'+(st.av?'<div class="card chapter-progress"><div><b>'+st.pct+'%</b><span>'+st.full+'/'+st.av+' কনসেপ্ট সম্পন্ন</span><div class="bar"><i style="width:'+st.pct+'%"></i></div></div></div>':'')
+  +'<div class="chapter-concept-list">'+items.map(function(c,i){var a=c.status==='available',n=a?cnt(c.id):0;return (a?'<a href="#/chapter/'+E(c.id)+'"':'<div')+' class="card concept-index-row '+(a?'av':'')+'"><span class="concept-index-num">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+E(c.t)+'</h3><p>'+(a?'চারটি স্টেজ · '+(c.q||[]).length+'টি MCQ · '+n+'/4 ধাপ'+(n>=4?' ✓':''):'শীঘ্রই আসছে')+'</p>'+(a?'<div class="bar"><i style="width:'+n*25+'%"></i></div>':'')+'</div>'+(a?'<span class="go">'+(n>=4?'আবার দেখুন →':n>0?'চালিয়ে যান →':'শুরু করুন →')+'</span>':'<span class="bd2">Coming soon</span>')+'</'+(a?'a':'div')+'>'}).join('')+'</div>'
+  +(st.av?'<div class="chapter-continue-action">'+cont+'</div>':'')
+  +'<footer class="chapter-navigation-footer"><nav class="chapter-pn chapter-pn-bottom" aria-label="অধ্যায় নেভিগেশন">'+(prev?'<a class="btn" href="#/chapter-list/'+encodeURIComponent(sub+'|'+prev)+'">← '+E(prev)+'</a>':'<span></span>')+(next?'<a class="btn" href="#/chapter-list/'+encodeURIComponent(sub+'|'+next)+'">'+E(next)+' →</a>':'<span></span>')+'</nav></footer></div>'}
+
+function chapter(id){var c=C[id];if(!c)return pages.chapters();var peers=CHL.filter(function(x){return x.s===c.s&&String(x.chapterTitle||x.chapter||x.t||'Chapter').trim()===String(c.chapterTitle||c.chapter||c.t||'Chapter').trim()&&!(x.id==='qualitative-chemistry'&&CHL.some(function(y){return y.id==='qc-01'}))});var pos=peers.findIndex(function(x){return x.id===id});return'<div class="w pgw concept-page" style="max-width:860px"><a class="bk" href="#/chapter-list/'+E(encodeURIComponent(c.s+'|'+String(c.chapterTitle||c.chapter||c.t||'Chapter').trim()))+'">← অধ্যায়ের কনসেপ্ট তালিকা</a><div class="concept-position">CONCEPT '+(pos+1)+' OF '+peers.length+'</div><h1 class="ctitle">'+E(c.t)+'</h1><button type="button" class="btn study-bookmark-btn" data-study-bookmark-concept="'+E(id)+'">'+(STUDY().bookmarks[id]?'🔖 Bookmarked · Remove':'🔖 Bookmark this concept')+'</button>'+(c.cover?'<img class="cv" src="'+E(c.cover)+'" alt="">':'')+'<div class="mutt" id="pg"></div><div class="bar"><i id="pb"></i></div><div class="tabs" id="tabs"></div><div id="stg"></div><div id="conceptNav" class="concept-nav"></div></div>'}
+function gaDirectGamePage(g){var ion=g.type==='ionDetective',sim=g.type==='simExplorer';return '<div class="w pgw play-detail-page '+(sim?'ga-direct-simulation':'ga-direct-game')+'" style="max-width:1040px"><a class="bk" href="#/play">← Arcade-এ ফিরুন</a><div class="ga-play-banner"><span class="ga-game-icon" style="--icon-hue:'+iconHue(g.id)+'">'+E(gameIcon(g))+'</span><div><span class="ga-eyebrow">'+(sim?'INTERACTIVE SIMULATION':ion?'VIRTUAL LAB':'INTERACTIVE GAME')+'</span><h1>'+E(gameTitle(g))+'</h1><p>'+E(g.d||'নিজে পরীক্ষা করে শিখুন।')+'</p></div></div><div id="gm"></div></div>'}
+function gamePage(id,level){var g=gaGameById(id);if(!g)return pages.play();if(gaIsQuizGame(g)){if(level==='review')return gaReviewPage(g);if(!level)return g.chapterQuiz?gaChapterQuizIntro(g):gaLevelPicker(g);var lev=gaLevelFor(level);return '<div class="w pgw play-detail-page ga-play-detail '+(g.chapterQuiz?'ga-chapter-quiz-page':'')+'" style="max-width:1040px"><a class="bk" href="#/play/'+E(g.id)+'">← '+(g.chapterQuiz?'কুইজের বিবরণ':'লেভেল বেছে নিন')+'</a><div class="ga-play-banner"><span class="ga-game-icon" style="--icon-hue:'+iconHue(g.id)+'">'+E(gameIcon(g))+'</span><div>'+(g.chapterQuiz?'':'<span class="ga-eyebrow">'+E(lev.name)+'</span>')+'<h1>'+E(gameTitle(g))+'</h1><p>'+(g.chapterQuiz?(g.data.q||[]).length+'টি প্রশ্ন · উত্তর ও ব্যাখ্যাসহ':E(lev.desc))+'</p></div><a class="ga-review-link" href="#/play/'+E(g.id)+'/review">🧠 Mistake Review</a></div><div id="gm"></div></div>'}return gaDirectGamePage(g)}
+function labPage(id){var l=LABS.filter(function(x){return x.id==id&&x.on!==false&&x.on!=='0'})[0];if(!l)return pages.lab();var rel=Object.keys(C).filter(function(k){return C[k].sim==l.sim});
+ return'<div class="w pgw lab-detail-page" style="max-width:1000px"><a class="bk" href="#/lab">'+E(X('lab_back'))+'</a><div class="gh2"><span class="gico big" style="--icon-hue:'+iconHue(l.id)+'">'+E(simIcon(l))+'</span><div><h1 class="ctitle" style="margin:0">'+E(simTitle(l))+'</h1>'+'<p class="mutt sim-detail-description">'+E(simDescription(l))+'</p><button type="button" class="btn study-save-sim-btn" data-study-save-sim="'+E(l.id)+'">'+(STUDY().savedSims[l.id]?'✓ সংরক্ষিত · সরান':'＋ সিমুলেশন সংরক্ষণ')+'</button></div></div>'+(l.arcadeImported?'<div class="card simcard sim-explorer-host" id="gm"></div>':'<div class="card simcard" id="sim"></div>')+'<section class="sim-copy-guides" aria-label="সিমুলেশন ব্যবহারের নির্দেশনা"><article class="sim-copy-guide sim-copy-instruction"><span class="sim-copy-kicker">কীভাবে ব্যবহার করবেন</span><p>'+E(simTip(l))+'</p></article><article class="sim-copy-guide sim-copy-controls"><span class="sim-copy-kicker">কন্ট্রোলের সহায়তা</span><p>'+E(simControlHelp(l))+'</p></article></section>'+(rel.length?'<p class="mutt" style="margin-top:22px">'+E(X('lab_rel'))+': '+rel.map(function(k){return'<a class="lnk" href="#/chapter/'+E(k)+'">'+E(C[k].t)+'</a>'}).join(', ')+'</p>':'')+'</div>'}
+
+/* ------------------------------------------------------------ chapter stages */
+function once(fn){var d=false;return function(){if(d)return;d=true;fn()}}
+function enhanceSimulationNumberInputs(el){
+ if(!el||el.dataset.numericControlsEnhanced==='1')return;el.dataset.numericControlsEnhanced='1';
+ el.querySelectorAll('input[type=range]').forEach(function(range){
+  if(range.dataset.numericInputBound==='1')return;range.dataset.numericInputBound='1';
+  var parent=range.parentElement;if(!parent||parent.querySelector('input[type=number],.sim-value-editor'))return;
+  var lab=range.getAttribute('aria-label')||'';if(!lab){var sibling=parent.querySelector('label span');if(sibling)lab=sibling.textContent.trim();}
+  var box=document.createElement('label');box.className='sim-value-editor';
+  var caption=document.createElement('span');caption.textContent='নিজে মান লিখুন';
+  var num=document.createElement('input');num.type='number';num.className='sim-value-input';num.inputMode='decimal';num.min=range.min;num.max=range.max;num.step=range.step||'any';num.value=range.value;num.setAttribute('aria-label',(lab?lab+' — ':'')+'নিজে মান লিখুন');num.title='স্লাইডার ছাড়াই মান লিখুন';
+  function syncFromRange(){if(document.activeElement!==num)num.value=range.value;}
+  range.addEventListener('input',syncFromRange);range.addEventListener('cl-number-sync',syncFromRange);
+  function applyNumber(){if(num.value===''||!Number.isFinite(Number(num.value)))return;var n=Number(num.value),min=range.min===''?-Infinity:Number(range.min),max=range.max===''?Infinity:Number(range.max);n=Math.max(min,Math.min(max,n));num.value=String(n);range.value=String(n);range.dispatchEvent(new Event('input',{bubbles:true}));num.value=range.value;range.dispatchEvent(new Event('change',{bubbles:true}));}
+  num.addEventListener('change',applyNumber);num.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();applyNumber();num.blur();}});
+  box.appendChild(caption);box.appendChild(num);parent.appendChild(box);
+ });
+}
+function mountLabCatalog(){var page=document.querySelector('.lab-page');if(!page)return;var panels=Array.prototype.slice.call(page.querySelectorAll('.lab-subject-panel')),tabs=Array.prototype.slice.call(page.querySelectorAll('[data-lab-subject]')),allButton=page.querySelector('#labShowAll'),status=page.querySelector('#labCatalogStatus');var all=false,current='phy';
+ function show(key){all=key==='all';if(!all)current=key;panels.forEach(function(panel){panel.hidden=!all&&panel.getAttribute('data-lab-panel')!==key;});tabs.forEach(function(tab){var active=!all&&tab.dataset.labSubject===key;tab.classList.toggle('on',active);tab.setAttribute('aria-selected',String(active));});if(allButton){allButton.setAttribute('aria-pressed',String(all));allButton.textContent=all?'▤ শুধু একটি বিষয় দেখুন':'▦ সব সিমুলেশন একসাথে দেখুন';}if(status)status.textContent=all?'পদার্থবিজ্ঞান, রসায়ন ও উচ্চতর গণিত—সব সিমুলেশন দেখানো হচ্ছে':(key==='phy'?'শুধু পদার্থবিজ্ঞানের সিমুলেশন দেখানো হচ্ছে':key==='chem'?'শুধু রসায়নের সিমুলেশন দেখানো হচ্ছে':'শুধু উচ্চতর গণিতের সিমুলেশন দেখানো হচ্ছে');}
+ tabs.forEach(function(tab){tab.addEventListener('click',function(){show(tab.dataset.labSubject);});});if(allButton)allButton.addEventListener('click',function(){show(all?current:'all');});show('phy');
+}
+function simInto(el,key,c,done){
+ if(key=='custom'){el.innerHTML='<iframe class="sf" sandbox="allow-scripts"></iframe>';el.firstChild.srcdoc=(c&&c.html)||'';done();return}
+ var f=window.CL_SIMS[key];if(!f){el.innerHTML='<p class="bn">সিমুলেশন শীঘ্রই আসছে।</p>';done();return}
+ el.innerHTML='';try{f(el,done);enhanceSimulationNumberInputs(el)}catch(e){console.error(e);el.innerHTML='<p class="bn">Simulation could not start. কন্ট্রোল বা মানগুলো আবার পরীক্ষা করুন।</p>'}
+ if(el.id==='sim'&&window.matchMedia&&window.matchMedia('(max-width: 700px)').matches){
+  var old=document.getElementById('mobileSimControlJump');if(old)old.remove();
+  var firstControl=el.querySelector('.ctl, .fl-controls, .lens-controls-host, .mirror-controls-host, .chips, input[type=range], select, input[type=number]');
+  var visual=el.querySelector('.motion-stage, canvas.cv2, canvas, svg[role="img"], .fl-visual, .metrology-lab');
+  /* Only add a jump control when an actual control panel exists. Label its direction from the real layout. */
+  if(firstControl&&!el.querySelector('.metrology-lab')){
+   var jump=document.createElement('button');jump.type='button';jump.id='mobileSimControlJump';jump.className='mobile-sim-control-jump';jump.setAttribute('aria-label','সিমুলেশনের কন্ট্রোল প্যানেলে যান');
+   function syncJumpDirection(){var c=firstControl.getBoundingClientRect(),v=visual?visual.getBoundingClientRect():null;var above=!!(v&&c.top<v.top);jump.textContent=above?'কন্ট্রোলে যান ↑':'কন্ট্রোলে যান ↓';jump.dataset.direction=above?'up':'down';}
+   syncJumpDirection();window.addEventListener('resize',syncJumpDirection,{passive:true});
+   jump.addEventListener('click',function(){var root=document.getElementById('sim');if(!root)return;var target=root.querySelector('.ctl')||root.querySelector('.fl-controls')||root.querySelector('.lens-controls-host')||root.querySelector('.mirror-controls-host')||root.querySelector('.chips')||root.querySelector('input[type=range]')||root.querySelector('select')||root.querySelector('input[type=number]');if(!target)return;target.scrollIntoView({behavior:'smooth',block:'center'});var field=target.matches('input,select,button')?target:target.querySelector('input,select,button');if(field){try{field.focus({preventScroll:true})}catch(e){field.focus()}}});
+   /* Insert at the simulation card root: firstControl can be nested inside a control wrapper. */
+   el.insertBefore(jump,el.firstChild);
+  }
+ }
+}
+function refreshBar(id){var n=cnt(id),a=$('#pg'),b=$('#pb');if(a)a.textContent=X('ch_prog').replace('{n}',n);if(b)b.style.width=n*25+'%'}
+function stage(id,i){var c=C[id],h=$('#stg');if(!h)return;try{sessionStorage.setItem('st'+id,i)}catch(e){}
+ $('#tabs').innerHTML=ST.map(function(s,j){return'<button type="button" class="tab'+(j==i?' on':'')+((P()[id]||[])[j]?' dn':'')+'" data-i="'+j+'"><small class="tab-step-number">0'+(j+1)+'</small><span class="tab-title">'+E(s)+'</span></button>'}).join('');
+ refreshBar(id);
+ if(i<2){h.innerHTML='<div class="stgin concept-explanation"><h2 class="stgh">'+E(ST[i])+'</h2><div class="concept-reading-label">'+(i?'মূল ধারণা ও গুরুত্বপূর্ণ তথ্য':'বাস্তব উদাহরণ থেকে ধারণা')+'</div><p class="bn bl">'+E(i?c.intu:c.hook)+'</p>'+(i?BL(c):'')+'<button class="btn pri" data-n="'+(i+1)+'">'+E(X('btn_next'))+' →</button></div>';mark(id,i);refreshBar(id);$('#tabs').children[i].classList.add('dn')}
+ else if(i==2){h.innerHTML='<div class="stgin"><h2 class="stgh">'+E(ST[2])+'</h2><div class="card simcard" id="sim"></div><div class="stage-next-wrap"><p class="mutt">সিমুলেশনটি পরীক্ষা করার পর পরবর্তী ধাপে যান।</p><button type="button" class="btn pri" data-n="3">'+E(X('btn_next'))+' →</button></div></div>';simInto($('#sim'),c.sim,c,once(function(){mark(id,2);if(c.sim&&c.sim!='none'&&c.sim!='custom')markSim(c.sim);refreshBar(id);var t=$('#tabs').children[2];if(t)t.classList.add('dn')}))}
+ else quiz(id,h);var nav=$('#conceptNav');if(nav){var peers=CHL.filter(function(x){return x.s===c.s&&String(x.chapterTitle||x.chapter||x.t||'Chapter').trim()===String(c.chapterTitle||c.chapter||c.t||'Chapter').trim()&&!(x.id==='qualitative-chemistry'&&CHL.some(function(y){return y.id==='qc-01'}))}),ix=peers.findIndex(function(x){return x.id===id}),prev=ix>0?peers[ix-1]:null,next=ix>=0&&ix<peers.length-1?peers[ix+1]:null;nav.innerHTML='<span class="concept-nav-count">Concept '+(ix+1)+' of '+peers.length+'</span><div class="concept-nav-buttons">'+(prev&&C[prev.id]?'<a class="btn" href="#/chapter/'+E(prev.id)+'">← Previous concept</a>':'<span></span>')+(next&&C[next.id]?'<a class="btn pri" href="#/chapter/'+E(next.id)+'">Next concept →</a>':'<a class="btn" href="#/lab">Back to learning →</a>')+'</div>';}FX.scan(h)}
+function quiz(id,h){var c=C[id],got=0,ans=0,quizStartedAt=Date.now();if(!c.q.length){h.innerHTML='<div class="stgin"><h2 class="stgh">'+E(ST[3])+'</h2><p class="bn">কুইজ শীঘ্রই আসছে।</p></div>';mark(id,3);refreshBar(id);return}
+ h.innerHTML='<div class="stgin"><h2 class="stgh">'+E(ST[3])+'</h2>'+c.q.map(function(q,n){return'<div class="card qcard" data-q="'+n+'"><p class="bn qt">'+(n+1)+'. '+E(q.q)+'</p>'+optOrder(q).map(function(k){return'<button class="opt" data-k="'+k+'">'+E(q.o[k])+'</button>'}).join('')+'<p class="ex"></p></div>'}).join('')+'<p id="sc" class="bn scr"></p><p class="ex">'+E(c.ref||X('ref_note'))+'</p></div>';
+ $$('[data-q]',h).forEach(function(b){var q=c.q[+b.dataset.q];b.onclick=function(e){var o=e.target.closest('.opt');if(!o||b.dataset.d)return;b.dataset.d=1;ans++;var k=+o.dataset.k;if(k==+q.a){got++;o.classList.add('ok')}else{o.classList.add('no');var cr=b.querySelector('.opt[data-k="'+(+q.a)+'"]');if(cr)cr.classList.add('ok');studyMistake(id,+b.dataset.q,k)}b.querySelector('.ex').textContent=(k==+q.a?'✔ ':'✘ সঠিক উত্তর: '+q.o[+q.a]+'। ')+(q.e||'');track(1);
+  if(ans==c.q.length){var perfect=got==c.q.length;$('#sc').innerHTML='আপনার স্কোর: <b>'+got+' / '+c.q.length+'</b>'+(perfect?' 🏆':'');var g=GS(),prev=(g.quiz[id]||{got:0}).got;g.quiz[id]={got:Math.max(prev,got),total:c.q.length};save(g);studyRecord(id,got,c.q.length,Date.now()-quizStartedAt);if(got>prev)award((got-prev)*GAM.xpQuiz,'Quiz');if(perfect)FX.confetti();mark(id,3);refreshBar(id);var t=$('#tabs').children[3];if(t)t.classList.add('dn');badges()}}})}
+
+/* ------------------------------------------------------------ v6: practice, daily, missions, cloud sync */
+function rerender(){var y=window.pageYOffset;route();instantScrollTo(y)}
+var DAY=86400000,MGOAL={stages:'কনসেপ্ট ধাপ সম্পন্ন',quiz:'কুইজ সম্পন্ন',games:'গেম খেলা',sims:'আলাদা সিমুলেশন',daily:'ডেইলি চ্যালেঞ্জ (দিন)',xp:'মোট XP',perfect:'পারফেক্ট কুইজ',review:'ভুলের খাতায় সঠিক রিভিশন'};
+var cloud={t:null,busy:false,status:'local',at:0,msg:'',ready:false};
+function MIS(){var m={daily:{},claimed:{},activity:{},goal:5,stats:{reviewCorrect:0,mastered:0}};try{m=Object.assign(m,JSON.parse(localStorage.getItem('clmis_v1')||'{}'))}catch(e){}if(!m.daily||typeof m.daily!=='object')m.daily={};if(!m.claimed||typeof m.claimed!=='object')m.claimed={};if(!m.activity||typeof m.activity!=='object')m.activity={};m.stats=Object.assign({reviewCorrect:0,mastered:0},m.stats||{});m.goal=Math.max(1,Math.min(50,+m.goal||5));return m}
+function saveMis(m){try{localStorage.setItem('clmis_v1',JSON.stringify(m))}catch(e){}cloudPush()}
+function track(n){var m=MIS(),t=today();m.activity[t]=(m.activity[t]||0)+(n||1);var keys=Object.keys(m.activity).sort(function(a,b){return dayNum(a)-dayNum(b)});if(keys.length>60)keys.slice(0,keys.length-60).forEach(function(k){delete m.activity[k]});saveMis(m)}
+function dayNum(k){var p=String(k).split('-');return new Date(+p[0],(+p[1]||1)-1,+p[2]||1).getTime()}
+function PR(){var p=Object.assign({intervals:[1,3,7,14],sessionSize:10,stepHints:1},D.practice||{});p.intervals=(Array.isArray(p.intervals)?p.intervals:[1,3,7,14]).map(Number).filter(function(x){return x>=0}).slice(0,8);if(!p.intervals.length)p.intervals=[1,3,7,14];p.sessionSize=Math.max(1,Math.min(50,+p.sessionSize||10));return p}
+function whenText(ts){var d=ts-Date.now();if(d<=0)return'এখনই';var h=Math.round(d/36e5);if(h<24)return h+' ঘণ্টা পর';var dd=Math.round(d/DAY);return dd+' দিন পর'}
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function optOrder(q,seed){var n=q.o.length,idx=[],i;for(i=0;i<n;i++)idx.push(i);var keep=/কোনোটিই নয়|কোনটিই নয়|সবগুলো|All of the above|None of the above/i.test(String(q.o[n-1]||''))?n-1:n,r=seed?rng(hashStr(String(seed))):Math.random;for(i=keep-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=idx[i];idx[i]=idx[j];idx[j]=t}return idx}
+function hintFor(c,q){if(q&&q.h&&String(q.h).trim())return String(q.h).trim();var h=String(c&&c.hook||'').replace(/\s+/g,' ').trim();if(!h)return'কনসেপ্টের “Core Intuition” ধাপটি আবার পড়ে দেখুন।';var cut=h.search(/[।.?!]/);var s=cut>20&&cut<170?h.slice(0,cut+1):h.slice(0,150)+'…';return s}
+function shortWhy(q){return String((q&&q.e)||'').trim()}
+
+/* ---- Smart practice: spaced revision */
+function practiceItems(){return STUDY().review.filter(function(it){var c=C[it.conceptId];return c&&c.q&&c.q[it.qIndex]})}
+function practiceCard(it,pr){var c=C[it.conceptId],q=c.q[it.qIndex],hard=(it.wrongCount||1)>=2,st=it.stage||0,order=optOrder(q).map(function(k){return{o:q.o[k],k:k}});
+ return'<article class="card practice-card" data-practice-card="'+E(it.key)+'" data-concept="'+E(it.conceptId)+'" data-qi="'+it.qIndex+'"><span class="mutt">'+E(SUB[c.s]||'')+' · ভুল '+(it.wrongCount||1)+' বার · রিভিশন ধাপ '+(Math.min(st,pr.intervals.length)+1)+'/'+pr.intervals.length+'</span>'+(hard?' <span class="bd2 hardtag">কঠিন</span>':'')+'<h2>'+E(c.t)+'</h2><p class="bn qt">'+E(q.q)+'</p><div class="practice-options">'+order.map(function(x){return'<button class="opt" data-practice-answer data-key="'+E(it.key)+'" data-choice="'+x.k+'" data-correct="'+(+q.a)+'" data-concept="'+E(it.conceptId)+'">'+E(x.o)+'</button>'}).join('')+'</div>'+(hard&&pr.stepHints?'<div class="practice-help"><button class="btn sm" data-practice-help>🪜 ধাপে ধাপে সাহায্য (১/৩)</button></div>':'')+'<p class="practice-hint ex" hidden></p><p class="ex practice-result" aria-live="polite"></p><a href="#/chapter/'+E(it.conceptId)+'">কনসেপ্ট রিভিউ →</a></article>'}
+function smartPractice(){var s=STUDY(),pr=PR(),m=MIS(),now=Date.now(),all=practiceItems(),due=all.filter(function(x){return x.dueAt<=now}).sort(function(a,b){return(b.wrongCount||1)-(a.wrongCount||1)||a.dueAt-b.dueAt}),later=all.filter(function(x){return x.dueAt>now}).sort(function(a,b){return a.dueAt-b.dueAt}),session=due.slice(0,pr.sessionSize);
+ var stats='<div class="study-stats"><div class="card"><b>'+all.length+'</b><span>ভুলের খাতায়</span></div><div class="card"><b>'+due.length+'</b><span>এখন রিভিশন</span></div><div class="card"><b>'+all.filter(function(x){return(x.wrongCount||1)>1}).length+'</b><span>বারবার ভুল</span></div><div class="card"><b>'+(m.stats.mastered||0)+'</b><span>আয়ত্তে এসেছে</span></div></div>';
+ var body=session.length?'<p class="lead" style="margin:14px 0">আজকের সেশন: '+session.length+'টি প্রশ্ন'+(due.length>session.length?' (আরও '+(due.length-session.length)+'টি পরে)':'')+'।</p><div class="practice-grid">'+session.map(function(it){return practiceCard(it,pr)}).join('')+'</div>':(all.length?'<section class="card study-panel"><h2>'+E(X('sp_done_h'))+'</h2><p>'+E(X('sp_done_p'))+'</p></section>':'<section class="card study-panel"><h2>'+E(X('sp_empty_h'))+'</h2><p>'+E(X('sp_empty_p'))+'</p><a class="btn pri" href="#/play">কুইজ অনুশীলন শুরু করুন →</a></section>');
+ var upcoming=later.length?'<section class="card study-panel" style="margin-top:22px"><h2>⏰ পরবর্তী রিভিশন</h2><p class="mutt">রিভিশনের ব্যবধান: '+pr.intervals.map(function(d){return d+' দিন'}).join(' → ')+'</p>'+later.slice(0,12).map(function(it){var c=C[it.conceptId];return'<article class="study-history"><span>'+E(c.t)+'<small>'+E(shortWhy(c.q[it.qIndex])||'')+'</small></span><b>'+E(whenText(it.dueAt))+'</b><button class="btn sm" data-practice-now="'+E(it.key)+'">এখনই অনুশীলন</button></article>'}).join('')+'</section>':'';
+ return'<div class="w pgw study-page"><span class="pill">SMART PRACTICE</span><h1>'+E(X('sp_h'))+'</h1><p class="lead">'+E(X('sp_lead'))+'</p>'+stats+body+upcoming+'</div>'}
+function practiceAnswer(pa){var card=pa.closest('[data-practice-card]');if(!card||card.dataset.answered)return;card.dataset.answered='1';var key=pa.dataset.key,chosen=+pa.dataset.choice,c=C[pa.dataset.concept],qi=+card.dataset.qi,q=c&&c.q[qi];if(!q)return;var correct=+q.a,pr=PR(),st=STUDY(),m=MIS(),it=st.review.find(function(x){return x.key===key}),used=+card.dataset.help||0,res=card.querySelector('.practice-result');
+ $$('[data-practice-answer]',card).forEach(function(b){b.disabled=true;if(+b.dataset.choice===correct)b.classList.add('ok')});
+ var why=shortWhy(q),msg;
+ if(chosen===correct){pa.classList.add('ok');if(it){it.correctReviews=(it.correctReviews||0)+1;m.stats.reviewCorrect=(m.stats.reviewCorrect||0)+1;if(!used)it.stage=(it.stage||0)+1;if((it.stage||0)>=pr.intervals.length){st.review=st.review.filter(function(x){return x.key!==key});m.stats.mastered=(m.stats.mastered||0)+1;msg='🏆 আয়ত্তে এসেছে! এটি ভুলের খাতা থেকে সরানো হলো।'}else{it.dueAt=Date.now()+pr.intervals[Math.min(it.stage||0,pr.intervals.length-1)]*DAY;msg='✔ সঠিক! পরের রিভিশন '+whenText(it.dueAt)+'।'+(used?' (সাহায্য নেওয়ায় ধাপ এগোয়নি)':'')}}else msg='✔ সঠিক!'}
+ else{pa.classList.add('no');if(it){it.wrongCount=(it.wrongCount||1)+1;it.stage=0;it.lastWrongAt=Date.now();it.dueAt=Date.now()+pr.intervals[0]*DAY;msg='✘ সঠিক উত্তর: '+q.o[correct]+'। আবার রিভিশন '+whenText(it.dueAt)+'।'}else msg='✘ সঠিক উত্তর: '+q.o[correct]+'।'}
+ if(res)res.textContent=msg+(why?' '+why:'');saveStudy(st);saveMis(m);track(1)}
+function practiceHelp(btn){var card=btn.closest('[data-practice-card]');if(!card||card.dataset.answered)return;var lv=(+card.dataset.help||0)+1,c=C[card.dataset.concept],q=c&&c.q[+card.dataset.qi];if(!q||lv>3)return;card.dataset.help=lv;var hint=card.querySelector('.practice-hint');
+ if(lv===1){hint.hidden=false;hint.textContent='💡 ইঙ্গিত: '+hintFor(c,q);btn.textContent='🪜 ধাপে ধাপে সাহায্য (২/৩): ভুল অপশন বাদ দিন'}
+ else if(lv===2){var wrong=shuf($$('[data-practice-answer]',card).filter(function(b){return +b.dataset.choice!==+q.a}));wrong.slice(0,Math.max(0,wrong.length-1)>=2?2:1).forEach(function(b){b.disabled=true;b.classList.add('dim')});btn.textContent='🪜 ধাপে ধাপে সাহায্য (৩/৩): সঠিক উত্তর দেখুন'}
+ else{var ok=$$('[data-practice-answer]',card).filter(function(b){return +b.dataset.choice===+q.a})[0];if(ok)ok.classList.add('hintok');btn.disabled=true;btn.textContent='সঠিক উত্তর চিহ্নিত হয়েছে'}}
+
+/* ---- Daily challenge */
+function DL(){return Object.assign({on:1,count:5,xp:30,bonus:20,hints:1,title:'',intro:'',pinned:[]},D.daily||{})}
+function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function dailySet(){var d=DL(),n=Math.max(1,Math.min(20,+d.count||5)),pool=[],pinned=[],seen={};(d.pinned||[]).forEach(function(k){var p=String(k).split(':'),c=C[p[0]],qi=+p[1];if(c&&c.q&&c.q[qi]&&!seen[k]){seen[k]=1;pinned.push({id:p[0],qi:qi})}});
+ Object.keys(C).sort().forEach(function(id){C[id].q.forEach(function(q,qi){if(q.q&&q.o&&q.o.length>=2&&!seen[id+':'+qi])pool.push({id:id,qi:qi})})});var r=rng(hashStr('cl-daily-'+today())),out=pinned.slice(0,n);while(out.length<n&&pool.length){out.push(pool.splice(Math.floor(r()*pool.length),1)[0])}return out}
+function dailyState(){var m=MIS(),t=today();m.daily[t]=m.daily[t]||{answers:{},hints:{},done:false,got:0,total:0};return{m:m,t:t,s:m.daily[t]}}
+function dailyDays(m){return Object.keys(m.daily).filter(function(k){return m.daily[k]&&m.daily[k].done}).length}
+function missionProgress(ms){var g=GS(),st=STUDY(),m=MIS();return(ms.goals||[]).map(function(go){var have=0,n=+go.n||1,sub=ms.s||'';switch(go.k){case'stages':have=sub?Object.keys(C).filter(function(id){return C[id].s===sub}).reduce(function(a,id){return a+cnt(id)},0):tot();break;case'quiz':have=st.history.filter(function(h){return!sub||h.subject===sub}).length;break;case'games':have=metric('games',g);break;case'sims':have=Object.keys(g.sims).length;break;case'daily':have=dailyDays(m);break;case'xp':have=g.xp;break;case'perfect':have=metric('perfect',g);break;case'review':have=m.stats.reviewCorrect||0;break}return{k:go.k,n:n,have:Math.min(have,n),raw:have}})}
+function weekBars(){var m=MIS(),days=[],names=['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'];for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();days.push({n:names[d.getDay()],v:m.activity[k]||0})}var mx=Math.max(m.goal,Math.max.apply(null,days.map(function(x){return x.v})));return'<div class="weekbars" role="img" aria-label="গত ৭ দিনের প্রশ্ন-উত্তর">'+days.map(function(x){return'<div><i style="height:'+Math.round(x.v/mx*100)+'%" class="'+(x.v>=m.goal?'hit':'')+'"></i><b>'+x.v+'</b><small>'+x.n+'</small></div>'}).join('')+'</div>'}
+function dailyPage(){var d=DL(),g=GS(),m=MIS();if(!ok(d.on))return'<div class="w pgw"><section class="card study-panel"><h1>ডেইলি চ্যালেঞ্জ</h1><p class="lead">এই মুহূর্তে ডেইলি চ্যালেঞ্জ বন্ধ আছে।</p><a class="btn pri" href="#/play">অনুশীলন শুরু করুন →</a></section></div>';
+ var set=dailySet(),ds=dailyState(),s=ds.s,answered=Object.keys(s.answers).length,tdy=m.activity[today()]||0;
+ var qs=set.length?set.map(function(it,i){var c=C[it.id],q=c.q[it.qi],a=s.answers[i],has=a!=null,hl=+s.hints[i]||0;
+  return'<article class="card qcard daily-q" data-dq="'+i+'"><p class="mutt">'+E(SUB[c.s]||'')+' · '+E(c.t)+'</p><p class="bn qt">'+(i+1)+'. '+E(q.q)+'</p>'+optOrder(q,'d'+today()+'-'+i).map(function(k){var o=q.o[k],cls=has?(k===+q.a?' ok':(k===+a?' no':'')):'';return'<button class="opt'+cls+'" data-daily-answer="'+i+'" data-k="'+k+'"'+(has?' disabled':'')+'>'+E(o)+'</button>'}).join('')+(d.hints&&!has?'<button class="btn sm" data-daily-hint="'+i+'">💡 ইঙ্গিত'+(hl?' (দেখানো হয়েছে)':'')+'</button>':'')+(hl&&!has?'<p class="ex">💡 '+E(hintFor(c,q))+'</p>':'')+(has?'<p class="ex">'+(+a===+q.a?'✔ ':'✘ সঠিক উত্তর: '+E(q.o[+q.a])+'। ')+E(shortWhy(q))+'</p>':'')+'</article>'}).join(''):'<p class="mutt">এখনো কোনো প্রশ্ন নেই।</p>';
+ var res=s.done?'<section class="card study-panel daily-done"><h2>🎯 আজকের চ্যালেঞ্জ সম্পন্ন: '+s.got+' / '+s.total+'</h2><p>আগামীকাল নতুন প্রশ্ন আসবে। ভুল প্রশ্নগুলো ভুলের খাতায় যোগ হয়েছে।</p><a class="btn" href="#/smart-practice">ভুলের খাতা →</a></section>':'';
+ var ring='<div class="card goal-card"><div><b>'+tdy+' / '+m.goal+'</b><span>আজকের শেখার লক্ষ্য (প্রশ্ন)</span><div class="bar"><i style="width:'+Math.min(100,Math.round(tdy/m.goal*100))+'%"></i></div></div><label class="goal-pick">লক্ষ্য <select data-goal-set>'+[3,5,10,15,20,30].map(function(n){return'<option value="'+n+'"'+(n===m.goal?' selected':'')+'>'+n+' প্রশ্ন/দিন</option>'}).join('')+'</select></label></div>'+weekBars();
+ var subs=['all'].concat(Object.keys(SUB));
+ var ms=(D.missions||[]).filter(function(x){return ok(x.on===undefined?1:x.on)&&(missionF==='all'||!x.s||x.s===missionF)});
+ var mhtml=ms.length?ms.map(function(x){var pg=missionProgress(x),done=pg.length&&pg.every(function(p){return p.have>=p.n}),claimed=m.claimed[x.id],pct=pg.length?Math.round(pg.reduce(function(a,p){return a+p.have/p.n},0)/pg.length*100):0;
+  return'<article class="card mission'+(claimed?' claimed':'')+'"><div class="mission-head"><span class="gico">'+E(x.i||'🎯')+'</span><div><h3>'+E(x.t)+'</h3><p>'+E(x.d||'')+'</p></div>'+(x.s&&SUB[x.s]?'<span class="bd2">'+E(SUB[x.s])+'</span>':'')+'</div>'+pg.map(function(p){return'<div class="goalrow"><span>'+E(MGOAL[p.k]||p.k)+'</span><b>'+p.have+' / '+p.n+'</b><div class="bar"><i style="width:'+Math.round(p.have/p.n*100)+'%"></i></div></div>'}).join('')+'<div class="mission-foot"><span class="mutt">'+pct+'% সম্পন্ন · +'+(+x.xp||0)+' XP</span>'+(claimed?'<span class="bd2">✓ সম্পন্ন</span>':(done?'<button class="btn pri sm" data-mission-claim="'+E(x.id)+'">'+E(X('ms_claim'))+'</button>':(x.link?'<a class="btn sm" href="'+E(safeLink(x.link))+'">শুরু করুন →</a>':'')))+'</div>'+(x.hint?'<details class="mission-hint"><summary>💡 ইঙ্গিত</summary><p>'+E(x.hint)+'</p></details>':'')+'</article>'}).join(''):'<p class="mutt">এই বিষয়ে কোনো মিশন নেই।</p>';
+ return'<div class="w pgw daily-page"><span class="pill"><i></i>DAILY CHALLENGE · MISSIONS</span><h1>'+E(d.title||'ডেইলি চ্যালেঞ্জ ও লার্নিং মিশন')+'</h1><p class="lead">'+E(d.intro||'প্রতিদিন নতুন প্রশ্ন, বিষয়ভিত্তিক মিশন আর নিজের শেখার লক্ষ্য—সবকিছু এক জায়গায়।')+'</p>'+ring
+  +'<h2 class="mt subh">'+E(X('dl_today'))+' <small class="mutt">'+answered+' / '+set.length+' · '+(+d.xp||0)+' XP'+((+d.bonus||0)?' + '+(+d.bonus)+' বোনাস (নিখুঁত ও ইঙ্গিতবিহীন)':'')+'</small></h2><div class="daily-list">'+qs+'</div>'+res
+  +'<h2 class="mt subh">'+E(X('ms_h'))+'</h2><div class="chips left" style="margin-bottom:14px">'+subs.map(function(k){return'<button class="chipb'+(missionF==k?' on':'')+'" data-mission-filter="'+E(k)+'">'+E(k=='all'?'সব':SUB[k])+'</button>'}).join('')+'</div><div class="mission-grid">'+mhtml+'</div></div>'}
+var missionF='all';
+function dailyAnswer(btn){var i=+btn.dataset.dailyAnswer,k=+btn.dataset.k,set=dailySet(),it=set[i];if(!it)return;var ds=dailyState(),s=ds.s;if(s.answers[i]!=null)return;var c=C[it.id],q=c.q[it.qi];s.answers[i]=k;s.total=set.length;if(k===+q.a)s.got=(s.got||0)+1;else studyMistake(it.id,it.qi,k);
+ var all=Object.keys(s.answers).length===set.length;if(all&&!s.done){s.done=true;var d=DL(),perfect=s.got===set.length&&!Object.keys(s.hints).some(function(h){return+s.hints[h]>0}),xp=Math.round((+d.xp||0)*(s.got/set.length))+(perfect?(+d.bonus||0):0);s.xpAwarded=xp;saveMis(ds.m);track(1);if(xp>0)award(xp,'Daily challenge');if(perfect)FX.confetti();badges()}else{saveMis(ds.m);track(1)}rerender()}
+function dailyHint(btn){var i=+btn.dataset.dailyHint,ds=dailyState();if(ds.s.answers[i]!=null)return;ds.s.hints[i]=1;saveMis(ds.m);rerender()}
+function missionClaim(id){var ms=(D.missions||[]).filter(function(x){return x.id===id})[0],m=MIS();if(!ms||m.claimed[id])return;var pg=missionProgress(ms);if(!pg.length||!pg.every(function(p){return p.have>=p.n}))return;m.claimed[id]=Date.now();saveMis(m);if(+ms.xp>0)award(+ms.xp,'Mission: '+ms.t);FX.confetti();rerender()}
+
+/* ---- Cloud sync (needs the Netlify function + a signed-in student) */
+function refreshHomeXpCounter(){
+ var el=document.querySelector('#app .home-stat-card[data-stat-key="xp"] [data-count]');
+ if(!el)return;
+ el.setAttribute('data-count',String(Math.max(0,Number(GS().xp)||0)));
+ el._c=0;el.textContent='0';
+ if(window.FX&&typeof FX.scan==='function')FX.scan(document.getElementById('app'));
+}
+function refreshAccount(){var tk=studentToken();if(!tk)return Promise.resolve();return fetch('/api/student-profile',{headers:{Authorization:'Bearer '+tk},cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(d){if(!d||!d.user)return;var old=JSON.stringify(student()||{}),nw=JSON.stringify(d.user),changed=old!==nw;try{localStorage.setItem('clstudent',JSON.stringify(d.user))}catch(e){}var g=GS(),xp=Math.max(0,Number(d.user.xp)||0);if(g.xp!==xp){g.xp=xp;try{localStorage.setItem('cl2',JSON.stringify(g))}catch(e){}chip();refreshHomeXpCounter()}syncAccountHeader();var ae=document.activeElement;if(changed&&/^#\/profile/.test(location.hash)&&!(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)))rerender()}).catch(function(){})}
+function refreshAll(){if(document.hidden||!studentToken())return;refreshAccount();if(cloud.ready)cloudPull(true);else cloudPull(true)}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)refreshAll()});window.addEventListener('focus',refreshAll);window.addEventListener('online',refreshAll);setInterval(refreshAll,30000);
+
+function cloudSnapshot(){var g=JSON.parse(JSON.stringify(GS()));delete g.xp;return{cl:P(),cl2:g,study:STUDY(),mis:MIS()}}
+function cloudPush(){if(cloud.busy||!studentToken()||!cloud.ready)return;clearTimeout(cloud.t);cloud.t=setTimeout(cloudPushNow,2500)}
+function cloudPushNow(){var tk=studentToken();if(!tk)return Promise.resolve();return fetch('/api/student-sync',{method:'PUT',headers:{'content-type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({data:cloudSnapshot()})}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(r.status===401){cloud.status='signin';cloud.msg='আবার সাইন-ইন করুন'}else if(r.status===404||r.status===405){cloud.status='nobackend';cloud.msg='এই সাইটে সিঙ্ক ব্যাকএন্ড নেই'}else if(!r.ok){cloud.status='error';cloud.msg=j.error||'সিঙ্ক হয়নি'}else{cloud.status='ok';cloud.at=Date.now();cloud.msg=''}cloudBadge()})}).catch(function(){cloud.status='offline';cloud.msg='অফলাইন—পরে আবার চেষ্টা হবে';cloudBadge()})}
+function mergeObjMax(a,b){var o=Object.assign({},a||{});Object.keys(b||{}).forEach(function(k){o[k]=Math.max(+o[k]||0,+b[k]||0)});return o}
+function mergeByKey(a,b,keyFn,pick){var map={};(a||[]).concat(b||[]).forEach(function(x){if(!x)return;var k=keyFn(x);map[k]=map[k]?pick(map[k],x):x});return Object.keys(map).map(function(k){return map[k]})}
+function mergeCloud(remote){if(!remote||typeof remote!=='object')return;cloud.busy=true;try{
+ if(remote.cl&&typeof remote.cl==='object'){var p=P();Object.keys(remote.cl).forEach(function(id){var a=p[id]||[0,0,0,0],b=remote.cl[id]||[];p[id]=[0,1,2,3].map(function(i){return(a[i]||b[i])?1:0})});try{localStorage.setItem('cl',JSON.stringify(p))}catch(e){}}
+ if(remote.cl2&&typeof remote.cl2==='object'){var g=GS(),r=remote.cl2;Object.keys(r.quiz||{}).forEach(function(id){var x=g.quiz[id],y=r.quiz[id];if(!x||(+y.got||0)>(+x.got||0))g.quiz[id]=y});Object.keys(r.games||{}).forEach(function(id){var x=g.games[id]||{plays:0,best:0},y=r.games[id]||{};g.games[id]={plays:Math.max(x.plays||0,y.plays||0),best:Math.max(x.best||0,y.best||0)}});Object.keys(r.sims||{}).forEach(function(k){g.sims[k]=1});Object.keys(r.badges||{}).forEach(function(k){if(!g.badges[k]||+r.badges[k]<+g.badges[k])g.badges[k]=r.badges[k]});if(dayNum(r.last||'1970-1-1')>dayNum(g.last||'1970-1-1')||(r.last===g.last&&(+r.streak||0)>(+g.streak||0))){g.streak=+r.streak||g.streak;g.last=r.last||g.last}if(r.daily&&dayNum(r.daily)>dayNum(g.daily||'1970-1-1'))g.daily=r.daily;try{localStorage.setItem('cl2',JSON.stringify(g))}catch(e){}}
+ if(remote.study&&typeof remote.study==='object'){var s=STUDY(),rs=remote.study;['bookmarks','notes','savedSims'].forEach(function(k){s[k]=Object.assign({},rs[k]||{},s[k]||{})});s.formulaBookmarks=mergeByKey(s.formulaBookmarks,rs.formulaBookmarks,function(x){return JSON.stringify(x)},function(a){return a});s.review=mergeByKey(s.review,rs.review,function(x){return x.key},function(a,b){return(+b.lastWrongAt||0)>(+a.lastWrongAt||0)||((+b.lastWrongAt||0)===(+a.lastWrongAt||0)&&(+b.stage||0)>(+a.stage||0))?b:a});s.history=mergeByKey(s.history,rs.history,function(x){return x.id+'|'+x.at},function(a){return a}).sort(function(a,b){return a.at-b.at}).slice(-500);try{localStorage.setItem('clstudy_v1',JSON.stringify(s))}catch(e){}}
+ if(remote.mis&&typeof remote.mis==='object'){var m=MIS(),rm=remote.mis;Object.keys(rm.daily||{}).forEach(function(k){var a=m.daily[k],b=rm.daily[k];if(!a||(b&&b.done&&!a.done)||(b&&Object.keys(b.answers||{}).length>Object.keys(a.answers||{}).length))m.daily[k]=b});m.claimed=Object.assign({},rm.claimed||{},m.claimed||{});m.activity=mergeObjMax(m.activity,rm.activity);m.stats={reviewCorrect:Math.max(m.stats.reviewCorrect||0,(rm.stats||{}).reviewCorrect||0),mastered:Math.max(m.stats.mastered||0,(rm.stats||{}).mastered||0)};try{localStorage.setItem('clmis_v1',JSON.stringify(m))}catch(e){}}
+ }finally{cloud.busy=false}}
+function cloudOwner(){var em=((student()||{}).email||'').toLowerCase(),own=localStorage.getItem('clcloudOwner')||'';if(em&&own&&own!==em){['cl','cl2','clstudy_v1','clmis_v1'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});cloud.ready=false}if(em){try{localStorage.setItem('clcloudOwner',em)}catch(e){}}}
+function cloudPull(quiet){var tk=studentToken();if(!tk){cloud.status='signin';cloud.ready=false;cloudBadge();return Promise.resolve()}cloudOwner();var before=localStorage.getItem('cl')+localStorage.getItem('cl2')+localStorage.getItem('clstudy_v1')+localStorage.getItem('clmis_v1');return fetch('/api/student-sync',{headers:{Authorization:'Bearer '+tk},cache:'no-store'}).then(function(r){if(r.status===401){cloud.status='signin';cloud.msg='আবার সাইন-ইন করুন';throw 0}if(r.status===404||r.status===405){cloud.status='nobackend';cloud.msg='এই সাইটে সিঙ্ক ব্যাকএন্ড নেই';cloud.ready=true;throw 0}if(!r.ok)throw new Error('sync');return r.json()}).then(function(j){if(j&&j.sync&&j.sync.data)mergeCloud(j.sync.data);cloud.ready=true;chip();var after=localStorage.getItem('cl')+localStorage.getItem('cl2')+localStorage.getItem('clstudy_v1')+localStorage.getItem('clmis_v1');cloud.changed=before!==after;var same=false;try{same=!!(j&&j.sync&&j.sync.data)&&JSON.stringify(cloudSnapshot())===JSON.stringify(j.sync.data)}catch(e){}cloud.status='ok';cloud.at=Date.now();cloudBadge();return same?null:cloudPushNow()}).then(function(){var re=quiet===true?/^#\/(progress|analytics)/:/^#\/(progress|analytics|daily|smart-practice)/;if((quiet!==true||cloud.changed)&&re.test(location.hash))rerender()}).catch(function(e){if(e!==0){cloud.status='offline';cloud.msg='অফলাইন'}cloudBadge()})}
+function cloudBadge(){var el=$('#cloudBadge');if(el)el.innerHTML=cloudHtml()}
+function cloudHtml(){var t={ok:'☁️ সিঙ্ক চালু'+(cloud.at?' · সর্বশেষ '+new Date(cloud.at).toLocaleTimeString():''),signin:'☁️ ডিভাইসের মধ্যে সিঙ্ক করতে সাইন-ইন করুন',nobackend:'💾 শুধু এই ডিভাইসে সংরক্ষিত (সিঙ্ক ব্যাকএন্ড নেই)',offline:'📴 অফলাইন—অনলাইনে এলে সিঙ্ক হবে',error:'⚠️ সিঙ্ক ত্রুটি',local:studentToken()?'☁️ সিঙ্ক অপেক্ষমাণ':'☁️ ডিভাইসের মধ্যে সিঙ্ক করতে সাইন-ইন করুন'}[cloud.status]||'';return E(t)+(cloud.msg&&cloud.status!=='ok'?' · '+E(cloud.msg):'')+(studentToken()?' <button class="btn sm" data-cloud-sync>এখন সিঙ্ক করুন</button>':' <a class="btn sm" href="#/account/signin">সাইন-ইন</a>')}
+function progressExtras(){var m=MIS(),st=STUDY(),h=st.history,avg=h.length?Math.round(h.reduce(function(a,x){return a+x.accuracy},0)/h.length):0;return'<div class="card cloudcard"><div id="cloudBadge">'+cloudHtml()+'</div></div><h2 class="mt subh">📅 গত ৭ দিনের শেখা</h2>'+weekBars()+'<div class="stats4" style="margin-top:14px">'+[[h.length,'কুইজ অ্যাটেম্পট'],[avg+'%','গড় স্কোর'],[dailyDays(m),'ডেইলি চ্যালেঞ্জ (দিন)'],[Object.keys(m.claimed).length,'মিশন সম্পন্ন']].map(function(s){return'<div class="card"><b>'+s[0]+'</b><span>'+E(s[1])+'</span></div>'}).join('')+'</div>'}
+app.addEventListener('click',function(e){var t=e.target;if(!t.closest)return;var a=t.closest('[data-daily-answer]');if(a)return dailyAnswer(a);a=t.closest('[data-daily-hint]');if(a)return dailyHint(a);a=t.closest('[data-mission-claim]');if(a)return missionClaim(a.dataset.missionClaim);a=t.closest('[data-mission-filter]');if(a){missionF=a.dataset.missionFilter;return rerender()}a=t.closest('[data-practice-help]');if(a)return practiceHelp(a);a=t.closest('[data-practice-now]');if(a){var sx=STUDY(),itx=sx.review.find(function(x){return x.key===a.dataset.practiceNow});if(itx){itx.dueAt=Date.now()-1;saveStudy(sx)}return rerender()}a=t.closest('[data-cloud-sync]');if(a){a.disabled=true;cloud.status='local';return cloudPull().then(function(){cloudBadge()})}});
+app.addEventListener('change',function(e){if(e.target&&e.target.matches&&e.target.matches('[data-goal-set]')){var m=MIS();m.goal=+e.target.value||5;saveMis(m);rerender()}});
+
+/* ------------------------------------------------------------ games runner */
+function questionPool(){var o=[];Object.keys(C).forEach(function(k){C[k].q.forEach(function(q){if(q.q&&q.o&&q.o.length>=2)o.push({q:q.q,o:q.o,a:+q.a,e:q.e||''})})});return o}
+function startGame(g,level){var root=$('#gm');if(!root)return;root.innerHTML='';root.classList.toggle('is-chapter-quiz',!!(g&&g.chapterQuiz));var quizPage=root.closest('.play-detail-page');if(quizPage)quizPage.classList.toggle('has-chapter-quiz',!!(g&&g.chapterQuiz));var config=(g&&g.chapterQuiz)?gaStagedGame(g,level||'boss'):((level&&gaIsQuizGame(g))?gaStagedGame(g,level):g),f=window.CL_GAMES[config.type];if(!f){root.innerHTML='<div class="card"><p class="bn">This game type is not available.</p></div>';return}config.attemptId=gaNewAttemptId();try{localStorage.setItem('cl_arcade_last_v1',JSON.stringify({id:config.id||g.id,level:config.levelId||'',at:Date.now()}))}catch(e){}if(window.SFX)window.SFX.play('gameStart');
+ var api={X:X,E:E,every:FX.every,confetti:FX.confetti,toast:FX.toast,questions:questionPool,questionTypeLabels:window.CL_QUIZ_ENRICHMENT_V86?window.CL_QUIZ_ENRICHMENT_V86.typeLabels:{},renderMedia:function(q,surface){return window.CL_QUIZ_ENRICHMENT_V86?window.CL_QUIZ_ENRICHMENT_V86.renderMedia(q,surface):''},recordMistake:function(x){var enriched=Object.assign({},x||{});enriched.attemptId=config.attemptId;enriched.level=config.levelId||'concept';enriched.chapterId=enriched.chapterId||config.chapterId||'';if(!enriched.chapterTitle&&config.t)enriched.chapterTitle=config.t;return gaSaveMistakeRecord(config.id,enriched,config.levelId||'concept')},recordCorrect:function(q){if(!q)return;var m=q.meta||{},qid=q.questionId||q.id||m.id;if(qid&&config.id)gaMarkMistakeReviewed(config.id,qid)},done:function(res){finish(root,config,res)}};
+ var wrap=document.createElement('div');root.appendChild(wrap);try{f(wrap,config,api)}catch(e){console.error(e);wrap.innerHTML='<div class="card"><p class="bn">Game could not start.</p></div>'}}
+function reviewHtml(r){r=(r||[]).filter(function(x){return x&&x.q}).slice(0,8);if(!r.length)return'';return'<div class="card game-review"><h3>ভুল প্রশ্নের সংক্ষিপ্ত ব্যাখ্যা</h3>'+r.map(function(x){var e=String(x.e||'');if(e.length>180)e=e.slice(0,177)+'…';return'<div class="rv-i"><b>'+E(x.q)+'</b><span>✔ '+E(x.a)+'</span>'+(e?'<p>'+E(e)+'</p>':'')+'</div>'}).join('')+'</div>'}
+function finish(root,g,res){if(res&&Array.isArray(res.review))gaSaveMistakes(g.id,res.review,g.levelId||'concept');var gs=GS(),rec=gs.games[g.id]||{plays:0,best:0},nb=res.score>rec.best;rec.plays++;rec.best=Math.max(rec.best,res.score);gs.games[g.id]=rec;
+ var dg=dailyGame(),dbl=dg&&dg.id==g.id&&gs.daily!=today(),pct=Math.max(0,Math.min(1,res.pct||0)),xp=pct>0?Math.max(3,Math.round((+g.xp||20)*pct)):0;if(dbl){xp*=2;gs.daily=today()}save(gs);
+ var stars=pct>=.85?3:pct>=.5?2:pct>0?1:0;if(window.SFX)window.SFX.play(pct>=.85?'perfect':'complete');if(pct>=.6)FX.confetti();
+ var quizResult=gaIsQuizGame(g),simResult=g.type==='simExplorer',replayHref=simResult?'#/lab/'+encodeURIComponent(g.id):'#/play/'+E(g.id);root.innerHTML='<div class="card result"><div class="stars">'+[1,2,3].map(function(n){return'<span class="'+(n<=stars?'on':'')+'" style="--d:'+n*.18+'s">★</span>'}).join('')+'</div><h2>'+E(pct>=.6?X('g_win'):X('g_ok'))+'</h2><div class="big"><b data-count="'+res.score+'">0</b><small>'+E(X('g_score'))+'</small></div><p class="mutt">'+E(res.detail||'')+(nb&&rec.plays>1?' · 🆕 '+E(X('g_best')):'')+'</p><div class="xpchip">+'+xp+' XP'+(dbl?' · 🔥 '+E(X('ar_daily'))+' ×2':'')+'</div><div class="row c" style="margin-top:22px"><button class="btn pri" data-again>'+E(X('btn_again'))+'</button><a class="btn" href="'+replayHref+'">'+(simResult?'সিমুলেশন খুলুন':quizResult?'লেভেল বেছে নিন':'গেম খুলুন')+'</a>'+(quizResult?'<a class="btn" href="#/play/'+E(g.id)+'/review">🧠 Mistake Review</a>':'')+(simResult?'<a class="btn" href="#/lab">সিমুলেশন তালিকায় ফিরুন</a>':'<a class="btn" href="#/play">'+E(X('btn_arcade'))+'</a>')+'</div></div>'+(quizResult?reviewHtml(res.review):'');track(1);
+ FX.scan(root);if(xp)award(xp,g.t);else badges();
+ root.querySelector('[data-again]').onclick=function(){var again=gaGameById(g.id)||g;startGame(again,gaIsQuizGame(again)?(g.levelId||'concept'):'')}}
+
+/* ------------------------------------------------------------ router */
+function mountSims(){$$('[data-sim]',app).forEach(function(el){var key=el.dataset.sim;simInto(el,key,null,function(){})})}
+function swipeNav(el,fn){var x0=null;el.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});el.addEventListener('touchend',function(e){if(x0==null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>45)fn(dx<0?1:-1)},{passive:true})}
+function mountHomeGameCarousel(){
+ var track=$('#homeGameTrack');if(!track)return;
+ var cards=$$('.gdeck-card',track),n=cards.length,ix=(window.matchMedia&&window.matchMedia('(max-width: 600px)').matches)?0:Math.floor(Math.max(0,n-1)/2),reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,raf=0,lock=0,settleTimer=0;
+ if(!n)return;
+ function centeredIndex(){var tr=track.getBoundingClientRect(),mid=tr.left+track.clientWidth/2,best=0,bd=1e9;cards.forEach(function(c,i){var r=c.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<bd){bd=d;best=i}});return best}
+ function setOn(k){ix=Math.max(0,Math.min(n-1,k));cards.forEach(function(c,i){var on=i===ix;c.classList.toggle('on',on);if(on)c.setAttribute('aria-current','true');else c.removeAttribute('aria-current')});var b=$('#gdeckBar'),count=$('#gdeckCount');if(b)b.style.width=Math.round((ix+1)/n*100)+'%';if(count)count.textContent=String(ix+1).padStart(2,'0')+' / '+String(n).padStart(2,'0')}
+ function syncToCenter(){if(!track.isConnected)return;var best=centeredIndex();if(best!==ix)setOn(best)}
+ function go(k,smooth){k=((k%n)+n)%n;var c=cards[k],tr=track.getBoundingClientRect(),cr=c.getBoundingClientRect();var target=track.scrollLeft+(cr.left+cr.width/2-(tr.left+track.clientWidth/2));lock=Date.now()+(smooth&&!reduce?850:100);track.scrollTo({left:Math.max(0,target),behavior:smooth&&!reduce?'smooth':'auto'});setOn(k);clearTimeout(settleTimer);settleTimer=setTimeout(function(){lock=0;syncToCenter()},smooth&&!reduce?900:140)}
+ track.addEventListener('scroll',function(){if(Date.now()<lock||raf)return;raf=requestAnimationFrame(function(){raf=0;syncToCenter()})},{passive:true});
+ track.addEventListener('scrollend',function(){lock=0;clearTimeout(settleTimer);syncToCenter()},{passive:true});
+ $$('[data-gdeck]').forEach(function(b){b.onclick=function(){go(ix+Number(b.dataset.gdeck),true)}});
+ track.addEventListener('click',function(e){var c=e.target.closest('.gdeck-card');if(c&&!c.classList.contains('on')){e.preventDefault();go(Number(c.dataset.gi),true)}});
+ track.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){e.preventDefault();go(ix+1,true)}else if(e.key==='ArrowLeft'){e.preventDefault();go(ix-1,true)}});
+ setOn(ix);requestAnimationFrame(function(){go(ix,false);requestAnimationFrame(function(){go(ix,false)})})
+}
+function mountHomeSimCarousel(){mountHomeGameCarousel();var track=$('#homeLabTrack');if(track){var cards=$$('.home-lab-card',track),ix=Math.max(0,cards.findIndex(function(c){return !c.hidden}));function showCard(n){if(!cards.length)return;ix=(n+cards.length)%cards.length;cards.forEach(function(c,i){c.hidden=i!==ix});}$$('[data-home-lab-shift]').forEach(function(b){b.onclick=function(){showCard(ix+Number(b.dataset.homeLabShift))}});swipeNav(track,function(d){showCard(ix+d)});showCard(ix);return}var target=$('#homeSimTarget');if(!target)return;var items=LABS.filter(function(x){return x.on!==false&&x.on!=='0'&&!x.arcadeImported&&x.sim&&x.sim!=='none'&&x.sim!=='custom'});if(!items.length)items=[{sim:'wave',t:'Wave Machine'},{sim:'line',t:'Straight Line Studio'},{sim:'force',t:'Force & Motion'}];var initial=items.findIndex(function(x){return x.sim===target.dataset.sim});var ix=Math.max(0,initial);function show(n){ix=(n+items.length)%items.length;var item=items[ix],key=item.sim;target.dataset.sim=key;target.innerHTML='';var title=$('#homeSimTitle'),num=$('#homeSimNum');if(title)title.textContent=item.t||key;if(num)num.textContent=String(ix+1).padStart(2,'0')+' / '+String(items.length).padStart(2,'0');simInto(target,key,null,function(){})}var prev=$('#homeSimPrev'),next=$('#homeSimNext');if(prev)prev.onclick=function(){show(ix-1)};if(next)next.onclick=function(){show(ix+1)};show(ix)}
+function loadLeaderboard(){var box=$('#leaderboardData'),count=$('#leaderCount');if(!box)return;fetch('/api/student-leaderboard',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('Could not load rankings');return r.json()}).then(function(d){if(!$('#leaderboardData'))return;if(count)count.textContent=String(d.count||0);var rows=d.students||[];if(!rows.length){box.innerHTML='<div class="card leader-empty"><div class="empty-icon">✦</div><h2>Be the first on the board</h2><p>No student rankings yet. Create an account and start learning to appear here.</p><a class="btn pri" href="#/account/signup">Create student account</a></div>';return;}var top=rows.slice(0,3),rest=rows.slice(3),podiumOrder=[];if(top[1])podiumOrder.push({u:top[1],rank:2});if(top[0])podiumOrder.push({u:top[0],rank:1});if(top[2])podiumOrder.push({u:top[2],rank:3});function avatar(u,small){var cls='avatar'+(small?' sm':'');return u.avatar?'<img class="'+cls+' avatar-photo" src="'+E(u.avatar)+'" alt="'+E(u.name||'Student')+' profile picture">':'<span class="'+cls+'">'+E((u.name||'S').trim().charAt(0).toUpperCase())+'</span>'}box.innerHTML='<div class="podium">'+podiumOrder.map(function(item){var u=item.u,i=item.rank-1;return'<article class="podium-card rank-'+item.rank+'"><span class="rank-medal">'+(['🥇','🥈','🥉'][i])+'</span>'+avatar(u,false)+'<h3>'+E(u.name||'Student')+'</h3><strong>'+Number(u.xp||0)+' <small>XP</small></strong><span class="rank-position">#'+item.rank+'</span></article>'}).join('')+'</div>'+(rest.length?'<div class="rank-table">'+rest.map(function(u,i){return'<div class="rank-row"><span class="rank-num">#'+(i+4)+'</span><span class="rank-person">'+avatar(u,true)+'<span class="rank-name">'+E(u.name||'Student')+'</span></span><strong>'+Number(u.xp||0)+' XP</strong></div>'}).join('')+'</div>':'');}).catch(function(){if(box)box.innerHTML='<div class="card leader-empty"><h2>Rankings are temporarily unavailable</h2><p>Please check the deployment and student database configuration, then refresh this page.</p><button class="btn" onclick="location.reload()">Try again</button></div>'})}
+function customPage(slug){var page=(D.customPages||[]).filter(function(x){return x&&(x.slug===slug||x.id===slug)&&x.on!==false&&x.on!==0&&x.on!=='0'})[0];if(!page)return '<div class="w pgw"><section class="card"><h1>Page unavailable</h1><p class="lead">এই পেজটি প্রকাশিত নয় অথবা পাওয়া যায়নি।</p><a class="btn" href="#/">Home</a></section></div>';var body=String(page.body||'').trim();var paragraphs=body?body.split(/\n\s*\n/).map(function(part){return '<p>'+E(part).replace(/\n/g,'<br>')+'</p>'}).join(''):'<p class="mutt">এই পেজের কনটেন্ট শিগগিরই প্রকাশ করা হবে।</p>';return '<div class="w pgw custom-public-page"><div class="custom-page-heading rv"><span class="eyebrow">GOLDEN SNITCH · PAGE</span><h1>'+E(page.title||page.navLabel||'Page')+'</h1></div><article class="card custom-page-content rv">'+paragraphs+'</article><p class="mutt" style="margin-top:20px"><a href="#/">← Home</a></p></div>'}
+function initScrollReveal(root){
+ root=root||document.getElementById('app');if(!root)return;
+ /* Use one lightweight observer in both themes. Light Theme keeps short, smooth
+    reveals instead of making every section visible instantly. */
+ var targets=root.querySelectorAll('.home-launchpad,.ayat-hadith-section,.motivation-section,.sec-features,.sec-stages,.arcade-s,.sec-sims,.home-lab,.home-games,.sec-subjects,.goals,.road,.home-discovery-motion,.home-science-outro,.home-stats-section,.pgw>.card,.pgw section,.pgw .card.rv,.lab-subject-group,.chapter-subject-group,.custom-page-heading,.custom-page-content');
+ /* Dark and Purple are intentionally immediate-render modes. Avoid creating a new
+    observer plus a scroll sweep for sections that have no reveal transition. */
+ var theme=document.documentElement.getAttribute('data-theme');
+ if(theme==='dark'||theme==='purple'||theme==='light'){targets.forEach(function(el){el.classList.add('scroll-reveal','is-visible')});return}
+ if(!('IntersectionObserver' in window)){targets.forEach(function(el){el.classList.add('scroll-reveal','is-visible')});return}
+ var io=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('is-visible');io.unobserve(entry.target)}})},{root:null,rootMargin:'0px 0px 680px 0px',threshold:.01});
+ targets.forEach(function(el){if(el.dataset.revealBound)return;el.dataset.revealBound='1';el.classList.add('scroll-reveal');io.observe(el)});
+ /* Safety net: anything at/above the viewport edge is always revealed, so a fast scroll or a skipped observer callback can never leave a section invisible. */
+ function sweep(){var vh=window.innerHeight||800,list=document.querySelectorAll('#app .scroll-reveal:not(.is-visible)');for(var i=0;i<list.length;i++){var r=list[i].getBoundingClientRect();if(r.top<vh+680){list[i].classList.add('is-visible');try{io.unobserve(list[i])}catch(e){}}}}
+ if(!window.__clRevealSweep){window.__clRevealSweep=1;var tk=0;window.addEventListener('scroll',function(){if(tk)return;tk=requestAnimationFrame(function(){tk=0;sweep()})},{passive:true});window.addEventListener('scrollend',sweep,{passive:true});window.addEventListener('resize',sweep,{passive:true})}
+ setTimeout(sweep,350);setTimeout(sweep,1400);
+}
+var GAME_CARD_ICONS=['⚡','🃏','✅','🔤','⚖️','🎯','🧲','🧬','🧪','📐','🪐','🧠','📏','🌡️','🔭','🧫','🧮','📡','🧩','🧯','🧱','🌀','🧰','🛰️','📊','🧷','🧵','🪄','🧭','🔋','💡','🛠️','🧊','🌈','🪙','🗝️','🪶','🪴','🪸','🪷','🪁','🛞','🔬','🧴','🧻'];
+function mountImportantNotice(pg,root){
+ var old=document.getElementById('clMessageCentre');if(old)old.remove();var oldPanel=document.getElementById('clMessagePanel');if(oldPanel)oldPanel.remove();
+ var msg=String((D&&D.settings&&D.settings.importantNotice)||'').trim();
+ var title=String((D&&D.settings&&D.settings.importantNoticeTitle)||'Important Notice').trim(),version=msg?(title+'\n'+msg):'',seenKey='cl_notice_seen_v2',seen='';
+ try{seen=localStorage.getItem(seenKey)||''}catch(e){}
+ var isNew=!!msg&&seen!==version,wrap=document.createElement('div');wrap.id='clMessageCentre';wrap.className='cl-message-centre';
+ wrap.innerHTML='<button type="button" class="cl-message-trigger'+(isNew?' is-new':'')+'" aria-label="Messages" aria-expanded="false"><svg class="cl-message-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>'+(isNew?'<span class="cl-message-count">1 new</span>':'')+'</button><section id="clMessagePanel" class="cl-message-panel" hidden role="region" aria-label="Message centre"><header><h2></h2><button type="button" class="cl-message-close" aria-label="Close messages">×</button></header><article><h3></h3><p></p></article></section>';
+ wrap.querySelector('.cl-message-panel header h2').textContent='Message Centre';wrap.querySelector('article h3').textContent=msg?title:'কোনো নতুন নোটিশ নেই';wrap.querySelector('article p').textContent=msg?msg:'এখানে অ্যাডমিনের প্রকাশিত গুরুত্বপূর্ণ বার্তা দেখা যাবে।';
+ var trigger=wrap.querySelector('.cl-message-trigger'),panel=wrap.querySelector('.cl-message-panel');
+ function toggle(){var open=panel.hidden;panel.hidden=!open;if(open){var hd=document.querySelector('header');var bt=hd?Math.round(hd.getBoundingClientRect().bottom):64;panel.style.setProperty('top',(bt+8)+'px','important')}trigger.setAttribute('aria-expanded',String(open));if(open&&msg){try{localStorage.setItem(seenKey,version)}catch(e){}trigger.classList.remove('is-new');var count=trigger.querySelector('.cl-message-count');if(count)count.remove()}}
+ trigger.addEventListener('click',toggle);wrap.querySelector('.cl-message-close').addEventListener('click',function(){panel.hidden=true;trigger.setAttribute('aria-expanded','false')});var headerActions=document.querySelector('header .hx');if(headerActions){headerActions.insertBefore(wrap,document.getElementById('burger'))}else{document.body.appendChild(wrap)}document.body.appendChild(panel);function closePanel(){panel.hidden=true;trigger.setAttribute('aria-expanded','false')}if(!window.__clMessageGlobalBound){document.addEventListener('click',function(ev){var p=document.getElementById('clMessagePanel'),t=document.querySelector('#clMessageCentre .cl-message-trigger');if(p&&!p.hidden&&!p.contains(ev.target)&&t&&!t.contains(ev.target)){p.hidden=true;t.setAttribute('aria-expanded','false')}});document.addEventListener('keydown',function(ev){var p=document.getElementById('clMessagePanel'),t=document.querySelector('#clMessageCentre .cl-message-trigger');if(ev.key==='Escape'&&p&&!p.hidden){p.hidden=true;if(t)t.setAttribute('aria-expanded','false')}});window.__clMessageGlobalBound=true;}
+}
+
+var routeScrollMemory=Object.create(null),lastRouteHash=location.hash;
+/* Capture the exact Student Hub dashboard position before a tool link changes the hash.
+   Some mobile browsers move the document before the hashchange handler runs; reading
+   pageYOffset only inside route() can therefore save the wrong position. */
+function hubCurrentScrollY(){return Math.max(0,Number(window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop)||0)}
+document.addEventListener('click',function(ev){
+ var link=ev.target&&ev.target.closest?ev.target.closest('a[href]'):null;
+ if(!link)return;
+ var href=String(link.getAttribute('href')||''),fromHubGrid=!!(link.closest&&link.closest('#app .hub-dashboard .hub-tool-launch-grid'));
+ if(!fromHubGrid&&!/^#\/hub\//.test(href))return;
+ var current=String(location.hash||'').replace(/^#\/?/,'').replace(/\/+$/,'');
+ if(current!=='hub')return;
+ routeScrollMemory.hub=hubCurrentScrollY();
+ try{sessionStorage.setItem('clHubDashboardReturnY',String(routeScrollMemory.hub));sessionStorage.setItem('clHubDashboardToolOpen','1');}catch(e){}
+},true);
+function instantScrollTo(y){var doc=document.documentElement,body=document.body,sc=document.scrollingElement,target=Math.max(0,+y||0),oldDoc=doc.style.getPropertyValue('scroll-behavior'),oldBody=body&&body.style.getPropertyValue('scroll-behavior');doc.style.setProperty('scroll-behavior','auto','important');if(body)body.style.setProperty('scroll-behavior','auto','important');if(sc)sc.scrollTop=target;doc.scrollTop=target;if(body)body.scrollTop=target;try{window.scrollTo(0,target)}catch(e){}requestAnimationFrame(function(){if(sc)sc.scrollTop=target;doc.scrollTop=target;if(body)body.scrollTop=target;});if(oldDoc)doc.style.setProperty('scroll-behavior',oldDoc);else doc.style.removeProperty('scroll-behavior');if(body){if(oldBody)body.style.setProperty('scroll-behavior',oldBody);else body.style.removeProperty('scroll-behavior')}}
+var pinTopOff=null;
+function pinTop(){var doc=document.documentElement,timers=[],stopped=false,evs=['touchstart','wheel','keydown','mousedown'];if(pinTopOff)pinTopOff();
+ function top(){if(!stopped&&(window.pageYOffset||doc.scrollTop||0)>0)instantScrollTo(0)}
+ function stop(){if(stopped)return;stopped=true;timers.forEach(clearTimeout);doc.classList.remove('cl-pin-top');evs.forEach(function(e){window.removeEventListener(e,stop,true)});window.removeEventListener('hashchange',stop);if(pinTopOff===stop)pinTopOff=null}
+ pinTopOff=stop;doc.classList.add('cl-pin-top');
+ evs.forEach(function(e){window.addEventListener(e,stop,{capture:true,passive:true})});
+ setTimeout(function(){window.addEventListener('hashchange',stop)},0);
+ top();requestAnimationFrame(function(){top();requestAnimationFrame(top)});
+ [60,160,320,700].forEach(function(ms){timers.push(setTimeout(top,ms))});timers.push(setTimeout(stop,950))}
+function route(){var previousHash=lastRouteHash,previousPath=String(previousHash||'').replace(/^#\/?/,'').split('/')[0],previousFull=String(previousHash||'').replace(/^#\/?/,''),nextFull=String(location.hash||'').replace(/^#\/?/,''),nextPath=nextFull.split('/')[0],restoreY=null;if(nextPath==='settings'&&previousPath!=='settings'){window.__clSettingsReturn=previousFull?'#/'+previousFull:'#/';window.__clSettingsReturnY=window.pageYOffset||document.documentElement.scrollTop||0;}if(previousPath==='settings'&&window.__clSettingsReturn&&nextFull===String(window.__clSettingsReturn).replace(/^#\/?/,'')){restoreY=Math.max(0,Number(window.__clSettingsReturnY)||0);}if((previousPath==='play'&&previousFull==='play')||(previousPath==='lab'&&previousFull==='lab'))routeScrollMemory[previousPath]=window.pageYOffset||document.documentElement.scrollTop||0;if((nextFull==='play'&&previousFull.indexOf('play/')===0)||(nextFull==='lab'&&previousFull.indexOf('lab/')===0)){var k=nextPath;if(typeof routeScrollMemory[k]==='number')restoreY=routeScrollMemory[k]}if(previousFull==='hub'&&nextFull.indexOf('hub/')===0){
+ if(typeof routeScrollMemory.hub!=='number')routeScrollMemory.hub=hubCurrentScrollY();
+ try{sessionStorage.setItem('clHubDashboardReturnY',String(routeScrollMemory.hub));}catch(e){}
+ }
+ var returningFromHubTool=previousFull.indexOf('hub/')===0,hubToolMarker='';
+ if(nextFull==='hub'){
+  try{hubToolMarker=sessionStorage.getItem('clHubDashboardToolOpen')||'';}catch(e){}
+  if(returningFromHubTool||hubToolMarker==='1'){
+   var hubY=routeScrollMemory.hub;
+   if(typeof hubY!=='number'||!Number.isFinite(hubY)){
+    try{var storedHubY=sessionStorage.getItem('clHubDashboardReturnY');if(storedHubY!==null&&storedHubY.trim()!=='')hubY=Number(storedHubY);}catch(e){}
+   }
+   restoreY=Number.isFinite(Number(hubY))?Math.max(0,Number(hubY)):0;
+   try{sessionStorage.removeItem('clHubDashboardToolOpen');sessionStorage.removeItem('clHubDashboardReturnY');}catch(e){}
+  }else if(previousPath!=='hub'){
+   routeScrollMemory.hub=0;
+   try{sessionStorage.removeItem('clHubDashboardReturnY');}catch(e){}
+  }
+ }
+ if(previousFull!==nextFull&&previousFull!=='hub'&&previousFull.indexOf('hub/')!==0&&nextFull!=='hub'){
+  try{sessionStorage.removeItem('clHubDashboardToolOpen');sessionStorage.removeItem('clHubDashboardReturnY');}catch(e){}
+ }
+ lastRouteHash=location.hash;var mobileJump=document.getElementById('mobileSimControlJump');if(mobileJump)mobileJump.remove();syncAccountHeader();var h=location.hash.replace(/^#\/?/,''),p=h.split('/'),pg=p[0],html;if(pg==='chapters'){location.hash='#/lab';return;}
+ $$('header nav a').forEach(function(a){var t=a.getAttribute('href').replace('#/','').split('/')[0],id=a.getAttribute('data-menu-id')||'',active=t==pg||(t===''&&pg==='')||(pg==='chapter'&&t==='chapters')||(pg==='chapter-list'&&t==='chapters');if(pg==='hub'){if(id==='hub')active=p.length<2;else if(id.indexOf('hub-')===0)active=!!p[1]&&id==='hub-'+p[1];else active=false;}a.classList.toggle('on',active)});
+ $$('.bottom-nav a').forEach(function(a){var t=a.getAttribute('href').replace('#/','').split('/')[0],active=t==pg||(t==''&&pg==='')||(pg==='chapter'&&t==='chapters')||(pg==='chapter-list'&&t==='chapters')||(t==='hub'&&/^(toolkit|solver|reference|share-card|shortcuts|study-space)$/.test(pg));a.classList.toggle('on',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+ try{html=pg==='mistakes'?gaReviewPage(null):pg=='chapter-list'&&p[1]?chapterListPage(p[1]):pg=='chapter'&&p[1]?chapter(p[1]):pg=='play'&&p[1]?gamePage(p[1],p[2]):pg=='lab'&&p[1]?labPage(p[1]):pg=='graphs'&&p[1]&&window.CL_GRAPHS?CL_GRAPHS.detail(p[1]):pg=='page'&&p[1]?customPage(decodeURIComponent(p[1])):(pages[pg]||(window.CL_HUB&&CL_HUB.pages[pg])||pages[''])()}
+ catch(err){console.error('Golden Snitch render error:',err);html='<section class="w pgw"><h1>Something went wrong</h1><p class="lead">Please refresh the page. If this keeps happening, tell the site admin.</p></section>'}
+ html=fillCountTokens(html);app.innerHTML=html;mountImportantNotice(pg,app);setNavOpen(false,false);if(pg==='lab'&&!p[1])mountLabCatalog();if(pg==='play'&&!p[1])mountGameAcademy(app);if(pg==='play'&&p[1]&&p[2]==='review')mountGameMistakes(app,p[1]);if(pg==='mistakes')mountGameMistakes(app,'');initScrollReveal(app);app.classList.remove('page-enter');void app.offsetWidth;app.classList.add('page-enter');app.dataset.page=pg||'home';document.body.classList.toggle('ion-game-active',pg==='play'&&p[1]==='chemistry-ion-challenge');if(restoreY!==null){requestAnimationFrame(function(){instantScrollTo(restoreY);requestAnimationFrame(function(){instantScrollTo(restoreY)});});}else{instantScrollTo(0);if(pg==='settings'||pg==='appearance')pinTop()}if(window.CL_HUB)try{CL_HUB.mount(pg,app)}catch(hx){console.error(hx)}
+ if(pg==='leaderboard')loadLeaderboard();
+ if(pg==='graphs'&&p[1]&&window.CL_GRAPHS)try{CL_GRAPHS.mount(p[1],app)}catch(ge){console.error('Graph Lab mount error:',ge)}
+ if(pg==='account'){var af=$('#studentAuth');if(af)af.addEventListener('submit',function(ev){ev.preventDefault();var fd=new FormData(af),mode=af.dataset.mode,btn=af.querySelector('.auth-submit'),msg=$('#authMessage');btn.disabled=true;msg.textContent='Please wait…';fetch('/api/student-'+(mode==='signup'?'signup':'login'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:String(fd.get('name')||'').trim(),email:String(fd.get('email')||'').trim().toLowerCase(),password:fd.get('password'),school:String(fd.get('school')||'').trim()})}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Unable to continue');return j})}).then(function(j){if(j.token)localStorage.setItem('clstudentToken',j.token);try{localStorage.setItem('clHasAccount','1')}catch(x){}setStudent(j.user);if(mode==='signup'){try{window.CLWelcome&&window.CLWelcome.queue(j.user)}catch(x){}}if(j.token)fetch('/api/student-progress',{headers:{Authorization:'Bearer '+j.token},cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(d){if(d&&d.user){var g=GS();g.xp=Number(d.user.xp)||0;save(g);chip()}}).catch(function(){});msg.textContent='Signed in as '+j.user.name+'.';var back='';try{back=sessionStorage.getItem('clAuthReturn')||'';sessionStorage.removeItem('clAuthReturn')}catch(x){}location.hash=(back&&/^#\//.test(back))?back:'#/profile'}).catch(function(e){msg.textContent=e.message;}).finally(function(){btn.disabled=false})})}
+
+
+ if(pg==='profile'){var lo=$('#studentLogout');if(lo)lo.addEventListener('click',function(){cloud.ready=false;try{localStorage.setItem('clHasAccount','1')}catch(e){}localStorage.removeItem('clstudent');localStorage.removeItem('clstudentToken');syncAccountHeader();location.hash='#/';});}
+ if(pg==='edit-profile'){var pf=$('#studentProfileForm'),pic=$('#profilePicture'),avatarData=(student()||{}).avatar||'';if(pic)pic.addEventListener('change',function(){var f=pic.files&&pic.files[0];if(!f)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type)){pic.value='';$('#profileMessage').textContent='Please choose a JPG, PNG, or WebP image.';return;}var im=new Image(),reader=new FileReader();reader.onload=function(){im.onload=function(){var c=document.createElement('canvas'),max=360,scale=Math.min(1,max/Math.max(im.width,im.height));c.width=Math.round(im.width*scale);c.height=Math.round(im.height*scale);c.getContext('2d').drawImage(im,0,0,c.width,c.height);avatarData=c.toDataURL('image/jpeg',.78);$('#profilePreview').innerHTML='<img class="profile-avatar-img" src="'+avatarData+'" alt="Profile picture preview">';};im.src=reader.result;};reader.readAsDataURL(f);});if(pf)pf.addEventListener('submit',function(ev){ev.preventDefault();var fd=new FormData(pf),btn=pf.querySelector('button'),msg=$('#profileMessage');btn.disabled=true;msg.textContent='Saving…';apiStudent('student-profile',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({name:String(fd.get('name')||'').trim(),bio:String(fd.get('bio')||''),school:String(fd.get('school')||''),location:String(fd.get('location')||''),avatar:avatarData})}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'Could not save profile');return j})}).then(function(j){setStudent(j.user);msg.textContent='Profile updated successfully.';}).catch(function(err){msg.textContent=err.message;}).finally(function(){btn.disabled=false;});});}
+
+ try{
+  if(pg==''||!pages[pg]&&pg!='chapter'&&pg!='chapter-list'&&pg!='play'&&pg!='lab'){var ow=$('.sci-art'),sc=ow&&ow.querySelector('.sci-scene');if(sc&&S.hero){while(sc.children.length>1)sc.removeChild(sc.lastChild);var im=document.createElementNS('http://www.w3.org/2000/svg','image');im.setAttribute('href',S.hero);im.setAttribute('x','100');im.setAttribute('y','0');im.setAttribute('width','660');im.setAttribute('height','640');im.setAttribute('preserveAspectRatio','xMidYMid slice');sc.appendChild(im)}else mountHero(app);$$('[data-type]',app).forEach(function(el){FX.type(el,el.dataset.type.split('|'),null,window.matchMedia&&matchMedia('(max-width:640px)').matches)});mountSims();mountHomeSimCarousel()}
+  if(pg=='chapter'&&p[1]&&C[p[1]]){var id=p[1],st=0;try{st=+(sessionStorage.getItem('st'+id)||0)}catch(e){}stage(id,st>=0&&st<4?st:0)}
+  if(pg=='play'&&p[1]){var g=gaGameById(p[1]),lv=p[2]||'';if(g&&$('#gm')&&(gaIsQuizGame(g)?(!!lv&&lv!=='review'):true))startGame(g,gaIsQuizGame(g)?(lv||''):'') }
+  if(pg=='lab'&&p[1]){var l=LABS.filter(function(x){return x.id==p[1]})[0];if(l&&l.arcadeImported&&$('#gm')){var ag=(GAMES||[]).filter(function(x){return x.id===(l.arcadeGameId||l.id)})[0];if(ag){startGame(ag,'');markSim(l.id)}}else if(l&&$('#sim'))simInto($('#sim'),l.sim,null,once(function(){markSim(l.sim)}))}
+ }catch(err){console.error(err)}
+ FX.scan(app)}
+app.addEventListener('submit',function(e){
+ var form=e.target;
+ if(form&&form.id==='studyNoteForm'){e.preventDefault();var fd=new FormData(form),id=String(fd.get('concept')||''),note=String(fd.get('note')||'').trim();if(!id||!note)return;var st=STUDY();st.notes[id]=note;saveStudy(st);var msg=document.getElementById('studyNoteStatus');if(msg)msg.textContent='নোট সংরক্ষণ হয়েছে।';form.querySelector('[name=note]').value='';return}
+ if(form&&form.id==='formulaBookmarkForm'){e.preventDefault();var fd=new FormData(form),formula=String(fd.get('formula')||'').trim(),label=String(fd.get('label')||'').trim();if(!formula)return;var st=STUDY();st.formulaBookmarks.unshift({formula:formula,label:label,at:Date.now()});saveStudy(st);route();return}
+ if(form&&form.id==='studentReviewForm'){
+  e.preventDefault();var rfd=new FormData(form),rating=Number(document.getElementById('reviewRating').value||0),message=String(rfd.get('message')||'').trim(),status=document.getElementById('reviewStatus'),button=document.getElementById('sendReview');
+  if(rating<1||rating>5){if(status)status.textContent='প্রথমে ১–৫ স্টারের মধ্যে আপনার রেটিং নির্বাচন করুন।';return;}
+  if(message.length<10){if(status)status.textContent='অনুগ্রহ করে অন্তত ১০ অক্ষরের একটি রিভিউ লিখুন।';return;}
+  if(String(rfd.get('website')||'').trim())return;
+  if(button)button.disabled=true;if(status)status.textContent='আপনার রিভিউ জমা হচ্ছে…';
+  var reviewHeaders={'content-type':'application/json'},token=studentToken();if(token)reviewHeaders.Authorization='Bearer '+token;
+  fetch('/api/reviews',{method:'POST',headers:reviewHeaders,body:JSON.stringify({name:String(rfd.get('name')||'').trim(),rating:rating,message:message,page:location.hash||'#/about',website:String(rfd.get('website')||'')})})
+  .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'রিভিউ জমা দেওয়া যায়নি। আবার চেষ্টা করুন।');return j;});})
+  .then(function(){form.reset();var field=document.getElementById('reviewRating'),caption=document.getElementById('reviewRatingCaption');if(field)field.value='0';if(caption)caption.textContent='স্টার বেছে নিন';app.querySelectorAll('[data-review-rating]').forEach(function(b){b.classList.remove('selected');b.setAttribute('aria-pressed','false');});if(status)status.textContent='ধন্যবাদ! আপনার রিভিউ সফলভাবে জমা হয়েছে।';})
+  .catch(function(err){if(status)status.textContent=err.message||'রিভিউ জমা দেওয়া যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';})
+  .finally(function(){if(button)button.disabled=false;});return;
+ }
+ if(!form||form.id!=='feedbackForm')return;
+ e.preventDefault();
+ var fd=new FormData(form),message=String(fd.get('message')||'').trim(),status=document.getElementById('feedbackStatus'),button=document.getElementById('sendFeedback');
+ if(message.length<5){if(status)status.textContent='অনুগ্রহ করে অন্তত ৫ অক্ষরের বার্তা লিখুন।';return;}
+ if(String(fd.get('website')||'').trim())return;
+ if(button)button.disabled=true;if(status)status.textContent='বার্তা পাঠানো হচ্ছে…';
+ fetch('/api/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:String(fd.get('name')||'').trim(),email:String(fd.get('email')||'').trim(),message:message,page:location.hash||'#/about',website:String(fd.get('website')||'')})})
+ .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'বার্তা পাঠানো যায়নি। আবার চেষ্টা করুন।');return j;});})
+ .then(function(){form.reset();if(status)status.textContent='ধন্যবাদ! আপনার বার্তা সফলভাবে পাঠানো হয়েছে।';})
+ .catch(function(err){if(status)status.textContent=err.message||'বার্তা পাঠানো যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';})
+ .finally(function(){if(button)button.disabled=false;});
+});
+
+app.addEventListener('click',function(e){
+ var reviewStar=e.target.closest('[data-review-rating]');if(reviewStar){var rating=Number(reviewStar.dataset.reviewRating)||0,field=document.getElementById('reviewRating'),caption=document.getElementById('reviewRatingCaption'),labels=['','একদম ভালো লাগেনি','আরও উন্নতি দরকার','মোটামুটি ভালো','খুব ভালো','অসাধারণ অভিজ্ঞতা'];if(field)field.value=String(rating);if(caption)caption.textContent=labels[rating]||'স্টার বেছে নিন';app.querySelectorAll('[data-review-rating]').forEach(function(b){var active=Number(b.dataset.reviewRating)<=rating;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(Number(b.dataset.reviewRating)===rating));});return;}
+ var sb=e.target.closest('[data-study-bookmark-concept]'),ss=e.target.closest('[data-study-save-sim]'),ub=e.target.closest('[data-study-unbookmark]'),us=e.target.closest('[data-study-unsave-sim]'),dn=e.target.closest('[data-study-delete-note]'),df=e.target.closest('[data-study-delete-formula]'),pa=e.target.closest('[data-practice-answer]');
+ if(sb){var st=STUDY(),id=sb.dataset.studyBookmarkConcept;if(st.bookmarks[id])delete st.bookmarks[id];else st.bookmarks[id]={at:Date.now()};saveStudy(st);sb.textContent=st.bookmarks[id]?'🔖 Bookmarked · Remove':'🔖 Bookmark this concept';return}
+ if(ss){var st=STUDY(),id=ss.dataset.studySaveSim;if(st.savedSims[id])delete st.savedSims[id];else st.savedSims[id]={at:Date.now()};saveStudy(st);ss.textContent=st.savedSims[id]?'✓ সংরক্ষিত · সরান':'＋ সিমুলেশন সংরক্ষণ';return}
+ if(ub){var st=STUDY();delete st.bookmarks[ub.dataset.studyUnbookmark];saveStudy(st);route();return}if(us){var st=STUDY();delete st.savedSims[us.dataset.studyUnsaveSim];saveStudy(st);route();return}if(dn){var st=STUDY();delete st.notes[dn.dataset.studyDeleteNote];saveStudy(st);route();return}if(df){var st=STUDY();st.formulaBookmarks.splice(Number(df.dataset.studyDeleteFormula),1);saveStudy(st);route();return}
+ if(pa){practiceAnswer(pa);return}
+var t=e.target.closest('.tab'),n=e.target.closest('[data-n]'),cf=e.target.closest('[data-chf]'),lsb=e.target.closest('[data-lab-subject]'),rs=e.target.closest('[data-reset]'),pw=e.target.closest('[data-toggle-password]'),fg=e.target.closest('[data-forgot-password]'),authLink=e.target.closest('a[href^="#/account/"]'),m=location.hash.match(/^#\/chapter\/(.+)/);
+ if(authLink&&!/^#\/account\//.test(location.hash)){try{sessionStorage.setItem('clAuthReturn',location.hash||'#/')}catch(x){}}
+ if(pw){var pi=$('#studentPassword');if(pi){var show=pi.type==='password';pi.type=show?'text':'password';pw.textContent=show?'Hide':'Show';pw.setAttribute('aria-label',show?'Hide password':'Show password')}return}
+ if(fg){var fm=$('#forgotMessage');if(fm)fm.hidden=!fm.hidden;return}
+ if(m&&C[m[1]]){if(t)stage(m[1],+t.dataset.i);if(n){var nextStage=+n.dataset.n;if(nextStage===3){mark(m[1],2);var concept=C[m[1]];if(concept.sim&&concept.sim!=='none'&&concept.sim!=='custom')markSim(concept.sim);refreshBar(m[1]);var stageTab=$('#tabs').children[2];if(stageTab)stageTab.classList.add('dn')}stage(m[1],nextStage)}}
+ var cs=e.target.closest('[data-chs]'),cr=e.target.closest('[data-ch-reset]');if(cs){chS=cs.dataset.chs;$$('[data-chs]').forEach(function(b){b.classList.toggle('on',b===cs)});$('#chg').innerHTML=chGrid();FX.scan($('#chg'))}if(cr){chS='all';chF='all';chQ='';route();return}if(cf){chF=cf.dataset.chf;$$('[data-chf]').forEach(function(b){b.classList.toggle('on',b===cf)});$('#chg').innerHTML=chGrid();FX.scan($('#chg'))}
+ if(lsb){var v=lsb.dataset.labSubject;$$('#labSubjectChooser [data-lab-subject]').forEach(function(b){var active=b===lsb;b.classList.toggle('on',active);b.setAttribute('aria-selected',active?'true':'false')});$$('#lbg [data-lab-panel]').forEach(function(c){c.hidden=c.dataset.labPanel!==v});FX.scan($('#lbg'))}
+ if(rs&&confirm('Reset all progress, XP and badges on this device?')){try{localStorage.removeItem('cl');localStorage.removeItem('cl2')}catch(x){}if(studentToken()&&cloud.ready){clearTimeout(cloud.t);cloudPushNow()}syncStudentXP();chip();route()}});
+app.addEventListener('input',function(e){if(e.target.id=='chq'){chQ=e.target.value;$('#chg').innerHTML=chGrid();FX.scan($('#chg'))}});
+var navHome=null,navPlaceholder=null;
+function setNavOpen(open,returnFocus){
+ if(typeof open!=='boolean')open=!document.body.classList.contains('navopen');
+ var b=$('#burger'),nav=$('#nav'),backdrop=$('#navBackdrop');
+ if(open){
+  if(nav&&nav.parentNode!==document.body){navHome=nav.parentNode;navPlaceholder=document.createComment('Golden Snitch navigation home');nav.parentNode.insertBefore(navPlaceholder,nav);document.body.appendChild(nav);}
+  if(nav){
+   var closeBtn=nav.querySelector('.nav-drawer-close');
+   if(!closeBtn){closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.className='nav-drawer-close';closeBtn.textContent='✕';closeBtn.setAttribute('aria-label','মেনু বন্ধ করুন');closeBtn.title='মেনু বন্ধ করুন';closeBtn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();setNavOpen(false,true);});nav.insertBefore(closeBtn,nav.firstChild);}
+   closeBtn.hidden=false;
+   var r=b?b.getBoundingClientRect():{bottom:70,right:window.innerWidth-16};
+   var header=$('header'),hr=header?header.getBoundingClientRect():null;
+   var anchorBottom=hr&&hr.bottom>0?hr.bottom:r.bottom;
+   /* The navigation drawer is an overlay, not a continuation below the header. Keep it at the top of the web viewport to eliminate the large blank lead-in on mobile. */
+   var top=8;
+   nav.classList.add('nav-portal');nav.style.position='fixed';nav.style.top=top+'px';nav.style.right=Math.max(12,window.innerWidth-r.right)+'px';nav.style.left='auto';nav.style.bottom='auto';nav.style.zIndex='10002';nav.style.maxHeight='calc(100dvh - '+(top+12)+'px - env(safe-area-inset-bottom))';nav.style.overflowY='auto';nav.style.overscrollBehavior='contain';nav.style.width='min(620px, calc(100vw - 24px))';nav.style.display='flex';nav.style.flexDirection='column';nav.style.alignItems='stretch';nav.style.justifyContent='flex-start';nav.style.gap='4px';nav.style.padding='12px';nav.style.border='1px solid rgba(56,189,248,.34)';nav.style.borderRadius='20px';nav.style.background='rgba(4,12,22,.985)';nav.style.boxShadow='0 24px 70px rgba(0,0,0,.72)';nav.style.backdropFilter='blur(24px)';nav.style.webkitBackdropFilter='blur(24px)';nav.style.animation='navDrop .22s ease-out both';nav.style.scrollbarWidth='thin';
+  }
+  document.body.classList.add('navopen');
+ }else{
+  document.body.classList.remove('navopen');
+  if(nav){nav.classList.remove('nav-portal');var closeBtn=nav.querySelector('.nav-drawer-close');if(closeBtn)closeBtn.hidden=true;['position','top','right','left','bottom','zIndex','maxHeight','overflowY','overscrollBehavior','width','display','flexDirection','alignItems','justifyContent','gap','padding','border','borderRadius','background','boxShadow','backdropFilter','webkitBackdropFilter','animation','scrollbarWidth'].forEach(function(k){nav.style[k]=''});if(navPlaceholder&&navPlaceholder.parentNode){navPlaceholder.parentNode.insertBefore(nav,navPlaceholder);navPlaceholder.parentNode.removeChild(navPlaceholder);}else if(navHome)navHome.appendChild(nav);navPlaceholder=null;navHome=null;}
+ }
+ if(b)b.setAttribute('aria-expanded',open?'true':'false');if(backdrop){backdrop.setAttribute('aria-hidden',open?'false':'true');backdrop.tabIndex=open?0:-1}if(!open&&returnFocus&&b)b.focus();
+}
+$('#burger')&&($('#burger').onclick=function(){setNavOpen();});
+$('#navBackdrop')&&($('#navBackdrop').onclick=function(){setNavOpen(false,true)});
+$('#nav')&&($('#nav').addEventListener('click',function(e){if(e.target.closest('a'))setNavOpen(false,false)}));
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.body.classList.contains('navopen'))setNavOpen(false,true)});
+addEventListener('hashchange',route);
+function goTop(ev){var a=ev.target&&ev.target.closest?ev.target.closest('#ftop'):null;if(!a)return;ev.preventDefault();try{window.scrollTo({top:0,left:0,behavior:'smooth'})}catch(e){}document.documentElement.scrollTop=0;document.body.scrollTop=0;var sc=document.scrollingElement;if(sc)sc.scrollTop=0}
+function bottomHomeToTop(ev){var a=ev.target&&ev.target.closest?ev.target.closest('.bottom-nav a[href]'):null;if(!a)return;var norm=function(h){return String(h||'').replace(/^#\/?/,'').replace(/\/+$/,'')};if(norm(a.getAttribute('href'))!==norm(location.hash))return;ev.preventDefault();var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;try{window.scrollTo({top:0,left:0,behavior:reduce?'auto':'smooth'})}catch(e){document.documentElement.scrollTop=0;document.body.scrollTop=0}}
+function footerSubjectGo(ev){var a=ev.target&&ev.target.closest?ev.target.closest('.pf-subjects a[data-subject-go]'):null;if(!a)return;ev.preventDefault();location.hash='#/lab';}
+function norm2(h){return String(h||'').replace(/^#\/?/,'').replace(/\/+$/,'')}
+document.addEventListener('click',goTop,true);document.addEventListener('click',bottomHomeToTop,true);document.addEventListener('click',footerSubjectGo,true);app.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('.sec-subjects a[data-subject-go]');if(!a)return;e.preventDefault();location.hash='#/lab';} ,true);window.addEventListener('pageshow',function(){var a=document.getElementById('ftop');if(a)a.setAttribute('role','button')});
+
+window.CL_API={award:award,lvl:lvl,GS:GS,student:student,settings:function(){return S||{}},editorialQueue:function(chapterId){var token='';try{token=localStorage.getItem('clt')||'';}catch(e){}var path='/api/editorial-blueprints'+(chapterId?'?chapterId='+encodeURIComponent(String(chapterId)):'');return fetch(path,{cache:'no-store',headers:{authorization:'Bearer '+token,'cache-control':'no-cache'}}).then(function(r){if(!r.ok)throw new Error('Admin sign-in is required to open the private editorial blueprint queue.');return r.json();}).then(function(data){return Array.isArray(data.items)?data.items:[];});},quizBanks:function(){return gaBuildChapterQuizzes().map(function(g){return{chapterId:g.chapterId,title:g.t,subject:g.subjectKey,questions:(g.data&&g.data.q||[]).map(function(q){return{id:String(q.questionId||q.id||''),q:q.q||'',o:Array.isArray(q.o)?q.o.slice():[],a:Number(q.a)||0,tier:Number(q.tier)||2,topic:q.subtopic||q.syllabusTopic||q.topic||'',questionType:q.questionType||'conceptual',e:q.e||'',media:Array.isArray(q.media)?q.media:[],explanation:q.explanation||{},meta:q.meta||{},authoredHscConcept:!!q.authoredHscConcept,syllabusGenerated:!!q.syllabusGenerated,qualityStatus:q.qualityStatus||'draft-unreviewed',editorialReviewed:!!q.editorialReviewed,qualityApproved:!!q.qualityApproved,blueprintDraft:!!(q.expansionMetadata&&q.expansionMetadata.generatedFromEditorialBlueprint===true),expansionMetadata:q.expansionMetadata||null,contentOrigin:q.contentOrigin||'',learningObjective:q.learningObjective||'',mediaPolicyV94:q.mediaPolicyV94||null,references:Array.isArray(q.explanation&&q.explanation.references)?q.explanation.references:[]}})}})},index:function(){var ls=(typeof LABS!=='undefined'&&LABS||[]).filter(function(l){return l&&l.on!==false&&l.on!=='0'});return{games:(typeof gaAllGames==='function'?gaAllGames():[]).map(function(g){return{id:g.id,t:gameTitle(g),en:g.t||'',d:g.d||'',i:gameIcon(g)}}),labs:ls.map(function(l){return{id:l.id,t:simTitle(l),en:l.t||'',d:l.d||'',i:simIcon(l)}}),chapters:(typeof CHL!=='undefined'&&CHL||[]).map(function(c){return{id:c.id,t:c.t||c.title||'',d:c.hook||'',s:c.s||''}})}}};load({});touchStreak();chip();syncAccountHeader();route();document.documentElement.classList.add('app-ready');syncStudentXP();if(studentToken()){refreshAccount();cloudPull()}
+fetch('/api/content',{cache:'no-store',headers:{'cache-control':'no-cache'}}).then(function(r){return r.ok?r.json():null}).then(function(d){if(d&&typeof d==='object'&&Object.keys(d).length){load(d);route()}}).catch(function(){});
+/* The HSC question-bank CMS is optional until a Netlify API deployment exists. */
+fetch('/api/published-question-bank',{cache:'no-store',headers:{'cache-control':'no-cache'}}).then(function(r){return r.ok?r.json():null}).then(function(payload){if(payload&&payload.chapters&&typeof payload.chapters==='object'){gaHscQuestionBankOverrides=payload.chapters;window.CL_HSC_QUESTION_BANK_OVERRIDES=gaHscQuestionBankOverrides;gaChapterQuizCache=null;if(/^#\/play/.test(location.hash||''))route();}}).catch(function(){});
+})();

@@ -1,0 +1,135 @@
+/* Golden Snitch v112 — Quiz chapter cards (premium, animated, compact).
+   Same quality bar as the Arcade games cards, with its own identity: a "Q" hex badge,
+   a rotating glow ring, floating question marks and a chapter-specific SVG scene.          */
+
+/* ---------- card shell ---------- */
+.qcard{--a:hsl(var(--h) 98% 76%);--b:hsl(calc(var(--h) + 58) 98% 74%);--c:#fde68a;--bg:hsl(var(--h) 45% 9%);--gc:hsl(var(--h) 90% 66%);
+  position:relative;display:flex;flex-direction:column;min-width:0;border-radius:22px;overflow:hidden;isolation:isolate;
+  background:linear-gradient(170deg,hsl(var(--h) 40% 14%),hsl(var(--h) 38% 8%));
+  border:1px solid hsl(var(--h) 60% 55% / .34);
+  box-shadow:0 18px 38px -22px hsl(var(--h) 90% 55% / .6);
+  color:#fbf8f2;contain:layout style;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.qcard:focus-within{border-color:hsl(var(--h) 85% 66%)}
+@media (hover:hover) and (pointer:fine){
+  .qcard:hover{transform:translateY(-4px);border-color:hsl(var(--h) 80% 62% / .75);box-shadow:0 26px 46px -22px hsl(var(--h) 90% 55% / .75)}}
+.qcard::after{content:"";position:absolute;z-index:4;left:0;right:0;top:0;height:3px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--a),var(--b),transparent);opacity:.85}
+
+/* ---------- animated stage ---------- */
+.qcard-stage{position:relative;height:128px;overflow:hidden;
+  background:
+    radial-gradient(110% 100% at 88% 0%,hsl(calc(var(--h) + 58) 85% 46% / .38),transparent 60%),
+    radial-gradient(90% 100% at 0% 100%,hsl(var(--h) 90% 50% / .34),transparent 62%),
+    linear-gradient(160deg,hsl(var(--h) 52% 17%),hsl(calc(var(--h) + 34) 48% 9%))}
+.qcard-stage::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(hsl(var(--h) 90% 85% / .22) 1px,transparent 1.4px);background-size:16px 16px;
+  -webkit-mask-image:radial-gradient(80% 90% at 50% 55%,#000 30%,transparent 100%);mask-image:radial-gradient(80% 90% at 50% 55%,#000 30%,transparent 100%)}
+.qcard-stage::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:linear-gradient(180deg,transparent 62%,hsl(var(--h) 45% 9% / .55))}
+.qc-aur{position:absolute;left:-20%;top:-40%;width:70%;height:140%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,hsl(calc(var(--h) + 30) 95% 62% / .28),transparent);will-change:transform;animation:qcDrift 9s ease-in-out infinite alternate}
+.qc-ring{position:absolute;left:50%;top:50%;width:176px;height:176px;margin:-88px 0 0 -88px;border-radius:50%;pointer-events:none;
+  border:7px solid transparent;border-top-color:hsl(var(--h) 95% 70% / .3);border-bottom-color:hsl(calc(var(--h) + 58) 95% 70% / .24);
+  will-change:transform;animation:qcSpin 22s linear infinite}
+.qs-svg{position:absolute;z-index:1;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;
+  contain:strict;will-change:transform}
+.qc-q{position:absolute;z-index:1;pointer-events:none;font:800 15px/1 inherit;font-style:normal;color:hsl(var(--h) 100% 88%);opacity:0;animation:qcFloat 7s ease-in infinite}
+.qc-q.q1{left:7%;bottom:14px}
+.qc-q.q2{right:8%;bottom:20px;font-size:19px;animation-delay:-2.4s}
+.qc-q.q3{left:19%;bottom:6px;font-size:12px;animation-delay:-4.6s}
+
+.qcard-badge,.qcard-xp{position:absolute;top:10px;z-index:3;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:99px;font-size:11.5px;font-weight:700;color:#fff;background:rgba(18,15,7,.7);border:1px solid rgba(255,255,255,.16);}
+.qcard-badge{left:10px;padding-left:4px}
+.qcard-badge b{display:grid;place-items:center;width:19px;height:19px;font-size:11px;font-weight:900;color:#1d180d;background:linear-gradient(135deg,var(--a),var(--b));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.qcard-xp{right:10px;color:#fde68a}
+
+/* ---------- SVG scene tokens ---------- */
+.qs-svg .fa{fill:var(--a)}.qs-svg .fb{fill:var(--b)}.qs-svg .fc{fill:var(--c)}.qs-svg .fw{fill:#fff}.qs-svg .fd{fill:var(--bg)}.qs-svg .fk{fill:#f472b6}
+.qs-svg .sa,.qs-svg .sb,.qs-svg .sc,.qs-svg .sw{stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.qs-svg .sa{stroke:var(--a)}.qs-svg .sb{stroke:var(--b)}.qs-svg .sc{stroke:var(--c)}.qs-svg .sw{stroke:#fff}
+.qs-svg line.sa,.qs-svg line.sb,.qs-svg line.sc,.qs-svg line.sw,.qs-svg path.sa,.qs-svg path.sb,.qs-svg path.sc,.qs-svg path.sw{fill:none}
+.qs-svg *{shape-rendering:optimizeSpeed}
+.qs-svg .nf{fill:none}
+.qs-svg .ns{vector-effect:non-scaling-stroke}
+.qs-svg text,.qs-svg .qt{fill:#fff;font:700 12px/1 system-ui,-apple-system,"Segoe UI","Noto Sans Bengali",sans-serif;text-anchor:middle}
+.qs-svg .qs{opacity:.7;font-size:10px}
+.qs-svg .qb{font-weight:900}
+.qs-svg .qfl{stroke-dasharray:1 8;stroke-linecap:round;animation:qFlow 1s linear infinite}
+.qs-svg .qfb{stroke-dasharray:7 7;stroke-linecap:round;animation:qFlowB 1.2s linear infinite}
+.qs-svg .qdraw{stroke-dasharray:1;stroke-dashoffset:1;animation:qDraw 6s ease-in-out infinite}
+.qs-svg line.qfl,.qs-svg path.qfl,.qs-svg circle.qfl,.qs-svg ellipse.qfl{fill:none}
+
+/* ---------- body ---------- */
+.qcard-body{display:flex;flex-direction:column;gap:8px;padding:12px 14px 14px;flex:1}
+.qcard-tags{display:flex;flex-wrap:wrap;gap:6px}
+.qcard-subj,.qcard-paper,.qcard-no{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qcard-subj{background:hsl(var(--h) 80% 60% / .22);color:hsl(var(--h) 100% 85%)}
+.qcard-paper{background:rgba(255,255,255,.08);color:#e5dece}
+.qcard-no{background:hsl(calc(var(--h) + 58) 80% 60% / .16);color:hsl(calc(var(--h) + 58) 100% 86%)}
+.qcard h3{margin:0;font-size:18px;line-height:1.3;font-weight:800;letter-spacing:.1px;color:#fff;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* launch button: whole card is tappable via the oversized ::after */
+.qcard-go{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;margin-top:auto;padding:0 14px;border-radius:14px;text-decoration:none;font-weight:800;font-size:15px;color:#fff;
+  background:linear-gradient(135deg,hsl(var(--h) 80% 48%),hsl(calc(var(--h) + 58) 82% 46%));border:1px solid hsl(var(--h) 90% 75% / .45);
+  box-shadow:0 10px 22px -12px hsl(var(--h) 90% 55% / .9),inset 0 1px 0 rgba(255,255,255,.22);transition:filter .2s,transform .15s}
+.qcard-go::before{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;transform:skewX(-20deg);will-change:transform;background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);animation:qcSheen 4.2s ease-in-out infinite}
+.qcard-go::after{content:"";position:absolute;inset:-9999px;z-index:1}
+.qcard-go svg{width:12px;height:12px;fill:currentColor;transition:transform .2s;animation:pcCue 1.4s ease-in-out infinite}
+.qcard-go:hover{filter:brightness(1.1)}
+.qcard-go:active{transform:scale(.985)}
+.qcard-go:focus-visible{outline:3px solid var(--p,#F5DB9C);outline-offset:2px}
+@media (hover:hover){.qcard:hover .qcard-go svg{transform:translateX(3px)}}
+
+/* ---------- performance: off-screen cards render nothing (no style/paint/animation cost) ---------- */
+.qcard:not(.is-live) .qs-svg,.qcard:not(.is-live) .qc-aur,.qcard:not(.is-live) .qc-ring,.qcard:not(.is-live) .qc-q{display:none}
+.qcard:not(.is-live) .qcard-go::before,.qcard:not(.is-live) .qcard-go svg{animation-play-state:paused}
+
+/* v113c · phones/touch only (desktop unchanged): far cards keep every element drawn but frozen; they start moving once the
+   card is within ~one screen of the viewport (see CL_QUIZ_ANIM.observe). */
+@media (max-width:760px),(pointer:coarse){
+  .qcard:not(.is-live) .qs-svg,.qcard:not(.is-live) .qc-aur,.qcard:not(.is-live) .qc-ring,.qcard:not(.is-live) .qc-q{display:block}
+  .qcard:not(.is-live),.qcard:not(.is-live) *,.qcard:not(.is-live) *::before,.qcard:not(.is-live) *::after{animation-play-state:paused!important}
+  .qcard:not(.is-live) .qs-svg g[style*=animation]{will-change:auto}}
+
+html.qa-lite .qcard .qc-aur,html.qa-lite .qcard .qc-ring,html.qa-lite .qcard .qc-q{display:none}
+.qs-svg g[style*=animation]{will-change:transform}
+
+/* ---------- keyframes ---------- */
+@keyframes qcSpin{to{transform:rotate(360deg)}}
+@keyframes qcDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(24%,12%,0)}}
+@keyframes qcFloat{0%{transform:translateY(0) rotate(-8deg);opacity:0}15%{opacity:.34}70%{opacity:.18}100%{transform:translateY(-70px) rotate(10deg);opacity:0}}
+@keyframes qcSheen{0%,55%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(560%) skewX(-20deg)}}
+@keyframes qFlow{to{stroke-dashoffset:-9}}
+@keyframes qFlowB{to{stroke-dashoffset:-14}}
+@keyframes qDraw{0%{stroke-dashoffset:1;opacity:1}58%,88%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes pcCue{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+
+/* ---------- section grid (quiz tab): same rhythm as the Games tab ---------- */
+#app .game-academy-page.arcade-page .pg-grid:has(.qcard){row-gap:30px;column-gap:30px}
+#app .game-academy-page.arcade-page .ga-game-grid:has(.qcard){gap:26px!important}
+
+/* ---------- themes ---------- */
+[data-theme="light"] .qcard{background:#fff;color:#262013;border-color:hsl(var(--h) 45% 55% / .38);box-shadow:0 16px 34px -22px hsl(var(--h) 70% 40% / .5)}
+[data-theme="light"] .qcard h3{color:#221c0f}
+[data-theme="light"] .qcard-subj{background:hsl(var(--h) 70% 50% / .14);color:hsl(var(--h) 70% 28%)}
+[data-theme="light"] .qcard-paper{background:rgba(38,32,19,.06);color:#504938}
+[data-theme="light"] .qcard-no{background:hsl(calc(var(--h) + 58) 70% 50% / .12);color:hsl(calc(var(--h) + 58) 70% 28%)}
+[data-theme="light"] .qcard-go{color:#fff}
+[data-theme="purple"] .qcard{background:linear-gradient(170deg,hsl(calc(var(--h) + 20) 30% 15%),hsl(calc(var(--h) + 20) 32% 9%))}
+
+/* ---------- responsive: keep it compact ---------- */
+@media (max-width:520px){
+  .qcard{border-radius:20px}
+  .qcard-stage{height:118px}
+  .qcard-body{padding:10px 12px 12px;gap:7px}
+  .qcard h3{font-size:17px}
+  .qcard-go{min-height:42px;font-size:14.5px}
+  .qc-ring{width:160px;height:160px;margin:-80px 0 0 -80px}}
+@media (max-width:340px){.qcard-no{display:none}}
+
+/* ---------- reduced motion: scenes stay visible, but frozen ---------- */
+@media (prefers-reduced-motion:reduce){
+  .qcard,.qcard-go,.qcard-go svg{transition:none}
+  .qcard *,.qc-aur,.qc-ring,.qcard-go::before,.qs-svg *{animation-play-state:paused!important}
+  .qcard-go::before,.qc-q{display:none}}

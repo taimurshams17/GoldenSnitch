@@ -1,0 +1,102 @@
+/* Golden Snitch v116c — Desktop side-gap refinement + box-free split hero.
+   Loaded LAST. Desktop rules live inside @media (min-width:1024px); tablet/mobile layout is untouched
+   except for the three hero animations, which are slightly reduced on phones (see bottom). */
+
+:root{
+  --cl-wide-max:1480px;
+  --cl-wide-w:82%;
+  --cl-z:1;
+}
+
+/* ───────────────────────── 1) WIDE, SPACIOUS CONTAINER ───────────────────────── */
+@media (min-width:1024px){
+  html:root body .w,
+  html:root body main.w,
+  html:root body #app .w,
+  html:root body header .w,
+  html:root body .pf .w,
+  html:root body .home-page,
+  html:root body .pgw,
+  html:root body .arcade-page{
+    width:min(var(--cl-wide-w),var(--cl-wide-max))!important;
+    max-width:var(--cl-wide-max)!important;
+    margin-left:auto!important;margin-right:auto!important;
+  }
+  html:root body .w,
+  html:root body #app .w,
+  html:root body header .w,
+  html:root body .pf .w{
+    padding-left:0!important;padding-right:0!important;
+  }
+  /* sections that used to be pinched into a narrow column */
+  html:root body #app[data-page="home"] .sec-stages > .w{max-width:var(--cl-wide-max)!important}
+  html:root body #app[data-page="home"] .motivation-section > .w{max-width:1100px!important}
+
+  /* Inner grids / lists with hard caps → follow the wider container */
+  html:root body #app[data-page="home"] .stage-premium-grid{max-width:none!important}
+  html:root body #app[data-page="home"] .feature-premium-list{max-width:1180px!important}
+  html:root body #app[data-page="home"] .sec-features .gA{max-width:1180px!important}
+  html:root body #app[data-page="home"] .home-roadmap-section .road-flow{max-width:900px!important}
+  html:root body #app[data-page="home"] .road-flow-step{max-width:880px!important}
+  html:root body #app[data-page="home"] .home-feature-showcase-head{max-width:980px!important}
+  html:root body #app[data-page="home"] .stage-premium-section .sh2,
+  html:root body #app[data-page="home"] .feature-premium-section .sh2{max-width:980px!important}
+  html:root body #app[data-page="home"] .stage-premium-section .sh2 p{max-width:820px!important}
+  html:root body #app[data-page="home"] .home-flow .fc-head{max-width:960px!important}
+  html:root body #app[data-page="home"] .home-flow .fc-head p{max-width:860px!important}
+  html:root body #app[data-page="home"] .pm-inner{max-width:920px!important}
+  html:root body #app[data-page="home"] .pm-lead{max-width:760px!important}
+  html:root body #app[data-page="home"] .pm-sub{max-width:660px!important}}
+@media (min-width:1800px){
+  :root{--cl-wide-max:1500px}}
+
+/* ───────────────────────── 1b) PROPORTIONAL SCALE-UP OF HOME SECTIONS + FOOTER ─────────────────────────
+   Scales text, padding, gaps, icons and card sizes together so the wider container never looks "empty".
+   Home page and footer only (no canvases / simulations are inside them). */
+@media (min-width:1024px){:root{--cl-z:1.00}}
+@media (min-width:1280px){:root{--cl-z:1.06}}
+@media (min-width:1440px){:root{--cl-z:1.12}}
+@media (min-width:1680px){:root{--cl-z:1.20}}
+@media (min-width:1920px){:root{--cl-z:1.28}}
+@media (min-width:1024px){
+  html:root body #app[data-page="home"] > section:not(.sci),
+  html:root body .footer-formula-motion,
+  html:root body .site-footer{zoom:var(--cl-z)}
+  /* inside a zoomed block, px caps are multiplied by the zoom → divide so the visual cap stays right */
+  html:root body #app[data-page="home"] > section:not(.sci) .w,
+  html:root body .site-footer .w{
+    width:min(var(--cl-wide-w),calc(var(--cl-wide-max) / var(--cl-z)))!important;
+    max-width:calc(var(--cl-wide-max) / var(--cl-z))!important;
+  }}
+
+@media (min-width:1024px){
+  /* tiny supporting text gets a little more presence (values are pre-zoom px) */
+  html:root body #app[data-page="home"] .showcase-card-copy{font-size:12px!important;line-height:1.7!important}
+  html:root body #app[data-page="home"] .showcase-card-kicker,
+  html:root body #app[data-page="home"] .home-stats-live{font-size:9.5px!important}
+  html:root body #app[data-page="home"] .home-feature-showcase-kicker,
+  html:root body #app[data-page="home"] .home-stats-kicker{font-size:10px!important}
+  html:root body #app[data-page="home"] .gdeck-play,
+  html:root body #app[data-page="home"] .gdeck-diff{font-size:10.5px!important}}
+
+/* ───────────────────────── 4) v116c — refinements ───────────────────────── */
+/* Softer background artwork in Light + Indigo */
+html[data-theme="light"] body::after{opacity:.26!important}
+html[data-theme="purple"] body::after{opacity:.24!important}
+html[data-theme="purple"] body::before{opacity:.8!important}
+
+@media (min-width:1024px){
+  /* every page wrapper follows the same side gap (beats page-specific caps like .lab-page 1240px) */
+  html:root body #app > .w.pgw.pgw,
+  html:root body #app > .w.pgw.lab-page,
+  html:root body #app > .lab-page,
+  html:root body #app > .arcade-page,
+  html:root body #app > .about-page{
+    width:min(var(--cl-wide-w),var(--cl-wide-max))!important;
+    max-width:var(--cl-wide-max)!important;
+  }
+  /* About → creators card used to be a narrow 820px column */
+  html:root body #app .creator-team-section,
+  html:root body #app .about-card.creator-team-section{max-width:none!important;width:100%!important;grid-column:1 / -1}
+  html:root body #app .creator-team-section > p{max-width:none!important}
+  html:root body #app .creator-team-section .creator-profiles{max-width:none!important;width:100%}}

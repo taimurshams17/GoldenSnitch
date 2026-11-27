@@ -1,0 +1,130 @@
+/* GOLDEN SNITCH — phase 2: typography system + dark-academia tokens.
+   Display = supplied "Harry P" (titles, headings, key lines). Body = EB Garamond + Noto Serif Bengali (Bengali glyphs). */
+:root{
+ --gs-display:"Harry P","Cormorant Garamond",Georgia,"Noto Serif Bengali",serif;
+ --gs-body:"EB Garamond","Cormorant Garamond",Georgia,"Noto Serif Bengali","Hind Siliguri",serif;
+ --gs-bn:"Noto Serif Bengali","Hind Siliguri","Noto Sans Bengali",serif;
+ --gs-math:"STIX Two Text","Cambria Math","Times New Roman",serif;
+ --gs-mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+/* Body & ordinary text */
+body,button,input,select,textarea,.btn{font-family:var(--gs-body)}
+body{font-size:17px;line-height:1.65;letter-spacing:.005em}
+/* Display font: every heading level + common title/lead-in classes across tabs */
+h1,h2,h3,h4,h5,h6,.ttl,.sc-title,.gs-title,
+[class*="-title"]:not(input):not(canvas):not(svg),[class*="Title"]:not(input),
+[class*="-heading"],[class*="__title"],.sec-h,.page-title,.hero-title,.card-title,
+.modal h2,.modal h3,.qz-title,.sim-title,.arcade-title,.hub-title,.pf-brand-lock b,
+.stage-title,.lead-in,.tagline{
+ font-family:var(--gs-display);font-weight:400;letter-spacing:.035em;line-height:1.18;
+ font-synthesis:none;text-rendering:optimizeLegibility}
+/* Bengali inside headings: Harry P has no Bengali glyphs, so fall back deliberately */
+/* Keep these crisp & legible */
+.katex,.math,.formula,[class*="formula"] *,[class*="eq-"],canvas,svg text,
+code,pre,kbd,samp,.mono,.sci-num,input[type=number]{font-family:var(--gs-math)}
+code,pre,kbd,samp,.mono{font-family:var(--gs-mono)}
+/* Tiny labels stay in body font for readability */
+small,.badge,.chip,.pill,label,th,td,.bottom-nav a,[class*="-sub"],[class*="-meta"]{font-family:var(--gs-body)}
+/* Dark-academia tokens (default dark theme only; light/purple themes untouched) */
+html:not([data-theme="light"]):not([data-theme="purple"]){
+ --gs-bg:#0B1019;--gs-panel:#141923;--gs-gold:#C5A15C;--gs-candle:#F5DB9C;--gs-parch:#E9DABC;--gs-text:#F2EBDD;--gs-text2:#B9B1A5}
+html:not([data-theme="light"]):not([data-theme="purple"]) h1,
+html:not([data-theme="light"]):not([data-theme="purple"]) h2{color:var(--gs-candle);text-shadow:0 0 22px rgba(197,161,92,.22)}
+html:not([data-theme="light"]):not([data-theme="purple"]) h3,
+html:not([data-theme="light"]):not([data-theme="purple"]) h4{color:var(--gs-gold)}
+:focus-visible{outline:2px solid var(--gs-gold,#C5A15C);outline-offset:2px}
+@media(max-width:640px){body{font-size:16px}h1,h2{letter-spacing:.02em}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+/* ===== World layer: environments, components ===== */
+body{--gs-env-a:rgba(197,161,92,.10);--gs-env-b:rgba(22,44,76,.35)}
+html[data-gs-env=tower]{--gs-env-a:rgba(120,160,255,.14);--gs-env-b:rgba(22,44,76,.7)}
+html[data-gs-env=potions]{--gs-env-a:rgba(80,200,140,.12);--gs-env-b:rgba(49,92,72,.6)}
+html[data-gs-env=arith]{--gs-env-a:rgba(233,218,188,.12);--gs-env-b:rgba(112,90,50,.45)}
+html[data-gs-env=library],html[data-gs-env=common]{--gs-env-a:rgba(245,170,80,.13);--gs-env-b:rgba(36,28,23,.8)}
+html[data-gs-env=games]{--gs-env-a:rgba(197,161,92,.16);--gs-env-b:rgba(112,43,53,.5)}
+html[data-gs-env=exam]{--gs-env-a:rgba(233,218,188,.10);--gs-env-b:rgba(36,28,23,.6)}
+html[data-gs-env=cup]{--gs-env-a:rgba(197,161,92,.16);--gs-env-b:rgba(112,43,53,.4)}
+html:not([data-theme=light]):not([data-theme=purple]) body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(900px 500px at 50% -10%,var(--gs-env-a),transparent 70%),radial-gradient(700px 600px at 100% 100%,var(--gs-env-b),transparent 70%),#0B1019;transition:background .6s}
+html:not([data-theme=light]):not([data-theme=purple]) body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+ background-image:radial-gradient(1.2px 1.2px at 20% 30%,#F5DB9C,transparent),radial-gradient(1px 1px at 70% 20%,#F5DB9C,transparent),radial-gradient(1.4px 1.4px at 40% 80%,#C5A15C,transparent),radial-gradient(1px 1px at 85% 65%,#F5DB9C,transparent);background-size:340px 340px}
+html:not([data-theme=light]):not([data-theme=purple]) :is(.card,.panel,.lw,[class*="-card"],.modal,.box){
+ border-color:rgba(197,161,92,.28);box-shadow:0 8px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(245,219,156,.07)}
+html:not([data-theme=light]):not([data-theme=purple]) :is(button,.btn,[class*="-btn"],.account-primary):not(#burger):not([class*=nav]){
+ border-color:rgba(197,161,92,.45)}
+html:not([data-theme=light]):not([data-theme=purple]) :is(.btn,.account-primary,button.primary,.pri){
+ background:linear-gradient(180deg,#E3C27E,#C5A15C);color:#1b140c;font-family:var(--gs-display);letter-spacing:.06em}
+html:not([data-theme=light]):not([data-theme=purple]) #nav a.on,html:not([data-theme=light]):not([data-theme=purple]) #nav a[aria-current]{color:#F5DB9C}
+html:not([data-theme=light]):not([data-theme=purple]) input,html:not([data-theme=light]):not([data-theme=purple]) select,html:not([data-theme=light]):not([data-theme=purple]) textarea{
+ background:#10161f;border-color:rgba(197,161,92,.35);color:#F2EBDD}
+html:not([data-theme=light]):not([data-theme=purple]) :is(input,select,textarea):focus{border-color:#C5A15C;box-shadow:0 0 0 3px rgba(197,161,92,.25)}
+/* exam / parchment surfaces */
+html[data-gs-env=exam]:not([data-theme=light]) :is(.qz,.quiz,[class*="quiz-card"],[class*="qz-"]){background:linear-gradient(180deg,#EADCBF,#E0CFA9);color:#2a1f14;border-color:#8a6d34}
+html[data-gs-env=exam]:not([data-theme=light]) :is(.qz,.quiz,[class*="quiz-card"],[class*="qz-"]) :is(h1,h2,h3,h4){color:#5a3a12;text-shadow:none}
+/* House button + modal */
+#gsHouseBtn{font:600 13px var(--gs-body);padding:7px 12px;border-radius:999px;border:1px solid var(--hc,#C5A15C);background:linear-gradient(135deg,var(--hb,#141923),#141923);color:var(--hc,#F5DB9C);cursor:pointer;margin-right:8px;min-height:36px;white-space:nowrap}
+#gsHouseBtn:hover{filter:brightness(1.15)}
+#gsHouseModal{position:fixed;inset:0;z-index:99999;background:rgba(5,8,14,.78);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px}
+.gs-hm{position:relative;max-width:440px;width:100%;background:linear-gradient(180deg,#E9DABC,#DCC9A1);color:#2a1f14;border:2px solid #8a6d34;border-radius:14px;padding:26px 22px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.gs-hm h2{color:#5a3a12;margin:0 0 8px;font-size:30px;text-shadow:none}.gs-hm p{margin:6px 0;font-size:16px}
+.gs-x{position:absolute;right:10px;top:6px;border:0;background:none;font-size:28px;cursor:pointer;color:#5a3a12;min-width:44px;min-height:44px}
+.gs-hg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.gs-hg button{padding:14px 8px;border-radius:10px;border:2px solid var(--hc);background:var(--hb);color:var(--hc);font:400 20px var(--gs-display);cursor:pointer;min-height:48px}
+.gs-hg button.on{outline:3px solid #2a1f14;outline-offset:2px}
+.gs-rule{font-size:14px!important;opacity:.85}.gs-leave{border:1px solid #5a3a12;background:none;border-radius:8px;padding:8px 12px;cursor:pointer;color:#5a3a12;min-height:40px}
+@media(max-width:640px){#gsHouseBtn{font-size:11px;padding:6px 8px;margin-right:4px}}
+@media(prefers-reduced-motion:reduce){body::before{transition:none!important}}
+
+/* ===== Specificity layer: site CSS uses html[data-theme] body #app … so win with !important, exceptions ordered after ===== */
+html body *:not(svg):not(svg *):not([class*="icon"]):not(i){font-family:var(--gs-body)!important}
+html body :is(h1,h2,h3,h4,h5,h6,.ttl,.sc-title,.gs-title,[class*="-title"],[class*="Title"],[class*="-heading"],[class*="__title"],.sec-h,.page-title,.hero-title,.card-title,.stage-title,.lead-in,.tagline,#bn,#fb,.gs-hm h2,.gs-hg button):not(svg){font-family:var(--gs-display)!important;font-weight:400!important;letter-spacing:.035em}
+html body :is(.katex,.katex *,.math,.formula,[class*="formula"],[class*="eq-"],.sci-num,input[type=number]){font-family:var(--gs-math)!important}
+html body :is(code,pre,kbd,samp,.mono,[class*="mono"]:not([class*="icon"])){font-family:var(--gs-mono)!important}
+/* Legacy font variables → Golden Snitch stacks */
+:root{--font-nakshatra:"Harry P","Noto Serif Bengali","Hind Siliguri",serif}
+html body #app :is(h1,h2,h3,h4,h5,h6){font-family:var(--gs-display)!important}
+/* Heading children inherit the display font (spans inside h1/h2 etc.) */
+html body :is(h1,h2,h3,h4,h5,h6,.ttl,.sc-title,#bn,#fb) :not(svg):not(svg *):not(i):not([class*="icon"]):not(.katex):not(.katex *){font-family:inherit!important}
+/* Dark theme palette: antique gold replaces cold blue/indigo */
+html[data-theme=dark]{--p:#C5A15C;--bg:#0B1019;--card:rgba(20,25,35,.88);--tx:#F2EBDD}
+html[data-theme=dark] .sci-btn--p{background:linear-gradient(180deg,#F5DB9C,#C5A15C)!important;color:#1b140c!important;border-color:#F5DB9C!important;box-shadow:0 6px 22px rgba(197,161,92,.35)}
+html[data-theme=dark] .sci-h1a{color:#F5DB9C}
+html[data-theme=dark] .sci-h1b{color:#E9DABC!important;-webkit-text-fill-color:#E9DABC!important;background:none!important}
+html[data-theme=dark] header{border-bottom-color:rgba(197,161,92,.35)}
+html[data-theme=dark] .bottom-nav{border-color:rgba(197,161,92,.35)}
+html[data-theme=dark] .bottom-nav a[aria-current],html[data-theme=dark] .bottom-nav a.on,html[data-theme=dark] .bottom-nav a.active{color:#F5DB9C;border-color:rgba(197,161,92,.6)}
+html[data-theme=dark] #app .sci-h1b{color:#E9DABC!important;-webkit-text-fill-color:#E9DABC!important;background:none!important}
+html[data-theme=dark] #app [class*="sci-"][class*="kick"],html[data-theme=dark] #app .sci-eyebrow{color:#C5A15C!important}
+html[data-theme=dark] .bottom-nav a:is([aria-current],.on,.active,.act,[aria-selected=true]),html[data-theme=dark] .bottom-nav a:is([aria-current],.on,.active,.act) *{color:#F5DB9C!important;border-color:rgba(197,161,92,.6)!important}
+html[data-theme=dark] #nav a:is([aria-current],.on,.active,.act){color:#F5DB9C!important}
+@media(max-width:640px){#gsHouseBtn{font-size:0;width:36px;min-width:36px;padding:0;margin-right:2px}#gsHouseBtn::before{content:"\269C";font-size:17px;line-height:1;color:var(--hc,#F5DB9C)}}
+
+/* ===== Environment textures (inline SVG, ~1KB each, dark + purple themes) ===== */
+html:not([data-theme=light])[data-gs-env=tower] body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cg fill='none' stroke='%239db8ff' stroke-opacity='.16'%3E%3Ccircle cx='210' cy='210' r='150'/%3E%3Ccircle cx='210' cy='210' r='100' stroke-dasharray='3 7'/%3E%3Cpath d='M60 210h300M210 60v300' stroke-opacity='.08'/%3E%3C/g%3E%3Cg fill='%23F5DB9C' fill-opacity='.5'%3E%3Ccircle cx='70' cy='60' r='1.6'/%3E%3Ccircle cx='330' cy='120' r='1.2'/%3E%3Ccircle cx='250' cy='330' r='1.8'/%3E%3Ccircle cx='110' cy='300' r='1.1'/%3E%3C/g%3E%3C/svg%3E");background-size:420px;opacity:.9}
+html:not([data-theme=light])[data-gs-env=potions] body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cg fill='none' stroke='%235fd6a0' stroke-opacity='.18'%3E%3Ccircle cx='60' cy='300' r='10'/%3E%3Ccircle cx='90' cy='250' r='5'/%3E%3Ccircle cx='300' cy='80' r='14'/%3E%3Ccircle cx='270' cy='130' r='6'/%3E%3Ccircle cx='180' cy='190' r='4'/%3E%3C/g%3E%3Cpath d='M0 340h360' stroke='%23b87333' stroke-opacity='.25' stroke-width='3'/%3E%3C/svg%3E");background-size:360px;opacity:.9}
+html:not([data-theme=light])[data-gs-env=arith] body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cg fill='none' stroke='%23E9DABC' stroke-opacity='.12'%3E%3Cpath d='M0 80h320M0 160h320M0 240h320M80 0v320M160 0v320M240 0v320'/%3E%3Ccircle cx='160' cy='160' r='110'/%3E%3Cpath d='M160 50l95 165H65z'/%3E%3C/g%3E%3C/svg%3E");background-size:320px;opacity:1}
+html:not([data-theme=light])[data-gs-env=library] body::after,html:not([data-theme=light])[data-gs-env=common] body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='160'%3E%3Cg fill='%23C5A15C' fill-opacity='.07'%3E%3Crect x='10' y='20' width='14' height='60'/%3E%3Crect x='28' y='30' width='12' height='50'/%3E%3Crect x='44' y='14' width='16' height='66'/%3E%3Crect x='130' y='24' width='14' height='56'/%3E%3Crect x='148' y='16' width='18' height='64'/%3E%3C/g%3E%3Cpath d='M0 82h240' stroke='%23C5A15C' stroke-opacity='.2' stroke-width='3'/%3E%3C/svg%3E");background-size:240px;opacity:1}
+html:not([data-theme=light])[data-gs-env=games] body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='%23C5A15C' fill-opacity='.06'%3E%3Crect width='40' height='40'/%3E%3Crect x='80' width='40' height='40'/%3E%3Crect x='40' y='40' width='40' height='40'/%3E%3Crect x='120' y='40' width='40' height='40'/%3E%3Crect y='80' width='40' height='40'/%3E%3Crect x='80' y='80' width='40' height='40'/%3E%3Crect x='40' y='120' width='40' height='40'/%3E%3Crect x='120' y='120' width='40' height='40'/%3E%3C/g%3E%3C/svg%3E");background-size:160px;opacity:1}
+html:not([data-theme=light])[data-gs-env=observatory] body::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cg fill='none' stroke='%239db8ff' stroke-opacity='.16'%3E%3Ccircle cx='210' cy='210' r='150'/%3E%3Ccircle cx='210' cy='210' r='100' stroke-dasharray='3 7'/%3E%3Cpath d='M60 210h300M210 60v300' stroke-opacity='.08'/%3E%3C/g%3E%3Cg fill='%23F5DB9C' fill-opacity='.5'%3E%3Ccircle cx='70' cy='60' r='1.6'/%3E%3Ccircle cx='330' cy='120' r='1.2'/%3E%3Ccircle cx='250' cy='330' r='1.8'/%3E%3Ccircle cx='110' cy='300' r='1.1'/%3E%3C/g%3E%3C/svg%3E");background-size:520px;opacity:.7}
+/* ===== Hero illustration: warm it toward gold/midnight (dark theme) ===== */
+html[data-theme=dark] .sci-art,html[data-theme=dark] .sci-scene{filter:sepia(.55) saturate(1.25) hue-rotate(-6deg) brightness(.95)}
+html[data-theme=dark] .sci-bg{opacity:.8}
+/* ===== Purple theme → Slytherin-night: deep emerald + silver-gold ===== */
+/* ===== Light theme → Parchment ===== */
+/* ===== About / creators: framed portraits ===== */
+#app :is(.about-card,.creator-profile){border:1px solid rgba(197,161,92,.4);border-radius:14px;background:linear-gradient(180deg,rgba(36,28,23,.92),rgba(20,25,35,.92))}
+#app .creator-avatar-ring{border-color:#C5A15C!important;box-shadow:0 0 0 3px rgba(197,161,92,.25),0 6px 22px rgba(0,0,0,.4)}
+#app .about-icon{color:#C5A15C}
+/* ===== Mobile header: give the brand room ===== */
+@media(max-width:640px){header .hx{gap:4px}header .brand #bn{font-size:15px;white-space:nowrap}header .brand .logo{width:30px;height:30px}#gsHouseBtn{display:none}.gs-mhouse{display:block}}
+
+.gs-mhouse{display:none}
+
+/* Purple theme → emerald (Slytherin night); Light → parchment brown accents */
+html[data-theme=dark] #app :is(.chapter-card,[class*="chapter-card"],[class*="chapter"] a) :is(h3,h4,b){color:#F5DB9C!important}
+html[data-theme=dark] #app [class*="chapter"] :is(h3,h4){color:#F5DB9C}
+/* Specificity boosters for the Purple (emerald) theme */
+html[data-theme=dark] #app .about-page{--about-accent:#C5A15C}
+html[data-theme=dark] body #app :is(.about-card,.creator-profile){border-color:rgba(197,161,92,.4)!important}
+html[data-theme=dark] body #app .creator-avatar-ring{border-color:#C5A15C!important;box-shadow:0 0 0 3px rgba(197,161,92,.25),0 6px 22px rgba(0,0,0,.4)!important}
+html[data-theme=dark] body #app :is(.about-icon,.about-icon *){color:#C5A15C!important;border-color:rgba(197,161,92,.4)!important;stroke:#C5A15C}
+html[data-theme=dark] body #app :is([class*="eyebrow"],[class*="kicker"],.about-page > :first-child small){color:#C5A15C!important}

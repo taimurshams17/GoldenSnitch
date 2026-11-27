@@ -1,0 +1,17 @@
+/* Golden Snitch admin skin: charcoal, dark wood, antique gold, parchment. Visual only. */
+@font-face{font-family:"Harry P";src:url(../fonts/harryp.ttf) format("truetype");font-display:swap}
+:root{--gs-display:"Harry P","Cormorant Garamond",Georgia,"Noto Serif Bengali",serif;--gs-body:"EB Garamond",Georgia,"Noto Serif Bengali","Hind Siliguri",serif}
+body,button,input,select,textarea{font-family:var(--gs-body)}
+h1,h2,h3,h4,[class*="title"]:not(input),[class*="-hd"],.brand{font-family:var(--gs-display);font-weight:400;letter-spacing:.035em;color:#F5DB9C}
+h1:lang(bn),h2:lang(bn),h3:lang(bn){font-family:"Noto Serif Bengali",serif;letter-spacing:0}
+body{background:radial-gradient(900px 500px at 50% -10%,rgba(197,161,92,.10),transparent 70%),#141923!important;color:#F2EBDD}
+:is(.card,.panel,section,aside,table,[class*="card"],[class*="panel"],dialog,.modal){border-color:rgba(197,161,92,.28)!important}
+:is(.card,.panel,[class*="card"],[class*="panel"]){background:linear-gradient(180deg,#241C17,#1a1511)!important}
+button,.btn{border-color:rgba(197,161,92,.45)}
+:is(.btn-primary,.primary,button[type=submit]){background:linear-gradient(180deg,#E3C27E,#C5A15C)!important;color:#1b140c!important;font-family:var(--gs-display);letter-spacing:.05em}
+input,select,textarea{background:#10161f!important;border:1px solid rgba(197,161,92,.35)!important;color:#F2EBDD!important}
+:is(input,select,textarea):focus{border-color:#C5A15C!important;box-shadow:0 0 0 3px rgba(197,161,92,.25)!important}
+th{background:#2d231b!important;color:#F5DB9C}
+:focus-visible{outline:2px solid #C5A15C;outline-offset:2px}
+html{background:#141923}
+body{background-repeat:no-repeat!important;background-attachment:fixed!important;min-height:100vh}

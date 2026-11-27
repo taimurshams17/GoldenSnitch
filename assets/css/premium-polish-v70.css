@@ -1,0 +1,241 @@
+
+
+/* Premium 4 + 4 feature flowchart on desktop. */
+#app[data-page="home"] .home-flow{padding:clamp(48px,6vw,76px) 0 58px!important}
+#app[data-page="home"] .home-flow .fc-head{max-width:760px;margin:0 auto 42px!important}
+#app[data-page="home"] .home-flow .fc-head h2{font-size:clamp(28px,3.7vw,42px)!important;letter-spacing:-.035em!important}
+#app[data-page="home"] .home-flow .fc-head p{max-width:700px;font-size:clamp(14px,1.45vw,16px)!important}
+#app[data-page="home"] .fc-board{
+  --rail:54px;--nh:84px;
+  grid-template-columns:minmax(0,1fr) 250px minmax(0,1fr)!important;
+  max-width:1160px!important;gap:0!important;align-items:center!important;
+}
+#app[data-page="home"] .fc-col{gap:16px!important}
+#app[data-page="home"] .fc-left{padding-right:var(--rail)!important}
+#app[data-page="home"] .fc-right{padding-left:var(--rail)!important}
+#app[data-page="home"] .fc-node{
+  height:var(--nh)!important;min-height:var(--nh)!important;padding:0 18px!important;gap:13px!important;
+  border-radius:19px!important;border:1px solid rgba(214,192,141,.2)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.022) 58%),var(--card,#1f1a0e)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 16px 34px -25px rgba(0,0,0,.7)!important;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease!important;
+}
+#app[data-page="home"] .fc-node:hover,#app[data-page="home"] .fc-node:focus-visible{
+  transform:translateY(-3px)!important;border-color:color-mix(in srgb,var(--s) 64%,transparent)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 20px 38px -23px rgba(0,0,0,.76),0 0 28px -16px var(--p)!important;
+  outline:none!important;
+}
+#app[data-page="home"] .fc-ico{
+  width:42px!important;height:42px!important;flex:0 0 42px!important;padding:10px!important;
+  border-radius:13px!important;background:rgba(197,167,96,.11)!important;
+  border:1px solid rgba(245,219,156,.16)!important;stroke:var(--s)!important;stroke-width:1.8!important;
+}
+#app[data-page="home"] .fc-txt{gap:4px!important}
+#app[data-page="home"] .fc-txt b{font-size:clamp(13px,1.25vw,15px)!important;font-weight:750!important;letter-spacing:-.012em}
+#app[data-page="home"] .fc-txt small{font-size:11.5px!important;line-height:1.42!important}
+#app[data-page="home"] .fc-hub{height:210px!important}
+#app[data-page="home"] .fc-core{
+  width:158px!important;height:158px!important;gap:4px!important;
+  border:1px solid rgba(234,218,181,.4)!important;
+  background:radial-gradient(circle at 50% 24%,#b09148 0%,#725b26 48%,#271f0d 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 0 0 9px rgba(197,161,92,.035),0 0 64px -10px rgba(197,161,92,.55)!important;
+}
+#app[data-page="home"] .fc-core img{width:94px!important;height:94px!important}
+#app[data-page="home"] .fc-core span{font-size:16px!important;letter-spacing:.015em}
+#app[data-page="home"] .fc-ring{width:158px!important;height:158px!important;border-color:rgba(216,187,120,.42)!important}
+html[data-theme="light"] #app[data-page="home"] .fc-node{
+  background:linear-gradient(145deg,#fff,#fdfbf7)!important;border-color:rgba(158,138,90,.2)!important;
+  box-shadow:inset 0 1px 0 #fff,0 13px 30px -24px rgba(90,75,40,.38)!important;
+}
+html[data-theme="light"] #app[data-page="home"] .fc-ico{background:rgba(201,162,71,.075)!important;border-color:rgba(201,162,71,.13)!important;stroke:#a2833b!important}
+html[data-theme="purple"] #app[data-page="home"] .fc-node{
+  background:linear-gradient(145deg,rgba(125,110,75,.36),rgba(49,42,27,.88))!important;border-color:rgba(232,215,176,.22)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 17px 34px -24px rgba(0,0,0,.65)!important;
+}
+html[data-theme="purple"] #app[data-page="home"] .fc-ico{background:rgba(228,208,161,.12)!important;border-color:rgba(238,225,196,.18)!important;stroke:#f2e8d0!important}
+html[data-theme="purple"] #app[data-page="home"] .fc-core{background:radial-gradient(circle at 50% 24%,#dcc38a 0%,#907c4e 48%,#38301c 100%)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 0 0 9px rgba(228,208,161,.045),0 0 64px -10px rgba(228,208,161,.5)!important}
+
+@media(max-width:860px){
+  #app[data-page="home"] .fc-board{--nhm:88px!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-rows:auto repeat(4,var(--nhm))!important;column-gap:18px!important;row-gap:10px!important;max-width:560px!important}
+  #app[data-page="home"] .fc-node{height:var(--nhm)!important;min-height:var(--nhm)!important;padding:9px 10px!important;gap:7px!important;border-radius:15px!important}
+  #app[data-page="home"] .fc-ico{width:32px!important;height:32px!important;flex:0 0 32px!important;padding:7px!important;border-radius:10px!important}
+  #app[data-page="home"] .fc-txt b{font-size:12px!important;line-height:1.25!important}
+  #app[data-page="home"] .fc-txt small{font-size:10px!important;line-height:1.35!important}
+  #app[data-page="home"] .fc-hub{height:auto!important}}
+@media(max-width:390px){
+  #app[data-page="home"] .fc-board{column-gap:12px!important;row-gap:8px!important}
+  #app[data-page="home"] .fc-node{padding:8px!important}
+  #app[data-page="home"] .fc-txt b{font-size:11px!important}
+  #app[data-page="home"] .fc-txt small{font-size:9px!important}}
+
+/* Student Hub toolkit rail: understated desktop arrows; phone keeps touch scrolling only. */
+#app[data-page="home"] .home-launchpad .launch-swipe-hint{display:none!important}
+#app[data-page="home"] .home-launchpad .launch-tool-carousel{position:relative!important;padding:0 38px!important;min-width:0!important}
+#app[data-page="home"] .home-launchpad .launch-tool-arrow-btn{
+  position:absolute!important;z-index:3!important;top:50%!important;transform:translateY(-50%)!important;
+  display:grid!important;place-items:center!important;width:28px!important;height:28px!important;
+  padding:0!important;border:1px solid rgba(214,192,141,.22)!important;border-radius:50%!important;
+  color:var(--tx,#f7f1e4)!important;background:rgba(55,48,30,.82)!important;
+  box-shadow:0 5px 16px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.07)!important;
+  font:600 22px/1 Inter,system-ui,sans-serif!important;cursor:pointer!important;
+  transition:background .18s,border-color .18s,opacity .18s,transform .18s!important;
+}
+#app[data-page="home"] .home-launchpad .launch-tool-arrow-btn.prev{left:3px!important}
+#app[data-page="home"] .home-launchpad .launch-tool-arrow-btn.next{right:3px!important}
+#app[data-page="home"] .home-launchpad .launch-tool-arrow-btn:hover:not(:disabled){background:rgba(168,140,76,.22)!important;border-color:rgba(245,219,156,.5)!important;transform:translateY(-50%) scale(1.06)!important}
+#app[data-page="home"] .home-launchpad .launch-tool-arrow-btn:disabled{opacity:.22!important;cursor:default!important;box-shadow:none!important}
+#app[data-page="home"] .home-launchpad .launch-tool-arrow-btn:focus-visible{outline:2px solid var(--s,#F5DB9C)!important;outline-offset:3px!important}
+#app[data-page="home"] .home-launchpad .launch-swipe-bar{margin-top:10px!important}
+html[data-theme="light"] #app[data-page="home"] .home-launchpad .launch-tool-arrow-btn{color:#564a2d!important;background:rgba(255,255,255,.92)!important;border-color:rgba(139,123,85,.22)!important}
+html[data-theme="purple"] #app[data-page="home"] .home-launchpad .launch-tool-arrow-btn{color:#f7f1e4!important;background:rgba(71,62,41,.9)!important;border-color:rgba(235,221,187,.25)!important}
+
+/* Student Hub: clearer hierarchy, calmer cards and semantic accent icons. */
+#app .hub-dashboard .hub-tool-box{
+  border-radius:26px!important;padding:clamp(16px,2.5vw,26px)!important;
+  background:linear-gradient(155deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--card,#1f1a0e)!important;
+  border:1px solid rgba(207,189,148,.17)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 24px 60px -48px rgba(0,0,0,.55)!important;
+}
+#app .hub-dashboard .hub-tool-box-head{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:14px!important;margin-bottom:20px!important}
+#app .hub-dashboard .hub-tool-box-head h2{font-size:clamp(21px,2.4vw,28px)!important;letter-spacing:-.03em!important}
+#app .hub-dashboard .hub-tool-box-head p{max-width:560px!important;line-height:1.65!important}
+#app .hub-dashboard .hub-tool-count{flex:0 0 auto!important;padding:7px 11px!important;border-radius:999px!important;border:1px solid rgba(214,192,141,.18)!important;background:rgba(197,161,92,.075)!important;font-size:11px!important;font-weight:750!important}
+#app .hub-dashboard .hub-tool-group{margin:20px 0 0!important;padding:18px 0 0!important;border-top:1px solid rgba(207,189,148,.12)!important}
+#app .hub-dashboard .hub-tool-group:first-of-type{margin-top:0!important;padding-top:0!important;border-top:0!important}
+#app .hub-dashboard .hub-group-heading{margin:0 0 12px!important;align-items:center!important}
+#app .hub-dashboard .hub-group-heading h3{font-size:17px!important;font-weight:780!important;letter-spacing:-.02em!important}
+#app .hub-dashboard .hub-group-heading p{font-size:12px!important;line-height:1.5!important}
+#app .hub-dashboard .hub-tool-launch-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:11px!important}
+#app .hub-dashboard .hub-launch-tile{
+  min-height:82px!important;padding:12px!important;gap:11px!important;border-radius:17px!important;
+  border:1px solid rgba(207,189,148,.16)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.052),rgba(255,255,255,.014))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 12px 24px -22px rgba(0,0,0,.65)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+#app .hub-dashboard .hub-launch-tile:hover,#app .hub-dashboard .hub-launch-tile:focus-visible{
+  transform:translateY(-2px)!important;border-color:rgba(245,219,156,.42)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 15px 28px -22px rgba(197,161,92,.24)!important;
+}
+#app .hub-dashboard .hub-launch-icon{
+  display:grid!important;place-items:center!important;flex:0 0 38px!important;width:38px!important;height:38px!important;
+  border-radius:12px!important;background:rgba(197,161,92,.11)!important;border:1px solid rgba(245,219,156,.17)!important;
+  font-size:19px!important;line-height:1!important;
+}
+#app .hub-dashboard .hub-launch-copy b{font-size:13px!important;font-weight:760!important;line-height:1.34!important}
+#app .hub-dashboard .hub-launch-copy small{font-size:10.5px!important;line-height:1.45!important;opacity:.82!important}
+#app .hub-dashboard .hub-launch-arrow{opacity:.62!important;font-size:12px!important}
+html[data-theme="light"] #app .hub-dashboard .hub-tool-box{background:linear-gradient(155deg,#fff,#fdfbf8)!important;border-color:rgba(143,126,87,.18)!important;box-shadow:0 22px 55px -42px rgba(101,87,54,.25)!important}
+html[data-theme="light"] #app .hub-dashboard .hub-tool-group{border-color:rgba(143,126,87,.14)!important}
+html[data-theme="light"] #app .hub-dashboard .hub-launch-tile{background:linear-gradient(145deg,#fff,#fdfcf9)!important;border-color:rgba(143,126,87,.17)!important;box-shadow:inset 0 1px 0 #fff,0 12px 25px -22px rgba(101,87,54,.28)!important}
+html[data-theme="light"] #app .hub-dashboard .hub-launch-icon{background:rgba(201,162,71,.075)!important;border-color:rgba(201,162,71,.13)!important;color:#a3833a!important}
+html[data-theme="purple"] #app .hub-dashboard .hub-tool-box{background:linear-gradient(155deg,rgba(117,103,70,.23),rgba(39,34,22,.93))!important;border-color:rgba(235,221,187,.18)!important}
+html[data-theme="purple"] #app .hub-dashboard .hub-tool-group{border-color:rgba(235,221,187,.12)!important}
+html[data-theme="purple"] #app .hub-dashboard .hub-launch-tile{background:linear-gradient(145deg,rgba(148,131,92,.2),rgba(51,45,30,.72))!important;border-color:rgba(235,221,187,.19)!important}
+html[data-theme="purple"] #app .hub-dashboard .hub-launch-icon{background:rgba(228,208,161,.14)!important;border-color:rgba(238,225,196,.18)!important;color:#f2e8d2!important}
+
+/* Mobile simulation cards: reclaim side space and reduce vertical bulk. */
+@media(max-width:700px){
+  #app[data-page="lab"] .lab-page{width:100%!important;max-width:none!important;padding-left:8px!important;padding-right:8px!important;padding-top:18px!important}
+  #app[data-page="lab"] .lab-page .lab-subject-groups{margin-left:0!important;margin-right:0!important}
+  #app[data-page="lab"] .lab-page .lab-subject-group{margin:12px 0 18px!important}
+  #app[data-page="lab"] .lab-page .lab-subject-group .lab-card-grid{grid-template-columns:minmax(0,1fr)!important;gap:8px!important;margin-top:8px!important}
+  #app[data-page="lab"] .lab-page .lab-sim-card{
+    display:grid!important;grid-template-columns:38px minmax(0,1fr)!important;align-content:center!important;align-items:center!important;
+    column-gap:10px!important;row-gap:4px!important;width:100%!important;max-width:none!important;min-height:0!important;height:auto!important;
+    margin:0!important;padding:10px 12px!important;border-radius:14px!important;
+  }
+  #app[data-page="lab"] .lab-page .lab-sim-card .gico{grid-column:1!important;grid-row:1/5!important;width:36px!important;height:36px!important;min-width:36px!important;flex-basis:36px!important;margin:0!important;font-size:21px!important;border-radius:11px!important}
+  #app[data-page="lab"] .lab-page .lab-sim-card h3{grid-column:2!important;margin:0!important;font-size:13px!important;line-height:1.32!important}
+  #app[data-page="lab"] .lab-page .lab-sim-card p{grid-column:2!important;margin:0!important;font-size:10.5px!important;line-height:1.42!important;-webkit-line-clamp:2!important}
+  #app[data-page="lab"] .lab-page .lab-sim-card .diff,
+  #app[data-page="lab"] .lab-page .lab-sim-card .lab-topic{grid-column:2!important;justify-self:start!important;margin:0!important;font-size:9px!important}
+  #app[data-page="lab"] .lab-page .lab-sim-card .go{grid-column:2!important;justify-self:start!important;margin:2px 0 0!important;padding:5px 9px!important;font-size:10px!important;line-height:1.25!important}
+  #app[data-page="lab"] .lab-page .subject-chooser{gap:7px!important;margin-top:14px!important}
+  #app[data-page="lab"] .lab-page .subject-choice{min-height:42px!important;padding:8px 7px!important;font-size:11px!important}}
+
+/* Desktop/tablet Hub grid adapts without making every tile feel cramped. */
+@media(min-width:701px) and (max-width:1050px){
+  #app .hub-dashboard .hub-tool-launch-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:700px){
+  #app .hub-dashboard .hub-tool-box{padding:15px 12px!important;border-radius:20px!important}
+  #app .hub-dashboard .hub-tool-box-head{align-items:flex-start!important;margin-bottom:14px!important}
+  #app .hub-dashboard .hub-tool-count{padding:6px 8px!important;font-size:10px!important}
+  #app .hub-dashboard .hub-tool-launch-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #app .hub-dashboard .hub-launch-tile{min-height:74px!important;padding:9px!important;gap:8px!important;border-radius:14px!important}
+  #app .hub-dashboard .hub-launch-icon{width:31px!important;height:31px!important;flex-basis:31px!important;border-radius:10px!important;font-size:16px!important}
+  #app .hub-dashboard .hub-launch-copy b{font-size:11px!important;line-height:1.28!important}
+  #app .hub-dashboard .hub-launch-copy small{font-size:9px!important;line-height:1.35!important}
+  #app .hub-dashboard .hub-launch-arrow{font-size:10px!important}
+  #app[data-page="home"] .home-launchpad .launch-tool-carousel{padding:0!important}
+  #app[data-page="home"] .home-launchpad .launch-tool-arrow-btn{display:none!important}
+  #app[data-page="home"] .home-launchpad .launch-swipe-hint{display:flex!important;gap:8px!important;margin:4px 0 9px!important;font-size:10px!important}
+  #app[data-page="home"] .home-launchpad .launch-tool-grid{width:100%!important}}
+@media(prefers-reduced-motion:reduce){
+  #app[data-page="home"] .fc-node,#app .hub-dashboard .hub-launch-tile,#app[data-page="home"] .home-launchpad .launch-tool-arrow-btn{transition:none!important}}
+
+
+/* Golden Snitch v71 — search decluttering and genuinely effective mobile lab sizing. */
+/* Search field stays focused: categories remain in their original tool groups, not in search controls. */
+.hpro-find .hpro-chips{display:none!important}
+.hpro-related{display:none!important}
+
+@media(max-width:700px){
+  /* The outer .w/.pgw defaults were stacking their horizontal spacing on small screens. */
+  #app .w.pgw.lab-page{
+    width:100%!important;max-width:none!important;
+    padding-left:7px!important;padding-right:7px!important;
+    margin-left:0!important;margin-right:0!important;
+  }
+  #app .lab-page .lab-subject-groups{width:100%!important;margin-left:0!important;margin-right:0!important}
+  #app .lab-page .lab-subject-group{width:100%!important;margin-left:0!important;margin-right:0!important}
+  /* Preserve the familiar two-card layout, but make each card use the reclaimed width. */
+  #app .lab-page .lab-card-grid:not(#A):not(#B):not(#C):not(#D):not(#E),
+  #app .lab-page .lab-subject-group>div[class*="grid"]:not(#A):not(#B):not(#C):not(#D):not(#E){
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;width:100%!important;margin-left:0!important;margin-right:0!important;
+  }
+  #app .lab-page .lab-sim-card:not(#A):not(#B):not(#C):not(#D):not(#E){
+    display:flex!important;flex-direction:column!important;align-items:stretch!important;
+    gap:7px!important;width:100%!important;min-width:0!important;max-width:none!important;
+    min-height:0!important;height:auto!important;padding:12px 10px!important;
+    overflow:visible!important;border-radius:14px!important;
+  }
+  #app .lab-page .lab-sim-card .gico:not(#A):not(#B):not(#C):not(#D):not(#E){
+    width:36px!important;height:36px!important;min-width:36px!important;flex:0 0 36px!important;
+    margin:0 0 1px!important;font-size:18px!important;
+  }
+  #app .lab-page .lab-sim-card h3:not(#A):not(#B):not(#C):not(#D):not(#E){
+    margin:0!important;font-size:13px!important;line-height:1.34!important;
+    white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+    display:block!important;overflow-wrap:anywhere!important;
+  }
+  #app .lab-page .lab-sim-card .lab-topic:not(#A):not(#B):not(#C):not(#D):not(#E){
+    display:inline-block!important;align-self:flex-start!important;max-width:100%!important;
+    margin:0!important;padding:3px 7px!important;border-radius:8px!important;
+    white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+    overflow-wrap:anywhere!important;font-size:9.5px!important;line-height:1.42!important;
+  }
+  #app .lab-page .lab-sim-card p:not(#A):not(#B):not(#C):not(#D):not(#E){
+    display:block!important;-webkit-line-clamp:unset!important;-webkit-box-orient:initial!important;
+    flex:0 0 auto!important;max-height:none!important;height:auto!important;
+    margin:0!important;font-size:11.5px!important;line-height:1.5!important;
+    white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+    overflow-wrap:anywhere!important;opacity:.86!important;
+  }
+  #app .lab-page .lab-sim-card .diff:not(#A):not(#B):not(#C):not(#D):not(#E){
+    align-self:flex-start!important;margin:0!important;font-size:9px!important;line-height:1.3!important;
+  }
+  #app .lab-page .lab-sim-card .go:not(#A):not(#B):not(#C):not(#D):not(#E){
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    align-self:stretch!important;width:100%!important;height:auto!important;min-height:34px!important;
+    margin:3px 0 0!important;padding:7px 6px!important;font-size:10.5px!important;
+    line-height:1.35!important;white-space:normal!important;text-align:center!important;
+  }}
+@media(max-width:390px){
+  #app .w.pgw.lab-page{padding-left:5px!important;padding-right:5px!important}
+  #app .lab-page .lab-card-grid:not(#A):not(#B):not(#C):not(#D):not(#E),
+  #app .lab-page .lab-subject-group>div[class*="grid"]:not(#A):not(#B):not(#C):not(#D):not(#E){gap:7px!important}
+  #app .lab-page .lab-sim-card:not(#A):not(#B):not(#C):not(#D):not(#E){padding:10px 8px!important}
+  #app .lab-page .lab-sim-card h3:not(#A):not(#B):not(#C):not(#D):not(#E){font-size:12.5px!important}
+  #app .lab-page .lab-sim-card p:not(#A):not(#B):not(#C):not(#D):not(#E){font-size:11px!important}}

@@ -1,0 +1,20 @@
+/* v94 chapter question target progress and live-bank coverage status */
+#app .cq-target-status{margin:14px 0 18px;padding:16px 18px;border:1px solid rgba(225,203,152,.28);border-radius:16px;background:linear-gradient(135deg,rgba(205,172,94,.10),rgba(154,122,53,.06));}
+#app .cq-target-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#app .cq-target-top span{display:block;color:var(--muted,#b3ab99);font-size:12px}
+#app .cq-target-top strong{display:block;font:800 clamp(22px,4vw,30px)/1.15 Inter,system-ui,sans-serif;color:#eadbb7;font-variant-numeric:tabular-nums}
+#app .cq-target-top small{color:var(--muted,#b3ab99);font-size:11px}
+#app .cq-target-track{height:9px;margin:12px 0 8px;overflow:hidden;border-radius:99px;background:rgba(179,171,153,.18)}
+#app .cq-target-track>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8a3a45,#9a7a35);transition:width .35s ease}
+#app .cq-target-status p{margin:0;color:var(--muted,#b3ab99);font-size:12px;line-height:1.6}
+#app .cq-target-status .cq-target-gap{color:#fbbf24;font-weight:700}
+#app .cq-target-status .cq-target-done{color:#34d399;font-weight:700}
+#app .cq-intro-stats{grid-template-columns:repeat(5,minmax(0,1fr))}
+html[data-theme="light"] #app .cq-target-status{background:linear-gradient(135deg,#fbf8f2,#fcf9f3);border-color:rgba(205,172,94,.2)}
+html[data-theme="light"] #app .cq-target-top strong{color:#b4954e}
+@media(max-width:920px){#app .cq-intro-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){#app .cq-intro-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){#app .cq-target-status{padding:13px}.cq-target-top{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){#app .cq-target-track>span{transition:none}}
+
+#app .cq-target-top>b{font-size:clamp(19px,3vw,25px);font-variant-numeric:tabular-nums;color:var(--text,#eeebe4);white-space:nowrap}
