@@ -1,8 +1,8 @@
 /* GOLDEN SNITCH — phase 2: typography system + dark-academia tokens.
    Display = supplied "Harry P" (titles, headings, key lines). Body = EB Garamond + Noto Serif Bengali (Bengali glyphs). */
 :root{
- --gs-display:"Harry P","Cormorant Garamond",Georgia,"Noto Serif Bengali",serif;
- --gs-body:"EB Garamond","Cormorant Garamond",Georgia,"Noto Serif Bengali","Hind Siliguri",serif;
+ --gs-display:"Harry P",Georgia,"Noto Serif Bengali","Hind Siliguri",serif;
+ --gs-body:"Dumbledor 1 Thin",Georgia,"Noto Serif Bengali","Hind Siliguri",serif;
  --gs-bn:"Noto Serif Bengali","Hind Siliguri","Noto Sans Bengali",serif;
  --gs-math:"STIX Two Text","Cambria Math","Times New Roman",serif;
  --gs-mono:ui-monospace,SFMono-Regular,Menlo,monospace}

@@ -30,3 +30,53 @@ html:not([data-theme=light]) body nav.bottom-nav a.on:not(#a),html:not([data-the
 /* Arcade mode tiles: Games = gold→wine, Quiz = parchment→gold (were violet / teal) */
 html body #app .arcade-page .ga-mode-deck .ga-mode-card:not(#a):not(#b){--mc:#C5A15C;--mc2:#702B35}
 html body #app .arcade-page .ga-mode-deck .ga-mode-card[data-ga-mode="quiz"]:not(#a):not(#b){--mc:#E9DABC;--mc2:#C5A15C}
+
+/* ===== Phase 9b ===== */
+/* Hero: photographic night castle (replaces the illustrated SVG scene) */
+html[data-theme] body #app section.sci{background:linear-gradient(180deg,rgba(5,9,18,.55),rgba(5,9,18,.22) 42%,rgba(5,9,18,.72)),#050912 url(../images/hero-castle-night.webp) center center/cover no-repeat!important}
+html[data-theme] .sci-art,html[data-theme] .sci-art.gs-hasc{background:transparent!important}
+@media(max-width:900px){html[data-theme] body #app section.sci{background:linear-gradient(180deg,rgba(5,9,18,.62),rgba(5,9,18,.35) 45%,rgba(5,9,18,.8)),#050912 url(../images/hero-castle-night.webp) 38% center/cover no-repeat!important}}
+/* Hero brand lockup: title + tagline in the supplied display font */
+.sci-brand{display:flex;flex-direction:column;align-items:center;gap:2px;margin:0 0 14px;text-align:center}
+.sci-brand img{width:44px;height:44px;margin-bottom:2px;filter:drop-shadow(0 0 12px rgba(245,219,156,.55))}
+.sci-brand-t{font-family:var(--gs-display);font-size:clamp(34px,6vw,72px);line-height:1;letter-spacing:.04em;text-transform:uppercase;color:#F5DB9C;text-shadow:0 0 22px rgba(245,219,156,.45),0 3px 0 rgba(0,0,0,.6)}
+.sci-brand-s{font-family:var(--gs-display);font-size:clamp(15px,2vw,22px);letter-spacing:.06em;color:#E9DABC;opacity:.95;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+html:not([data-theme=light]) #app .sci-t{font-size:clamp(26px,4vw,48px)}
+/* Header: brand on the left; Sign up, settings, bell, then hamburger at the far right */
+html body header .hr:not(#a){display:flex!important;align-items:center;gap:8px}
+html body header .hr .brand{order:0;margin-right:auto!important}
+html body header .hr #gsHouseBtn{order:1}
+html body header .hr #accountActions,html body header .hr #profileLink{order:2}
+html body header .hr #clSearchBtn{order:3}
+html body header .hr #headerSettingsLink{order:4}
+html body header .hr #clMessageCentre{order:5}
+html body header .hr #burger{order:6;margin-left:0!important}
+/* Phase 9b fixes */
+html body header .hr .brand:not(#a){margin:0 auto 0 0!important}
+html body #app .sci-brand-t,html body #app .sci-brand-s{font-family:var(--gs-display)!important;font-weight:400!important}
+html body #app .sci-brand-t{font-size:clamp(34px,5vw,56px)}
+html[data-theme] body #app .sci .sci-art{display:none!important}
+@media(min-width:901px){
+ html[data-theme] body #app section.sci{background:linear-gradient(90deg,rgba(5,9,18,.88),rgba(5,9,18,.5) 50%,rgba(5,9,18,.08)),linear-gradient(180deg,rgba(5,9,18,.35),rgba(5,9,18,0) 40%,rgba(5,9,18,.6)),#050912 url(../images/hero-castle-night.webp) center center/cover no-repeat!important}
+ .sci-brand{align-items:flex-start;text-align:left}
+}
+html body header .hr .brand:not(#a){position:static!important;left:auto!important;right:auto!important;top:auto!important;transform:none!important;order:0}
+
+/* GOLDEN SNITCH PHASE 10 — calm the atmosphere and keep mobile candles viewport-anchored. */
+#clIntro .stars,
+#clIntro .sparks,
+.gs-tw,
+.gs-dust,
+.gs-sp,
+.sci-mage .sm-sp,
+.sci-mage .sm-mote{
+  display:none!important;
+}
+/* Phase 13: pinned candles; their strings pass behind the sticky navigation surface. */
+body>header{position:sticky!important;top:0!important;z-index:120!important;isolation:isolate!important;overflow:visible!important;}
+body>header>.hr{position:relative!important;z-index:8!important;min-height:66px;background:rgba(14,11,6,1)!important;-webkit-backdrop-filter:blur(14px) saturate(1.1)!important;backdrop-filter:blur(14px) saturate(1.1)!important;}
+body>header>#gsAmb{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;width:100vw!important;height:230px!important;z-index:1!important;pointer-events:none!important;overflow:visible!important;transform:none!important;}
+body>header>#gsAmb .gs-cd{position:absolute!important;top:66px!important;}
+body>header>#gsAmb .gs-cd .gs-ch{top:-76px!important;height:calc(var(--l) + 76px)!important;}
+@media(max-width:899px){body>header>#gsAmb .gs-cd:nth-child(n+5){display:none!important;}}
+@media(max-width:700px){body>header>.hr{min-height:60px;}body>header>#gsAmb .gs-cd{top:60px!important;}body>header>#gsAmb .gs-cd .gs-ch{top:-70px!important;height:calc(var(--l) + 70px)!important;}}

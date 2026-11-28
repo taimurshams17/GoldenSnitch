@@ -1,0 +1,469 @@
+/* GOLDEN SNITCH — desktop hero (>=900px). Loaded last.
+   Two-column composition: copy on the left (brand → headline → Bengali line → typed line → buttons → subjects),
+   the right side is left open so the castle artwork shows. Mobile / tablet-portrait (<900px) is untouched. */
+
+
+@media (min-width:900px){
+ html[data-theme] body #app section.sci{
+  --hx:max(24px,calc((100vw - min(82vw,1480px))/2));
+  display:grid!important;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;column-gap:clamp(24px,3.5vw,64px);
+  align-items:center;
+  min-height:clamp(640px,calc(100vh - 68px),960px);
+  padding:clamp(104px,13vh,150px) var(--hx) clamp(96px,12vh,130px)!important;
+  background:
+   linear-gradient(90deg,rgba(4,7,14,.94) 0%,rgba(4,7,14,.82) 30%,rgba(4,7,14,.38) 56%,rgba(4,7,14,.06) 80%),
+   linear-gradient(180deg,rgba(4,7,14,.55) 0%,rgba(4,7,14,0) 22%,rgba(4,7,14,0) 62%,rgba(4,7,14,.78) 100%),
+   #050912 url(../images/hero-castle-night.webp) center center/cover no-repeat!important}
+
+ /* ---- copy column ---- */
+ html[data-theme] body #app section.sci .sci-copy{
+  grid-column:1;display:flex;flex-direction:column;align-items:flex-start;text-align:left;
+  width:100%;max-width:640px;padding:0!important;margin:0!important}
+ html[data-theme] body #app section.sci .sci-copy>*{margin-left:0!important;margin-right:0!important;text-align:left!important}
+ html[data-theme] body #app section.sci .sci-bar,
+ html[data-theme] body #app section.sci .sci-copy>.pill{display:none!important}
+
+ /* 1 · brand lockup: emblem | GOLDEN SNITCH / tagline, closed by a gold rule */
+ html body #app section.sci .sci-brand{
+  display:grid!important;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"logo title" "logo sub";
+  column-gap:18px;row-gap:6px;align-items:center;justify-items:start;
+  width:100%;margin:0 0 clamp(20px,2.8vh,30px)!important;padding:0 0 clamp(18px,2.6vh,26px);position:relative}
+ html body #app section.sci .sci-brand::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,rgba(245,219,156,.85),rgba(197,161,92,.35) 55%,transparent)}
+ html body #app section.sci .sci-brand::before{content:"✦";position:absolute;left:0;bottom:-8px;font-size:13px;line-height:1;color:#F5DB9C;
+  background:transparent;padding-right:8px;text-shadow:0 0 10px rgba(245,219,156,.7);display:none}
+ html body #app section.sci .sci-brand img{grid-area:logo;width:clamp(56px,4.6vw,72px);height:clamp(56px,4.6vw,72px);margin:0;border-radius:16px;
+  filter:drop-shadow(0 0 16px rgba(245,219,156,.5));box-shadow:0 0 0 1px rgba(245,219,156,.35)}
+ html body #app section.sci .sci-brand-t{grid-area:title;font-size:clamp(2.5rem,4.1vw,4.2rem)!important;line-height:.98;letter-spacing:.05em;white-space:nowrap}
+ html body #app section.sci .sci-brand-s{grid-area:sub;font-size:clamp(1rem,1.35vw,1.3rem)!important;letter-spacing:.06em;line-height:1.3;color:#E9DABC;opacity:.95}
+
+ /* 2 · headline */
+ html[data-theme] body #app section.sci .sci-copy h1.sci-t.sci-t{
+  display:block!important;margin:0!important;max-width:15em!important;text-align:left!important;
+  font-size:clamp(2.1rem,3.35vw,3.5rem)!important;line-height:1.14!important;letter-spacing:.025em!important;
+  text-wrap:balance;text-shadow:0 2px 18px rgba(0,0,0,.65)}
+ html[data-theme] body #app section.sci .sci-copy h1 .sci-h1a.sci-h1a{display:block!important;width:auto!important;text-align:left!important;
+  color:#F6EBD0!important;-webkit-text-fill-color:#F6EBD0!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important}
+ html[data-theme] body #app section.sci .sci-copy h1 .sci-h1b.sci-h1b{display:block!important;width:auto!important;text-align:left!important;margin-top:.12em!important;
+  font-size:.74em!important;line-height:1.25!important;letter-spacing:inherit!important;color:#C5A15C!important;-webkit-text-fill-color:#C5A15C!important}
+
+ /* 3 · Bengali supporting line */
+ html[data-theme] body #app section.sci .sci-copy .lead{
+  margin:clamp(16px,2.4vh,24px) 0 0!important;max-width:33em!important;
+  font-size:clamp(1.02rem,1.2vw,1.18rem)!important;line-height:1.85!important;color:rgba(242,235,221,.9)!important;
+  text-shadow:0 1px 12px rgba(0,0,0,.85)}
+
+ /* 4 · typed line */
+ html[data-theme] body #app section.sci .sci-copy .typed{
+  display:flex;align-items:baseline;gap:.4em;margin:clamp(14px,2.2vh,22px) 0 0!important;min-height:1.6em;
+  font-size:clamp(1.15rem,1.55vw,1.5rem)!important;line-height:1.4;color:#E9DABC!important;font-weight:400!important}
+ html[data-theme] body #app section.sci .sci-copy .typed::before{content:"✦";color:#C5A15C;font-size:.7em;transform:translateY(-.08em)}
+ html[data-theme] body #app section.sci .sci-copy .typed b{color:#F5DB9C!important;font-family:var(--gs-display)!important;font-weight:400!important;letter-spacing:.03em}
+
+ /* 5 · buttons */
+ html[data-theme] body #app section.sci .sci-cta{display:flex;flex-wrap:wrap;gap:14px;margin:clamp(22px,3.2vh,32px) 0 0!important}
+ html[data-theme] body #app section.sci .sci-btn{min-height:54px;padding:0 32px;font-size:1.05rem!important;letter-spacing:.03em;border-radius:999px;font-weight:600!important}
+ html[data-theme] body #app section.sci .sci-btn--p{box-shadow:0 8px 26px rgba(197,161,92,.35),inset 0 1px 0 rgba(255,255,255,.4)}
+ html[data-theme] body #app section.sci .sci-btn--s{background:rgba(20,16,12,.62)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+ /* 6 · subject chips */
+ html[data-theme] body #app section.sci .sci-subj{display:flex;flex-wrap:wrap;gap:10px;margin:clamp(20px,3vh,30px) 0 0!important;padding:0}
+ html[data-theme] body #app section.sci .sci-subj li{padding:9px 16px;font-size:.78rem!important;letter-spacing:.1em;
+  background:rgba(20,16,12,.6)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+}
+
+/* Shorter laptop screens: tighten so everything clears the bottom navigation */
+@media (min-width:900px) and (max-height:800px){
+ html[data-theme] body #app section.sci{padding-top:88px!important;padding-bottom:96px!important;min-height:calc(100vh - 68px)}
+ html body #app section.sci .sci-brand{margin-bottom:14px!important;padding-bottom:12px}
+ html body #app section.sci .sci-brand img{width:52px;height:52px}
+ html body #app section.sci .sci-brand-t{font-size:clamp(2.1rem,3.4vw,3.2rem)!important}
+ html[data-theme] body #app section.sci .sci-copy h1.sci-t.sci-t{font-size:clamp(1.8rem,2.8vw,2.6rem)!important}
+ html[data-theme] body #app section.sci .sci-copy .lead{margin-top:12px!important}
+ html[data-theme] body #app section.sci .sci-copy .typed{margin-top:10px!important}
+ html[data-theme] body #app section.sci .sci-cta{margin-top:18px!important}
+ html[data-theme] body #app section.sci .sci-btn{min-height:48px;padding:0 26px}
+ html[data-theme] body #app section.sci .sci-subj{margin-top:16px!important}
+ html[data-theme] body #app section.sci .sci-subj li{padding:7px 13px}
+}
+@media (min-width:900px) and (max-width:1100px){
+ html body #app section.sci .sci-brand-t{white-space:normal}
+ html[data-theme] body #app section.sci .sci-btn{padding:0 24px}
+}
+/* Ultra-wide */
+@media (min-width:1800px){
+ html[data-theme] body #app section.sci .sci-copy{max-width:720px}
+ html[data-theme] body #app section.sci .sci-copy h1.sci-t.sci-t{font-size:3.9rem!important}
+}
+
+/* Names (brand, people, chapters) use the display font like titles */
+html body :is(.brand,#bn,#fb,.pf-brand-lock b,.profile-name,.rank-name,.ma-name,.progress-chapter-name,.ga-chapter-name,.creator-profile :is(h2,h3,h4,strong,b),.creator-profile-meta b,.motivation-author,.chapter-subject-heading,.sci-brand-t):not(svg):not(i){
+ font-family:var(--gs-display)!important;font-weight:400!important;letter-spacing:.035em}
+
+/* Stragglers that still carried older font stacks */
+html body header a.account-link:not(#a):not(#b),html body #app .motivation-section .motivation-pill-label:not(#a):not(#b),html body #app .ga-mode-card strong:not(#a):not(#b){font-family:var(--gs-body)!important}
+html body #app .ga-mode-copy b:not(#a):not(#b){font-family:var(--gs-display)!important;font-weight:400!important;letter-spacing:.04em}
+
+/* Headline in the body font (Dumbledor) */
+@media (min-width:900px){
+ html[data-theme] body #app section.sci .sci-copy h1.sci-t.sci-t,
+ html[data-theme] body #app section.sci .sci-copy h1 .sci-h1a.sci-h1a,
+ html[data-theme] body #app section.sci .sci-copy h1 .sci-h1b.sci-h1b{font-family:var(--gs-body)!important;font-weight:400!important;letter-spacing:.01em!important}
+ html[data-theme] body #app section.sci .sci-copy h1.sci-t.sci-t{font-size:clamp(1.45rem,2.05vw,2.15rem)!important;line-height:1.2!important;max-width:16em!important}
+}
+
+/* Headline size: beat the older 4.6rem rule on the inner span */
+@media (min-width:900px){
+ html[data-theme] body #app section.sci .sci-copy .sci-t.sci-t .sci-h1a.sci-h1a.sci-h1a{font-size:clamp(1.7rem,2.45vw,2.5rem)!important;line-height:1.2!important;letter-spacing:.01em!important;font-weight:400!important}
+ html[data-theme] body #app section.sci .sci-copy .sci-t.sci-t .sci-h1b.sci-h1b.sci-h1b{font-size:.78em!important;font-weight:400!important;letter-spacing:.01em!important}
+}
+
+/* ===== Wizard on the right (desktop only), casting a spell from the wand tip ===== */
+.sci-mage{display:none}
+@media (min-width:900px){
+ html[data-theme] body #app section.sci .sci-mage{
+  grid-column:2;display:block;position:relative;z-index:1;pointer-events:none;
+  justify-self:center;align-self:end;margin-bottom:calc(-1 * clamp(96px,12vh,130px));
+  width:min(100%,clamp(300px,34vw,520px),calc((100vh - 140px)*.77));aspect-ratio:760/985;}
+ .sci-mage-glow{position:absolute;left:-18%;right:-18%;top:2%;bottom:6%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(245,219,156,.22),rgba(60,160,170,.10) 55%,transparent 100%);animation:smGlow 6s ease-in-out infinite}
+ .sci-mage-fig{position:absolute;inset:0;transform-origin:50% 100%;animation:smFloat 6s ease-in-out infinite}
+ .sci-mage-fig img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 2px rgba(3,6,12,.9)) drop-shadow(0 18px 28px rgba(0,0,0,.5));animation:smLit 6s ease-in-out infinite;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 80%,transparent 99%);mask-image:linear-gradient(180deg,#000 0,#000 80%,transparent 99%)}
+ /* effects are positioned in % of the figure; wand tip ≈ (55.7%, 24.3%) */
+ .sm-orb,.sm-ring{position:absolute;left:55.7%;top:24.3%;border-radius:50%;transform:translate(-50%,-50%)}
+ .sm-orb{width:13%;aspect-ratio:1;background:radial-gradient(circle,#fffbe8 0,#F5DB9C 22%,rgba(245,219,156,.55) 45%,transparent 70%);mix-blend-mode:screen;animation:smOrb 6s ease-in-out infinite}
+ .sm-ring{width:14%;aspect-ratio:1;border:2px solid rgba(245,219,156,.9);box-shadow:0 0 18px rgba(245,219,156,.6);opacity:0;animation:smRing 6s ease-out infinite}
+ .sm-swirl{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+ .sm-swirl path{fill:none;stroke:url(#smG);stroke-width:5;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;opacity:0;filter:drop-shadow(0 0 8px rgba(245,219,156,.9));animation:smSwirl 6s ease-in-out infinite}
+ .sm-sp{position:absolute;left:55.7%;top:24.3%;width:16px;height:16px;margin:-8px 0 0 -8px;opacity:0;
+  background:#F5DB9C;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);filter:drop-shadow(0 0 6px #F5DB9C);
+  animation:smSpark 6s ease-out infinite;animation-delay:var(--d,0s)}
+ .sm-sp.s1{--dx:-90px;--dy:-120px;--d:.0s}.sm-sp.s2{--dx:60px;--dy:-150px;--d:.08s;width:11px;height:11px}
+ .sm-sp.s3{--dx:140px;--dy:-70px;--d:.16s}.sm-sp.s4{--dx:-150px;--dy:-30px;--d:.05s;width:10px;height:10px}
+ .sm-sp.s5{--dx:110px;--dy:30px;--d:.22s;width:12px;height:12px}.sm-sp.s6{--dx:-40px;--dy:-190px;--d:.12s;width:9px;height:9px}
+ .sm-sp.s7{--dx:190px;--dy:-130px;--d:.3s;width:18px;height:18px}.sm-sp.s8{--dx:-120px;--dy:-210px;--d:.26s;width:13px;height:13px}
+ .sm-sp.s9{--dx:20px;--dy:-100px;--d:.34s;width:8px;height:8px}.sm-sp.s10{--dx:-190px;--dy:-100px;--d:.2s;width:14px;height:14px}
+ .sm-sp.s11{--dx:90px;--dy:-220px;--d:.4s;width:10px;height:10px}.sm-sp.s12{--dx:170px;--dy:10px;--d:.14s;width:9px;height:9px}
+ .sm-mote{position:absolute;width:5px;height:5px;border-radius:50%;background:#F5DB9C;box-shadow:0 0 8px 2px rgba(245,219,156,.7);opacity:0;animation:smMote var(--t,7s) ease-in-out infinite;animation-delay:var(--d,0s)}
+ .sm-mote.m1{left:78%;top:40%;--t:7s}.sm-mote.m2{left:86%;top:22%;--t:8s;--d:-2s}.sm-mote.m3{left:68%;top:12%;--t:6.5s;--d:-4s}
+ .sm-mote.m4{left:92%;top:52%;--t:9s;--d:-1s}.sm-mote.m5{left:8%;top:30%;--t:8s;--d:-5s}.sm-mote.m6{left:30%;top:6%;--t:7.5s;--d:-3s}.sm-mote.m7{left:96%;top:34%;--t:6s;--d:-2.5s}
+}
+/* 6s cycle: calm → raise wand (55–62%) → cast burst (62–80%) → settle */
+@keyframes smFloat{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-7px) rotate(.3deg)}58%{transform:translateY(-4px) rotate(-.2deg)}66%{transform:translateY(-12px) rotate(.9deg) scale(1.012)}80%{transform:translateY(-6px) rotate(.2deg)}}
+@keyframes smGlow{0%,100%{opacity:.6;transform:scale(.96)}66%{opacity:1;transform:scale(1.06)}}
+@keyframes smLit{0%,52%,100%{filter:drop-shadow(0 0 2px rgba(3,6,12,.9)) drop-shadow(0 18px 28px rgba(0,0,0,.5)) brightness(1)}66%{filter:drop-shadow(0 0 2px rgba(3,6,12,.9)) drop-shadow(0 18px 28px rgba(0,0,0,.5)) brightness(1.12)}}
+@keyframes smOrb{0%,100%{opacity:.35;transform:translate(-50%,-50%) scale(.55)}45%{opacity:.6;transform:translate(-50%,-50%) scale(.75)}64%{opacity:1;transform:translate(-50%,-50%) scale(2.1)}82%{opacity:.5;transform:translate(-50%,-50%) scale(1)}}
+@keyframes smRing{0%,60%{opacity:0;transform:translate(-50%,-50%) scale(.4)}64%{opacity:.95}88%,100%{opacity:0;transform:translate(-50%,-50%) scale(5)}}
+@keyframes smSwirl{0%,58%{stroke-dashoffset:100;opacity:0}63%{opacity:1}78%{stroke-dashoffset:0;opacity:1}92%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes smSpark{0%,60%{opacity:0;transform:translate(0,0) scale(.3) rotate(0)}64%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.1) rotate(160deg)}}
+@keyframes smMote{0%{opacity:0;transform:translateY(14px)}30%,60%{opacity:.85}100%{opacity:0;transform:translateY(-46px)}}
+@media (prefers-reduced-motion:reduce){.sci-mage *{animation:none!important}.sm-sp,.sm-ring,.sm-mote,.sm-swirl{display:none}.sm-orb{opacity:.6}}
+
+
+/* Phase 14 — requested hero copy font. Keep the existing .lead font-size
+   and line-height so the English copy matches the previous Bengali line. */
+html body #app section.sci .sci-copy > .lead{
+  font-family:"Dumbledor 1 Thin",Georgia,serif!important;
+  font-weight:400!important;
+}
+
+
+/* Phase 16 — restore the Golden Snitch hero brand and tagline.
+   The headline and description share the former .lead typography and size,
+   separated only by breathing room. The main title/subtitle use Harry P;
+   the two copy lines use the supplied Dumbledor 1 Thin font. */
+html body #app section.sci .sci-copy h1.sci-site-title{
+  display:block!important;width:auto!important;max-width:none!important;
+  margin:0 0 3px!important;padding:0!important;line-height:1!important;
+  font-family:"Harry P",var(--gs-display),Georgia,serif!important;
+  font-size:clamp(38px,5.4vw,62px)!important;font-weight:400!important;
+  letter-spacing:.035em!important;text-align:inherit!important;
+}
+html body #app section.sci .sci-copy h1.sci-site-title .sci-brand-t{
+  display:block!important;font-family:"Harry P",var(--gs-display),Georgia,serif!important;
+  font-size:inherit!important;line-height:1!important;font-weight:400!important;
+  letter-spacing:.035em!important;text-transform:none!important;
+  color:#F5DB9C!important;-webkit-text-fill-color:#F5DB9C!important;
+  text-shadow:0 0 18px rgba(245,219,156,.34),0 2px 8px rgba(0,0,0,.7)!important;
+}
+html body #app section.sci .sci-copy .sci-site-tagline{
+  display:block!important;margin:0 0 17px!important;padding:0!important;
+  font-family:"Harry P",var(--gs-display),Georgia,serif!important;
+  font-size:clamp(16px,2.1vw,22px)!important;line-height:1.25!important;
+  font-weight:400!important;letter-spacing:.025em!important;
+  color:#E9DABC!important;-webkit-text-fill-color:#E9DABC!important;
+  text-align:inherit!important;text-shadow:0 2px 8px rgba(0,0,0,.72)!important;
+}
+html body #app section.sci .sci-copy > .sci-combined-copy{
+  font-family:"Dumbledor 1 Thin",Georgia,serif!important;font-weight:400!important;
+}
+html body #app section.sci .sci-copy .sci-headline-inline,
+html body #app section.sci .sci-copy .sci-description{
+  display:block!important;font-family:"Dumbledor 1 Thin",Georgia,serif!important;
+  font-size:inherit!important;line-height:inherit!important;font-weight:400!important;
+  letter-spacing:inherit!important;color:inherit!important;
+  -webkit-text-fill-color:currentColor!important;
+}
+html body #app section.sci .sci-copy .sci-headline-inline{margin:0 0 1.35em!important;}
+html body #app section.sci .sci-copy .sci-lead-gap{display:none!important;height:0!important;margin:0!important;padding:0!important;}
+@media(max-width:640px){
+ html body #app section.sci .sci-copy h1.sci-site-title{font-size:clamp(36px,9.4vw,48px)!important;margin-bottom:2px!important;}
+ html body #app section.sci .sci-copy .sci-site-tagline{font-size:clamp(16px,4.6vw,20px)!important;margin-bottom:13px!important;}
+ html body #app section.sci .sci-copy .sci-headline-inline{margin-bottom:1.25em!important;}
+}
+
+
+/* Phase 17 — larger hero brand, viewport-fixed candles behind the sticky header,
+   and a one-column desktop hamburger menu. */
+html body #app section.sci .sci-copy h1.sci-site-title{
+  font-size:clamp(46px,6vw,72px)!important;
+  line-height:1.02!important;
+}
+html body #app section.sci .sci-copy .sci-site-tagline{
+  font-size:clamp(20px,2.4vw,28px)!important;
+  line-height:1.3!important;
+}
+
+/* The candle layer must be a direct child of body. A fixed descendant of a
+   backdrop-filter header is otherwise fixed to that header and scrolls with it. */
+body>#gsAmb{
+  position:fixed!important;top:0!important;left:0!important;right:0!important;
+  bottom:auto!important;width:100vw!important;height:230px!important;
+  z-index:119!important;pointer-events:none!important;overflow:visible!important;
+  transform:none!important;contain:none!important;
+}
+body>header{position:sticky!important;top:0!important;z-index:120!important;
+  isolation:isolate!important;overflow:visible!important;}
+body>header>.hr{position:relative!important;z-index:8!important;}
+body>#gsAmb .gs-cd{position:absolute!important;top:66px!important;}
+body>#gsAmb .gs-cd .gs-ch{top:-76px!important;height:calc(var(--l) + 76px)!important;}
+@media(max-width:899px){body>#gsAmb .gs-cd:nth-child(n+5){display:none!important;}}
+@media(max-width:700px){
+  body>header>.hr{min-height:60px!important;}
+  body>#gsAmb .gs-cd{top:60px!important;}
+  body>#gsAmb .gs-cd .gs-ch{top:-70px!important;height:calc(var(--l) + 70px)!important;}
+}
+
+/* PC: menu entries are stacked one button per row. Mobile keeps its compact grid. */
+@media(min-width:901px){
+  #nav.nav-portal{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-auto-flow:row!important;
+    width:min(470px,calc(100vw - 24px))!important;
+    flex-direction:initial!important;
+  }
+  #nav.nav-portal .menu-group-label{grid-column:1!important;}
+  #nav.nav-portal a.menu-tile{width:100%!important;min-height:62px!important;}
+}
+@media(max-width:640px){
+  html body #app section.sci .sci-copy h1.sci-site-title{
+    font-size:clamp(40px,10.5vw,54px)!important;
+  }
+  html body #app section.sci .sci-copy .sci-site-tagline{
+    font-size:clamp(18px,5vw,24px)!important;
+  }
+}
+
+
+/* Phase 18 — candles are children of the sticky site header, not body.
+   The opaque navigation row paints above the wick layer; the candle bodies
+   continue below it and remain attached to the header while the page scrolls. */
+html body > header{
+  position:sticky!important;top:0!important;z-index:120!important;
+  isolation:isolate!important;overflow:visible!important;transform:none!important;
+}
+html body > header > #gsAmb{
+  position:absolute!important;top:0!important;left:0!important;right:0!important;
+  bottom:auto!important;width:100vw!important;height:230px!important;
+  z-index:1!important;pointer-events:none!important;overflow:visible!important;
+  transform:none!important;contain:none!important;
+}
+html body > header > .hr{position:relative!important;z-index:8!important;}
+html body > header > #gsAmb .gs-cd{position:absolute!important;top:66px!important;}
+html body > header > #gsAmb .gs-cd .gs-ch{
+  top:-76px!important;height:calc(var(--l) + 76px)!important;
+}
+@media(max-width:899px){html body > header > #gsAmb .gs-cd:nth-child(n+5){display:none!important;}}
+@media(max-width:700px){
+  html body > header > .hr{min-height:60px!important;}
+  html body > header > #gsAmb .gs-cd{top:60px!important;}
+  html body > header > #gsAmb .gs-cd .gs-ch{top:-70px!important;height:calc(var(--l) + 70px)!important;}
+}
+
+/* Phase 18 — make the hero brand lockup more prominent on every screen. */
+html body #app section.sci .sci-copy h1.sci-site-title{
+  font-size:clamp(54px,7vw,84px)!important;line-height:1.04!important;
+}
+html body #app section.sci .sci-copy .sci-site-tagline{
+  font-size:clamp(26px,2.8vw,34px)!important;line-height:1.32!important;
+}
+@media(max-width:640px){
+  html body #app section.sci .sci-copy h1.sci-site-title{
+    font-size:clamp(50px,13vw,64px)!important;line-height:1.04!important;
+  }
+  html body #app section.sci .sci-copy .sci-site-tagline{
+    font-size:clamp(22px,5.8vw,29px)!important;line-height:1.34!important;
+  }
+}
+
+
+/* Phase 19 — desktop hero hierarchy, left alignment and proportional scale.
+   These high-specificity desktop-only rules override older .sci-t sizing rules;
+   mobile/tablet layouts remain unchanged. */
+@media (min-width: 900px) {
+  html[data-theme] body #app section.sci {
+    padding-left: clamp(40px, 5.7vw, 92px) !important;
+  }
+
+  html[data-theme] body #app section.sci .sci-copy {
+    max-width: 720px !important;
+  }
+
+  /* Main brand title: visibly dominant, like a true page title. */
+  html[data-theme] body #app section.sci .sci-copy h1.sci-site-title.sci-t.sci-t {
+    font-size: clamp(62px, 6.2vw, 90px) !important;
+    line-height: 1.04 !important;
+    margin-bottom: 4px !important;
+    letter-spacing: .035em !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy h1.sci-site-title.sci-t.sci-t .sci-brand-t {
+    display: block !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    white-space: nowrap !important;
+  }
+
+  /* Tagline and both lines of the supporting copy. */
+  html[data-theme] body #app section.sci .sci-copy p.sci-site-tagline {
+    font-size: clamp(29px, 2.7vw, 38px) !important;
+    line-height: 1.28 !important;
+    margin: 0 0 20px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy p.sci-combined-copy {
+    font-size: clamp(18px, 1.38vw, 20.5px) !important;
+    line-height: 1.82 !important;
+    max-width: 35em !important;
+  }
+
+  /* Typed line, primary/secondary calls to action and subject chips. */
+  html[data-theme] body #app section.sci .sci-copy p.typed {
+    font-size: clamp(21px, 1.72vw, 26px) !important;
+    line-height: 1.45 !important;
+    margin-top: 20px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy .sci-cta {
+    gap: 16px !important;
+    margin-top: 28px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy .sci-cta .sci-btn {
+    min-height: 60px !important;
+    padding: 0 38px !important;
+    font-size: 1.12rem !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy ul.sci-subj {
+    gap: 12px !important;
+    margin-top: 26px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy ul.sci-subj li {
+    padding: 10px 18px !important;
+    font-size: .86rem !important;
+    letter-spacing: .09em !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy ul.sci-subj svg {
+    width: 17px !important;
+    height: 17px !important;
+  }
+}
+
+/* Compact desktop/laptop widths: keep the larger hierarchy without clipping. */
+@media (min-width: 900px) and (max-width: 1100px) {
+  html[data-theme] body #app section.sci .sci-copy h1.sci-site-title.sci-t.sci-t {
+    font-size: clamp(58px, 6vw, 68px) !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy p.sci-site-tagline {
+    font-size: clamp(27px, 2.5vw, 30px) !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy .sci-cta .sci-btn {
+    padding: 0 28px !important;
+  }
+}
+
+
+/* Phase 20 — slightly larger desktop hero typography and controls,
+   with the complete copy column shifted modestly to the right.
+   Desktop-only: mobile and tablet-portrait layout is intentionally untouched. */
+@media (min-width: 900px) {
+  html[data-theme] body #app section.sci {
+    padding-left: clamp(60px, 7.2vw, 116px) !important;
+  }
+
+  html[data-theme] body #app section.sci .sci-copy {
+    max-width: 760px !important;
+    transform: translateX(4px);
+  }
+
+  html[data-theme] body #app section.sci .sci-copy h1.sci-site-title.sci-t.sci-t {
+    font-size: clamp(70px, 6.8vw, 100px) !important;
+    line-height: 1.04 !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy h1.sci-site-title.sci-t.sci-t .sci-brand-t {
+    font-size: inherit !important;
+  }
+
+  html[data-theme] body #app section.sci .sci-copy p.sci-site-tagline {
+    font-size: clamp(32px, 2.95vw, 44px) !important;
+    line-height: 1.28 !important;
+    margin-bottom: 22px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy p.sci-combined-copy {
+    font-size: clamp(20px, 1.55vw, 23.5px) !important;
+    line-height: 1.82 !important;
+    max-width: 35em !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy p.typed {
+    font-size: clamp(23px, 1.9vw, 29px) !important;
+    line-height: 1.45 !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy .sci-cta {
+    gap: 18px !important;
+    margin-top: 30px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy .sci-cta .sci-btn {
+    min-height: 66px !important;
+    padding: 0 44px !important;
+    font-size: 1.2rem !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy ul.sci-subj {
+    gap: 14px !important;
+    margin-top: 28px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy ul.sci-subj li {
+    padding: 12px 21px !important;
+    font-size: .94rem !important;
+    letter-spacing: .09em !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy ul.sci-subj svg {
+    width: 19px !important;
+    height: 19px !important;
+  }
+}
+
+/* Laptop widths: retain the increase while leaving enough room for the mage artwork. */
+@media (min-width: 900px) and (max-width: 1100px) {
+  html[data-theme] body #app section.sci .sci-copy h1.sci-site-title.sci-t.sci-t {
+    font-size: clamp(64px, 6.7vw, 76px) !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy p.sci-site-tagline {
+    font-size: clamp(30px, 2.8vw, 35px) !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy .sci-cta .sci-btn {
+    min-height: 62px !important;
+    padding-left: 34px !important;
+    padding-right: 34px !important;
+  }
+  html[data-theme] body #app section.sci .sci-copy ul.sci-subj li {
+    padding: 9px 16px !important;
+    font-size: .88rem !important;
+  }
+}

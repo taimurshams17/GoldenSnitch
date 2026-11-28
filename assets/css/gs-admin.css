@@ -1,6 +1,7 @@
 /* Golden Snitch admin skin: charcoal, dark wood, antique gold, parchment. Visual only. */
 @font-face{font-family:"Harry P";src:url(../fonts/harryp.ttf) format("truetype");font-display:swap}
-:root{--gs-display:"Harry P","Cormorant Garamond",Georgia,"Noto Serif Bengali",serif;--gs-body:"EB Garamond",Georgia,"Noto Serif Bengali","Hind Siliguri",serif}
+@font-face{font-family:"Dumbledor 1 Thin";src:url(../fonts/dumbledor-thin.ttf) format("truetype");font-weight:100 900;font-style:normal;font-display:swap}
+:root{--gs-display:"Harry P",Georgia,"Noto Serif Bengali",serif;--gs-body:"Dumbledor 1 Thin",Georgia,"Noto Serif Bengali","Hind Siliguri",serif}
 body,button,input,select,textarea{font-family:var(--gs-body)}
 h1,h2,h3,h4,[class*="title"]:not(input),[class*="-hd"],.brand{font-family:var(--gs-display);font-weight:400;letter-spacing:.035em;color:#F5DB9C}
 h1:lang(bn),h2:lang(bn),h3:lang(bn){font-family:"Noto Serif Bengali",serif;letter-spacing:0}

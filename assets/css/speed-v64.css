@@ -11,7 +11,7 @@
 .scroll-reveal:not(.is-visible){opacity:1!important;transform:none!important}
 .scroll-reveal{will-change:auto!important}
 
-/* 2) "GOLDEN SNITCH AT A GLANCE" counters: light, smooth, no blur filter. */
+/* 2) Home counters: light, smooth, no blur filter. */
 #app .home-stats-grid .home-stat-card [data-count]{will-change:auto!important;font-variant-numeric:tabular-nums;min-width:3ch}
 #app .home-stats-grid .home-stat-card.in [data-count]{animation:clStatPop64 .28s cubic-bezier(.2,.8,.2,1) both!important}
 @keyframes clStatPop64{0%{opacity:.5;transform:translateY(4px)}100%{opacity:1;transform:none}}

@@ -1,3 +1,4 @@
 @font-face{font-family:"Harry P";src:url(../fonts/harryp.ttf) format("truetype");font-display:swap}
+@font-face{font-family:"Dumbledor 1 Thin";src:url(../fonts/dumbledor-thin.ttf) format("truetype");font-weight:100 900;font-style:normal;font-display:swap;size-adjust:120%}
 :root{--gs-midnight:#0B1019;--gs-dark2:#141923;--gs-blue:#162C4C;--gs-wood:#241C17;--gs-gold:#C5A15C;--gs-candle:#F5DB9C;--gs-parch:#E9DABC;--gs-burg:#702B35;--gs-emerald:#315C48;--gs-text:#F2EBDD;--gs-text2:#B9B1A5;--gs-title:"Harry P","Cormorant Garamond",serif}
 #bn,#fb,.gs-title{font-family:var(--gs-title);letter-spacing:.04em;font-weight:400}

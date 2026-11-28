@@ -9,12 +9,12 @@ function env(){var h=(location.hash||'#/').toLowerCase(),e='hall';
  else if(/#\/study-space/.test(h))e='common';
  else if(/#\/play/.test(h))e='games';
  else if(/#\/lab|#\/graphs/.test(h))e='observatory';
- else if(/#\/(quiz|smart-practice|daily)/.test(h))e='exam';
+ else if(/#\/quiz/.test(h))e='exam';
  else if(/#\/(progress|analytics|leaderboard)/.test(h))e='cup';
  R.setAttribute('data-gs-env',e)}
 addEventListener('hashchange',env);env();
 /* 2. Exact-match label themes (nav + headings + buttons only; subjects untouched) */
-var MAP={'Home':'Great Hall','Arcade':'Game Room','Simulations':'Enchanted Labs','Leaderboard':'House Cup','My Progress':'Marauder\u2019s Progress','Study Space':'Common Room','Student Hub':'Hogwarts Library','Daily & Missions':'Daily Quests','Smart Practice':'Practice Chamber','Analytics':'Oracle Insights','About':'The Founders','Hub':'Library'};
+var MAP={'Home':'Great Hall','Arcade':'Game Room','Simulations':'Enchanted Labs','Leaderboard':'House Cup','My Progress':'Marauder\u2019s Progress','Study Space':'Common Room','Student Hub':'Hogwarts Library','Analytics':'Oracle Insights','About':'The Founders','Hub':'Library'};
 var LOCK=/^(Physics|Chemistry|Higher Mathematics)$/;
 function theme(root){var els=(root||D).querySelectorAll('#nav a,#nav a *,.bottom-nav a,.bottom-nav a *,h1,h2,h3,h4,.pf-link,footer a');
  els.forEach(function(n){for(var c=n.firstChild;c;c=c.nextSibling){if(c.nodeType!==3)continue;var t=c.nodeValue.trim();
